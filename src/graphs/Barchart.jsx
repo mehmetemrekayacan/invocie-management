@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import "./barGraph.css";
 
 const data = [
   {
@@ -74,41 +75,44 @@ const data = [
   },
 ];
 
-export default class Example extends PureComponent {
+export default class Barchart extends PureComponent {
   render() {
     return (
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={data}
-          margin={{
-            top: 50,
-            right: 30,
-            left: 30,
-            bottom: 50,
-          }}
-          barCategoryGap={5}
-        >
-          <XAxis
-            dataKey="name"
-            stroke="none"
-            tick={{ fill: "#000", fontSize: 14 }}
-          />
-          <YAxis
-            tickFormatter={(value) => `$${value / 1000}K`}
-            stroke="none"
-            tick={{ fill: "#000", fontSize: 14 }}
-          />
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <Tooltip
-            formatter={(value) => `$${value}`}
-            itemStyle={{ fontSize: "14px" }}
-            wrapperStyle={{ backgroundColor: "#000" }}
-          />
-          <Legend />
-          <Bar dataKey="Income" fill="#11CA00" activeBar={<Rectangle />} />
-          <Bar dataKey="Expense" fill="#D70000" activeBar={<Rectangle />} />
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="container--bargraph">
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart
+            data={data}
+            margin={{
+              top: 0,
+              right: 0,
+              left: 0,
+              bottom: 0,
+            }}
+            barCategoryGap="10%"
+            barGap={0}
+          >
+            <XAxis
+              dataKey="name"
+              stroke="none"
+              tick={{ fill: "#000", fontSize: 11 }}
+            />
+            <YAxis
+              tickFormatter={(value) => `$${value / 1000}K`}
+              stroke="none"
+              tick={{ fill: "#000", fontSize: 14 }}
+            />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <Tooltip
+              formatter={(value) => `$${value}`}
+              itemStyle={{ fontSize: "14px" }}
+              wrapperStyle={{ backgroundColor: "#000" }}
+            />
+            <Legend wrapperStyle={{ marginBottom: 5 }} />
+            <Bar dataKey="Income" fill="#8890FF" activeBar={<Rectangle />} />
+            <Bar dataKey="Expense" fill="#30335A" activeBar={<Rectangle />} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     );
   }
 }

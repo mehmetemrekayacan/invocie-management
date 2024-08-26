@@ -1,12 +1,13 @@
 import { useState } from "react";
 import "./App.css";
 import Barchart from "./graphs/Barchart";
+import HorBarchart from "./graphs/HorBarchart";
 
 function App() {
   return (
     <>
-      <h1>hello</h1>
       <Barchart />
+      <HorBarchart />
     </>
   );
 }
