@@ -1,0 +1,51 @@
+.datatable {
+  padding: 10px;
+  color: #fff;
+}
+
+.datatable--chart {
+  border-collapse: collapse;
+}
+
+.datatable--chart th,
+.datatable--chart td {
+  padding: 0px 5px;
+  border-bottom: 1px solid #272727;
+}
+
+.datatable--filter-header {
+  background-color: #3d3d3d;
+}
+.datatable--filter-header th {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.datatable--header {
+}
+.datatable--header th {
+  position: relative;
+  text-align: center;
+  font-size: 0.625rem;
+  font-weight: normal;
+}
+.datatable--header th:not(:last-child):after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: #fff;
+  width: 1px;
+  height: 24px;
+}
+
+.datatable--items {
+  background-color: #3d3d3d;
+}
+
+.datatable--items td {
+  font-size: 0.5rem;
+  font-weight: normal;
+  padding: 5px 5px;
+}
