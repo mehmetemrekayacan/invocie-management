@@ -3,6 +3,7 @@ import "./App.css";
 import Barchart from "./graphs-box/Barchart";
 import HorizontalBarchart from "./graphs-box/HorizontalBarchart";
 import Piechart from "./graphs-box/Piechart";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Piechart />
         </div>
       </div>
+      <Footer />
     </>
   );
 }

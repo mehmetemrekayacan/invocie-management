@@ -1,7 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+
+body {
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #272727;
+}
+
 .box {
   display: grid;
   grid-template-columns: 60% 40%;
   grid-template-rows: auto auto auto;
+  margin: 10px;
 }
 
 .horbar {
