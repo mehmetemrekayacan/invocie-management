@@ -1,0 +1,20 @@
+.box {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  grid-template-rows: auto auto auto;
+}
+
+.horbar {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+.bar {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+}
+
+.pie {
+  grid-column: 1;
+  grid-row: 3;
+}

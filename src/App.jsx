@@ -7,9 +7,17 @@ import Piechart from "./graphs-box/Piechart";
 function App() {
   return (
     <>
-      <HorizontalBarchart />
-      <Barchart />
-      <Piechart />
+      <div className="box">
+        <div className="horbar">
+          <HorizontalBarchart />
+        </div>
+        <div className="bar">
+          <Barchart />
+        </div>
+        <div className="pie">
+          <Piechart />
+        </div>
+      </div>
     </>
   );
 }
