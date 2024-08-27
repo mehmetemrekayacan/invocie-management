@@ -5,11 +5,13 @@ import HorizontalBarchart from "./graphs-box/HorizontalBarchart";
 import Piechart from "./graphs-box/Piechart";
 import Footer from "./components/Footer";
 import Topbar from "./components/Topbar";
+import Navbar from "./components/Navbar";
 
 function App() {
   return (
     <>
       <Topbar />
+      <Navbar />
       <div className="box">
         <div className="horbar">
           <HorizontalBarchart />
