@@ -17,7 +17,7 @@ export default class Piechart extends PureComponent {
           <h2 className="pie--header--title">Expenses Structure</h2>
           <div className="pie--header--sort">
             <span>SORT BY</span>
-            <img src="/src/assets/Property 1=dark-4.svg" alt="sort" />
+            <img src="/src/assets/dropdown=dark.svg" alt="sort" />
           </div>
         </div>
         <div className="pie--chart">
