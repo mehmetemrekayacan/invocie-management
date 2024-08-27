@@ -129,7 +129,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
   margin-bottom: 10px;
 }
 
@@ -166,7 +165,6 @@ body {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 5px;
 }
 
 .pie--footer--item {
