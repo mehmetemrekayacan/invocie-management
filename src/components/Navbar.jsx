@@ -1,19 +1,26 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
     <div className="navbar">
       <div className="navbar--title">
-        <img src="/src/assets/dashboard=dark.svg" alt="dashboard" />
-        <h2>Dashboard</h2>
+        <Link to="/">
+          <img src="/src/assets/dashboard=dark.svg" alt="dashboard" />
+          <h2>Dashboard</h2>
+        </Link>
       </div>
       <div className="navbar--title">
-        <img src="/src/assets/income=dark.svg" alt="transaction" />
-        <h2>Income</h2>
+        <Link to="/income">
+          <img src="/src/assets/income=dark.svg" alt="income" />
+          <h2>Income</h2>
+        </Link>
       </div>
       <div className="navbar--title">
-        <img src="/src/assets/invoice=dark.svg" alt="expense" />
-        <h2>Invoice</h2>
+        <Link to="/income">
+          <img src="/src/assets/invoice=dark.svg" alt="invoice" />
+          <h2>Invoice</h2>
+        </Link>
       </div>
       <div className="navbar--title">
         <img src="/src/assets/expense=dark.svg" alt="expense" />
