@@ -5,6 +5,8 @@
 
 .datatable--chart {
   border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .datatable--chart th,

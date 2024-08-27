@@ -66,6 +66,13 @@
   display: flex;
   gap: 5px;
 }
+.navbar--title a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  gap: 5px;
+}
 
 .navbar--title h2 {
   font-size: 0.75rem;
