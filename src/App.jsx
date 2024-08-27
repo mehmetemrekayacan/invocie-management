@@ -6,12 +6,14 @@ import Piechart from "./graphs-box/Piechart";
 import Footer from "./components/Footer";
 import Topbar from "./components/Topbar";
 import Navbar from "./components/Navbar";
+import Incometable from "./data-table/Incometable";
 
 function App() {
   return (
     <>
       <Topbar />
       <Navbar />
+      <Incometable />
       <div className="box">
         <div className="horbar">
           <HorizontalBarchart />
