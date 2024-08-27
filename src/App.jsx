@@ -4,10 +4,12 @@ import Barchart from "./graphs-box/Barchart";
 import HorizontalBarchart from "./graphs-box/HorizontalBarchart";
 import Piechart from "./graphs-box/Piechart";
 import Footer from "./components/Footer";
+import Topbar from "./components/Topbar";
 
 function App() {
   return (
     <>
+      <Topbar />
       <div className="box">
         <div className="horbar">
           <HorizontalBarchart />
