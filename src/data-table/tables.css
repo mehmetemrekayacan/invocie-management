@@ -23,8 +23,8 @@
   font-weight: bold;
 }
 
-.datatable--header {
-}
+/* .datatable--header {
+} */
 .datatable--header th {
   position: relative;
   text-align: center;
