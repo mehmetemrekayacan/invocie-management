@@ -6,10 +6,9 @@ import Piechart from "./graphs-box/Piechart";
 import Footer from "./components/Footer";
 import Topbar from "./components/Topbar";
 import Navbar from "./components/Navbar";
-import Incometable from "./data-table/Incometable";
 import IncomePage from "./pages/IncomePage";
 import InvoicePage from "./pages/InvoicePage";
-// import TaxPage from "./pages/TaxPage";
+import TaxPage from "./pages/TaxPage";
 // import PaymentPage from "./pages/PaymentPage";
 
 function App() {
@@ -17,10 +16,12 @@ function App() {
     <Router>
       <Topbar />
       <Navbar />
+      <TaxPage />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/income" element={<IncomePage />} />
         <Route path="/invoice" element={<InvoicePage />} />
+        <Route path="/tax" element={<TaxPage />} />
       </Routes>
       <Footer />
     </Router>
