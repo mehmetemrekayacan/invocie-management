@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Kumar+One&display=swap");
+
 /* Topbar */
 .topbar {
   display: flex;
@@ -16,6 +18,8 @@
 
 .topbar--logo h2 {
   font-size: 0.75rem;
+  font-family: "Kumar One", cursive;
+  font-weight: normal;
 }
 
 .topbar--logo img {

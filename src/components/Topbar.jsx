@@ -29,7 +29,7 @@ export default function Topbar() {
     <div className="topbar">
       <div className="topbar--logo">
         <img src="/src/assets/logo-dark.svg" alt="logo" />
-        <h2>Logo Name</h2>
+        <h2>Invoicify</h2>
       </div>
       <div className="topbar--profile">
         <div className="topbar--profile-box">
