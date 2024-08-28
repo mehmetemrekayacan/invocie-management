@@ -54,7 +54,7 @@ export default function Incometable() {
               <td>{product.date}</td>
               <td>{product.incomeDetail}</td>
               <td>{product.incomeType}</td>
-              <td>{product.amount}</td>
+              <td>$ {product.amount}</td>
               <td>{product.status}</td>
               <td>{product.action}</td>
             </tr>
