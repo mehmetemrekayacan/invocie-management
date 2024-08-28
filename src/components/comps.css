@@ -64,8 +64,9 @@
 
 .navbar--title {
   display: flex;
-  gap: 5px;
+  position: relative;
 }
+
 .navbar--title a {
   display: flex;
   align-items: center;
@@ -83,6 +84,34 @@
   font-size: 0.625rem;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  gap: 2px;
+}
+
+.navbar--dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.navbar--dropdown-open .navbar--dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.navbar--dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #1e2039;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  z-index: 1000;
+}
+
+.navbar--dropdown-item {
+  padding: 5px;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  font-size: 0.625rem;
 }
 
 .navbar--title-active img {

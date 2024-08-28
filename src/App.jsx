@@ -16,14 +16,12 @@ function App() {
     <Router>
       <Topbar />
       <Navbar />
-      <TaxPage />
-      <PaymentPage />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/income" element={<IncomePage />} />
         <Route path="/invoice" element={<InvoicePage />} />
-        <Route path="/tax" element={<TaxPage />} />
-        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/expense/tax" element={<TaxPage />} />
+        <Route path="/expense/payment" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </Router>
