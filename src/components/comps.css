@@ -32,16 +32,11 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  position: relative;
 }
 
 .topbar--profile-box img {
   height: 30px;
-}
-
-.topbar--profile-title {
-  font-size: 0.625rem;
-  display: flex;
-  align-items: center;
 }
 
 .topbar--profile-title img {
@@ -50,6 +45,52 @@
 
 .topbar--profile-icon {
   height: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.topbar--icon-badge {
+  position: absolute;
+  top: -4px;
+  right: -1px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.topbar--profile-title {
+  font-size: 0.625rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.topbar--dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.topbar--dropdown-open .topbar--dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.topbar--dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #30335a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  z-index: 1000;
+}
+
+.topbar--dropdown-item {
+  padding: 5px;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  font-size: 0.625rem;
 }
 
 /* Navbar */
