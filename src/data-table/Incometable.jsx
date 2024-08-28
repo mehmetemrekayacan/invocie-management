@@ -6,7 +6,15 @@ const products = [
     date: "01.02.2024",
     incomeDetail: "Salary ",
     incomeType: "Bank Transfer",
-    amount: 245000,
+    amount: 2450000000,
+    status: "Receipt",
+    action: "Edit",
+  },
+  {
+    date: "01.02.2024",
+    incomeDetail: "Salary ",
+    incomeType: "Bank Transfer",
+    amount: 2450000,
     status: "Receipt",
     action: "Edit",
   },
@@ -18,6 +26,30 @@ const products = [
     status: "Not Received",
     action: "Edit",
   },
+  {
+    date: "01.02.2024",
+    incomeDetail: "Salary ",
+    incomeType: "Credit Card",
+    amount: 2400,
+    status: "Not Received",
+    action: "Edit",
+  },
+  {
+    date: "01.02.2024",
+    incomeDetail: "Salary ",
+    incomeType: "Credit Card",
+    amount: 240,
+    status: "Not Received",
+    action: "Edit",
+  },
+  {
+    date: "01.02.2024",
+    incomeDetail: "Salary ",
+    incomeType: "Credit Card",
+    amount: 24,
+    status: "Not Received",
+    action: "Edit",
+  },
 ];
 
 export default function Incometable() {
@@ -26,6 +58,16 @@ export default function Incometable() {
   const filteredProducts = products.filter(
     (product) => filter === "All" || product.status === filter
   );
+
+  function formatAmount(amount) {
+    if (amount < 1000000) {
+      return new Intl.NumberFormat("en-US").format(amount);
+    } else if (amount < 1000000000) {
+      return (amount / 1000000).toFixed(3).replace(".", ",") + "M";
+    } else {
+      return (amount / 1000000000).toFixed(3).replace(".", ",") + "B";
+    }
+  }
 
   return (
     <div className="datatable">
@@ -54,7 +96,7 @@ export default function Incometable() {
               <td>{product.date}</td>
               <td>{product.incomeDetail}</td>
               <td>{product.incomeType}</td>
-              <td>$ {product.amount}</td>
+              <td>${formatAmount(product.amount)}</td>
               <td>{product.status}</td>
               <td>{product.action}</td>
             </tr>
