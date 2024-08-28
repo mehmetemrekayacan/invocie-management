@@ -17,7 +17,7 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="navbar--title">
-        <Link to="/income">
+        <Link to="/invoice">
           <img src="/src/assets/invoice=dark.svg" alt="invoice" />
           <h2>Invoice</h2>
         </Link>

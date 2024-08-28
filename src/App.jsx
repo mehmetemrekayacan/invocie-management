@@ -8,6 +8,9 @@ import Topbar from "./components/Topbar";
 import Navbar from "./components/Navbar";
 import Incometable from "./data-table/Incometable";
 import IncomePage from "./pages/IncomePage";
+import InvoicePage from "./pages/InvoicePage";
+// import TaxPage from "./pages/TaxPage";
+// import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -17,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/income" element={<IncomePage />} />
+        <Route path="/invoice" element={<InvoicePage />} />
       </Routes>
       <Footer />
     </Router>
