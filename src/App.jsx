@@ -9,7 +9,7 @@ import Navbar from "./components/Navbar";
 import IncomePage from "./pages/IncomePage";
 import InvoicePage from "./pages/InvoicePage";
 import TaxPage from "./pages/TaxPage";
-// import PaymentPage from "./pages/PaymentPage";
+import PaymentPage from "./pages/PaymentPage";
 
 function App() {
   return (
@@ -17,11 +17,13 @@ function App() {
       <Topbar />
       <Navbar />
       <TaxPage />
+      <PaymentPage />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/income" element={<IncomePage />} />
         <Route path="/invoice" element={<InvoicePage />} />
         <Route path="/tax" element={<TaxPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
       </Routes>
       <Footer />
     </Router>
