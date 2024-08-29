@@ -11,12 +11,16 @@
   text-align: center;
   background-color: rgb(255, 255, 255, 0.1);
   border-radius: 25px;
+  color: #fff;
+  width: 250px;
+  margin-top: 30%;
 }
 
 .login--form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 }
 
 .login--container h1 {
@@ -59,3 +63,64 @@
 }
 
 /* register */
+
+.register--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
+  background-color: rgb(255, 255, 255, 0.1);
+  border-radius: 25px;
+  color: #fff;
+  width: 250px;
+  margin-top: 10%;
+}
+
+.register--form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.register--container h1 {
+  font-size: 1.5rem;
+}
+
+.register--enter {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 3px;
+}
+
+.register--enter p {
+  font-size: 0.75rem;
+}
+
+.register--enter input {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.register--sign-button {
+  gap: 5px;
+}
+
+.register--sign-button button {
+  font-size: 0.75rem;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 25px;
+  background-color: #30335a;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.register--sign-button p {
+  font-size: 0.375rem;
+}

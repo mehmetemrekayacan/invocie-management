@@ -16,6 +16,7 @@ import InvoicePage from "./pages/InvoicePage";
 import TaxPage from "./pages/TaxPage";
 import PaymentPage from "./pages/PaymentPage";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
 
 function Main() {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const isLoginPage =
+    location.pathname === "/login" || location.pathname === "/register";
 
   return (
     <div className="App">
@@ -40,6 +42,7 @@ function Main() {
         <Route path="/expense/tax" element={<TaxPage />} />
         <Route path="/expense/payment" element={<PaymentPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       {!isLoginPage && (
         <div className="app--footer">
