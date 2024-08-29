@@ -14,16 +14,20 @@ import PaymentPage from "./pages/PaymentPage";
 function App() {
   return (
     <Router>
-      <Topbar />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/income" element={<IncomePage />} />
-        <Route path="/invoice" element={<InvoicePage />} />
-        <Route path="/expense/tax" element={<TaxPage />} />
-        <Route path="/expense/payment" element={<PaymentPage />} />
-      </Routes>
-      <Footer />
+      <div className="App">
+        <Topbar />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/income" element={<IncomePage />} />
+          <Route path="/invoice" element={<InvoicePage />} />
+          <Route path="/expense/tax" element={<TaxPage />} />
+          <Route path="/expense/payment" element={<PaymentPage />} />
+        </Routes>
+        <div className="app--footer">
+          <Footer />
+        </div>
+      </div>
     </Router>
   );
 }
