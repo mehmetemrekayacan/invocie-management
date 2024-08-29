@@ -5,11 +5,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5f5;
   margin: 0 auto;
   gap: 20px;
   padding: 10px;
   text-align: center;
+  background-color: rgb(255, 255, 255, 0.1);
+  border-radius: 25px;
 }
 
 .login--form {
@@ -49,6 +50,7 @@
   border-radius: 25px;
   background-color: #30335a;
   color: #fff;
+  border: none;
   cursor: pointer;
 }
 

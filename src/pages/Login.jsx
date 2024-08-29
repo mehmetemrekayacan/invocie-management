@@ -17,10 +17,10 @@ export default function Login() {
         </label>
         <label className="login--sign-button">
           <Link to="/">
-            <button type="submit">Sign In</button>
+            <button type="signin">Sign In</button>
           </Link>
           <Link to="/">
-            <p type="submit">Are you don’t have account? Create one!</p>
+            <p type="signin">Are you don’t have account? Create one!</p>
           </Link>
         </label>
       </form>

@@ -99,7 +99,7 @@ export default function Topbar() {
               <Link to="/login" className="topbar--sign-title">
                 Sign In
               </Link>
-              <Link to="/signup" className="topbar--sign-title">
+              <Link to="/register" className="topbar--sign-title">
                 Sign up
               </Link>
             </div>
