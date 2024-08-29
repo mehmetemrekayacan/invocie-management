@@ -97,6 +97,19 @@
   font-size: 0.625rem;
 }
 
+.topbar--sign-box {
+  font-size: 0.625rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.topbar--sign-title {
+  text-decoration: none;
+  color: #fff;
+}
+
 /* Navbar */
 .navbar {
   display: flex;
