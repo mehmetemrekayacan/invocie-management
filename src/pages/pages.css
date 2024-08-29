@@ -1,0 +1,59 @@
+/* Login */
+
+.login--container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  margin: 0 auto;
+  gap: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+.login--form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login--container h1 {
+  font-size: 1.5rem;
+}
+
+.login--enter {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 3px;
+}
+
+.login--enter p {
+  font-size: 0.75rem;
+}
+
+.login--enter input {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.login--sign-button {
+  gap: 5px;
+}
+
+.login--sign-button button {
+  font-size: 0.75rem;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 25px;
+  background-color: #30335a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.login--sign-button p {
+  font-size: 0.375rem;
+}
+
+/* register */
