@@ -195,6 +195,7 @@
 .darkmode--container {
   display: flex;
   justify-content: right;
+  margin: 10px;
 }
 
 .switch {
