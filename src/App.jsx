@@ -55,17 +55,22 @@ function Main() {
 
 function Home() {
   return (
-    <div className="box">
-      <div className="horbar">
-        <HorizontalBarchart />
+    <>
+      <div className="heading">
+        <h1>Dashboard</h1>
       </div>
-      <div className="bar">
-        <Barchart />
+      <div className="box">
+        <div className="horbar">
+          <HorizontalBarchart />
+        </div>
+        <div className="bar">
+          <Barchart />
+        </div>
+        <div className="pie">
+          <Piechart />
+        </div>
       </div>
-      <div className="pie">
-        <Piechart />
-      </div>
-    </div>
+    </>
   );
 }
 

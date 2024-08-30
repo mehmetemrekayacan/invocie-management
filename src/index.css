@@ -59,6 +59,18 @@ body {
   top: 100%;
 }
 
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.heading h1 {
+  font-size: 1.5rem;
+  color: var(--title);
+}
+
 .box {
   display: grid;
   grid-template-columns: 60% 40%;
