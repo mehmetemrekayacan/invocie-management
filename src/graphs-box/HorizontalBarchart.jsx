@@ -25,7 +25,16 @@ export default class HorBarchart extends PureComponent {
       <div className="horizontal--container">
         <div className="horizontal--title">
           <span>SORT BY</span>
-          <img src="/src/assets/dropdown=dark.svg" alt="sort" />
+          <img
+            src="/src/assets/dropdown=dark.svg"
+            className="dark-icon"
+            alt="sort"
+          />
+          <img
+            src="/src/assets/dropdown=light.svg"
+            className="light-icon"
+            alt="sort"
+          />
         </div>
         <div className="horizontal--header">
           <div className="horizontal--header-item">

@@ -1,16 +1,13 @@
 :root {
   --button-background: #30335a;
-  --button-color: #fff;
-}
-
-[data-theme="light"] {
-  --button-background: #30335a;
-  --button-color: #fff;
 }
 
 [data-theme="dark"] {
+  --button-background: #30335a;
+}
+
+[data-theme="light"] {
   --button-background: #787fd7;
-  --button-color: #000000;
 }
 
 /* Login */

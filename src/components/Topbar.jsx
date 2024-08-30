@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import Darkmode from "../components/Darkmode";
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -39,7 +40,16 @@ export default function Topbar() {
   return (
     <div className="topbar">
       <div className="topbar--logo">
-        <img src="/src/assets/logo-dark.svg" alt="logo" />
+        <img
+          src="/src/assets/logo-dark.svg"
+          alt="dark-logo"
+          className="dark-icon"
+        />
+        <img
+          src="/src/assets/logo-light.svg"
+          alt="light-logo"
+          className="light-icon"
+        />
         <h2>Invoicify</h2>
       </div>
       <div className="topbar--profile">
@@ -111,6 +121,9 @@ export default function Topbar() {
             <div className="topbar--icon-badge"></div>
           </div>
         )}
+      </div>
+      <div className="topbar--darkmode">
+        <Darkmode />
       </div>
     </div>
   );

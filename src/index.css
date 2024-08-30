@@ -4,14 +4,37 @@
   --title: #ffffff;
 }
 
-[data-theme="light"] {
+[data-theme="dark"] {
   --body-background: #272727;
   --title: #fff;
 }
 
-[data-theme="dark"] {
+[data-theme="light"] {
   --body-background: #f6f6f6;
   --title: #000;
+}
+.dark-icon {
+  display: block;
+}
+
+.light-icon {
+  display: none;
+}
+
+[data-theme="dark"] .dark-icon {
+  display: block;
+}
+
+[data-theme="dark"] .light-icon {
+  display: none;
+}
+
+[data-theme="light"] .dark-icon {
+  display: none;
+}
+
+[data-theme="light"] .light-icon {
+  display: block;
 }
 
 body {
