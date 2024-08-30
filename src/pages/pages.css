@@ -1,3 +1,18 @@
+:root {
+  --button-background: #30335a;
+  --button-color: #fff;
+}
+
+[data-theme="light"] {
+  --button-background: #30335a;
+  --button-color: #fff;
+}
+
+[data-theme="dark"] {
+  --button-background: #787fd7;
+  --button-color: #000000;
+}
+
 /* Login */
 
 .login--container {
@@ -10,8 +25,9 @@
   padding: 10px;
   text-align: center;
   background-color: rgb(255, 255, 255, 0.1);
+  border: 1px solid #000000;
   border-radius: 25px;
-  color: #fff;
+  color: var(--title);
   width: 250px;
   margin-top: 30%;
 }
@@ -52,7 +68,7 @@
   padding: 10px;
   gap: 10px;
   border-radius: 25px;
-  background-color: #30335a;
+  background-color: var(--button-background);
   color: #fff;
   border: none;
   cursor: pointer;
@@ -76,13 +92,12 @@
   border-radius: 25px;
   color: #fff;
   width: 250px;
-  margin-top: 10%;
+  margin-top: 20%;
 }
 
 .register--form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   width: 100%;
 }
 
@@ -94,7 +109,6 @@
   display: flex;
   flex-direction: column;
   text-align: left;
-  gap: 3px;
 }
 
 .register--enter p {
@@ -107,7 +121,7 @@
 }
 
 .register--sign-button {
-  gap: 5px;
+  margin-top: 10px;
 }
 
 .register--sign-button button {

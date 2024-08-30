@@ -1,10 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+:root {
+  --body-background: #272727;
+  --title: #ffffff;
+}
+
+[data-theme="light"] {
+  --body-background: #272727;
+  --title: #fff;
+}
+
+[data-theme="dark"] {
+  --body-background: #f6f6f6;
+  --title: #000;
+}
 
 body {
   font-family: "Open Sans", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #272727;
+  background-color: var(--body-background);
 }
 
 .App {
