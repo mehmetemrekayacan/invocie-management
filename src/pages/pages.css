@@ -1,13 +1,16 @@
 :root {
   --button-background: #30335a;
+  --model-background: #272727;
 }
 
 [data-theme="dark"] {
   --button-background: #30335a;
+  --model-background: #272727;
 }
 
 [data-theme="light"] {
   --button-background: #787fd7;
+  --model-background: #d9d9d9;
 }
 
 /* Add Button */
@@ -35,6 +38,75 @@
   font-weight: bold;
 }
 
+/* Model Box */
+
+.modal--overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998;
+}
+
+.model--box {
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  z-index: 9999;
+}
+
+.modal--content {
+  background-color: var(--model-background);
+  color: var(--title);
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal--content h2 {
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.model--form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.modal--content label {
+  font-size: 0.625rem;
+}
+
+.model--dropdowns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.model--buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.model--buttons button {
+  padding: 10px;
+  border-radius: 25px;
+  background-color: var(--button-background);
+  color: var(--title);
+  border: none;
+  cursor: pointer;
+}
 /* Login */
 
 .login--container {
