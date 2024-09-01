@@ -10,6 +10,31 @@
   --button-background: #787fd7;
 }
 
+/* Add Button */
+
+.add-button {
+  padding: 10px;
+  background-color: var(--button-background);
+  color: var(--title);
+  border: none;
+  padding: 10px;
+  border-radius: 25px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.add-button div {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.add-button div span {
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
 /* Login */
 
 .login--container {
