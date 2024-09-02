@@ -18,6 +18,7 @@ import TaxPage from "./pages/TaxPage";
 import PaymentPage from "./pages/PaymentPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function Main() {
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/dashboard" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/income" element={<IncomePage />} />
         <Route path="/invoice" element={<InvoicePage />} />
         <Route path="/expense/tax" element={<TaxPage />} />

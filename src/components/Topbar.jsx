@@ -102,14 +102,14 @@ export default function Topbar() {
               {isDropdownOpen && (
                 <div className="topbar--dropdown-menu">
                   <Link
-                    to="/profile/profile"
+                    to="/profile"
                     className="topbar--dropdown-item"
                     onClick={closeDropdown}
                   >
                     Profile
                   </Link>
                   <Link
-                    to="/profile/settings"
+                    to="/settings"
                     className="topbar--dropdown-item"
                     onClick={closeDropdown}
                   >

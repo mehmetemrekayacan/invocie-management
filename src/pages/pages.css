@@ -1,16 +1,19 @@
 :root {
   --button-background: #30335a;
   --model-background: #272727;
+  --profile-background: #3d3d3d;
 }
 
 [data-theme="dark"] {
   --button-background: #30335a;
   --model-background: #272727;
+  --profile-background: #3d3d3d;
 }
 
 [data-theme="light"] {
   --button-background: #787fd7;
   --model-background: #d9d9d9;
+  --profile-background: #d9d9d9;
 }
 
 /* Add Button */
@@ -249,4 +252,46 @@
 
 .register--sign-button p {
   font-size: 0.375rem;
+}
+
+/* Profile */
+
+.profile {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  background-color: var(--profile-background);
+  color: var(--title);
+}
+
+.profile--header h1 {
+  margin-bottom: 20px;
+}
+
+.profile--info p {
+  font-size: 0.75rem;
+  margin: 5px 0;
+}
+
+.profile--actions {
+  margin-top: 20px;
+}
+
+.profile--button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile--button:hover {
+  opacity: 0.8;
+}
+
+.profile--button-delete {
+  background-color: red;
+  color: white;
 }
