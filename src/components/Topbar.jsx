@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Darkmode from "../components/Darkmode";
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -17,9 +18,18 @@ export default function Topbar() {
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      closeDropdown();
+      setTimeout(() => {
+        closeDropdown();
+      }, 0);
     }
   };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  });
 
   useEffect(() => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
@@ -30,12 +40,11 @@ export default function Topbar() {
     }
   }, []);
 
-  useEffect(() => {
-    document.addEventListener("click", handleClickOutside, true);
-    return () => {
-      document.removeEventListener("click", handleClickOutside, true);
-    };
-  });
+  const handleSignOut = () => {
+    localStorage.setItem("isLoggedIn", "false");
+    setIsLoggedIn(false);
+    navigate("/dashboard");
+  };
 
   return (
     <div className="topbar">
@@ -95,9 +104,8 @@ export default function Topbar() {
                     Dark/Light
                   </Link>
                   <Link
-                    to="/profile/signout"
                     className="topbar--dropdown-item"
-                    onClick={closeDropdown}
+                    onClick={handleSignOut}
                   >
                     Sign out
                   </Link>
