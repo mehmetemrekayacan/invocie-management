@@ -19,10 +19,10 @@ export default function Login() {
             <input type="password" />
           </label>
           <label className="login--sign-button">
-            <Link to="/">
+            <Link to="/dashboard">
               <button type="signin">Sign In</button>
             </Link>
-            <Link to="/">
+            <Link to="/register">
               <p type="signin">Are you don’t have account? Create one!</p>
             </Link>
           </label>

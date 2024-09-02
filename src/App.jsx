@@ -3,6 +3,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import "./App.css";
 import Barchart from "./graphs-box/Barchart";
@@ -36,7 +37,8 @@ function Main() {
       {!isLoginPage && <Topbar />}
       {!isLoginPage && <Navbar />}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/dashboard" element={<Home />} />
         <Route path="/income" element={<IncomePage />} />
         <Route path="/invoice" element={<InvoicePage />} />
         <Route path="/expense/tax" element={<TaxPage />} />

@@ -31,7 +31,7 @@ export default function Register() {
             <input type="password" />
           </label>
           <label className="register--sign-button">
-            <Link to="/">
+            <Link to="/dashboard">
               <button type="signup">Sign Up</button>
             </Link>
           </label>
