@@ -1,29 +1,58 @@
-import React from "react";
-import { Link } from "react-router-dom";
+/* eslint-disable react/no-unescaped-entities */
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./pages.css";
 import Darkmode from "../components/Darkmode";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (
+      storedUser &&
+      storedUser.email === email &&
+      storedUser.password === password
+    ) {
+      localStorage.setItem("isLoggedIn", "true");
+
+      navigate("/dashboard");
+    } else {
+      alert("Invalid email or password. Please try again.");
+    }
+  };
+
   return (
     <>
       <Darkmode />
       <div className="login--container">
         <h1>Log In</h1>
-        <form className="login--form">
+        <form className="login--form" onSubmit={handleSubmit}>
           <label className="login--enter">
             <p>E-Mail</p>
-            <input type="text" />
+            <input
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </label>
           <label className="login--enter">
             <p>Password</p>
-            <input type="password" />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </label>
           <label className="login--sign-button">
-            <Link to="/dashboard">
-              <button type="signin">Sign In</button>
-            </Link>
+            <button type="submit">Sign In</button>
             <Link to="/register">
-              <p type="signin">Are you don’t have account? Create one!</p>
+              <p>Don't have an account? Create one!</p>
             </Link>
           </label>
         </form>
