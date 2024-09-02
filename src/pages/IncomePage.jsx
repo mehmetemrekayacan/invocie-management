@@ -69,10 +69,10 @@ export default function IncomePage() {
                   </div>
 
                   <div>
-                    <label htmlFor="status">Status</label>
+                    <label htmlFor="income-status">Status</label>
                     <select
-                      id="status"
-                      name="status"
+                      id="income-status"
+                      name="income-status"
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
