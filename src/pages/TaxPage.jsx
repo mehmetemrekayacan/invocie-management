@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import Taxtable from "../data-table/Taxtable";
+import countries from "./DataCountries";
 
 export default function TaxPage() {
   const [showModal, setShowModal] = useState(false);
@@ -59,16 +60,20 @@ export default function TaxPage() {
 
                 <div className="model--dropdowns">
                   <div className="model--dropdown-status">
-                    <label htmlFor="tax-status">Status</label>
+                    <label htmlFor="tax-status">Country</label>
                     <select
                       id="tax-status"
                       name="tax-status"
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
+                      className="model--countries-dropdown"
                     >
-                      <option value="">Select Status Type</option>
-                      <option value="enabled">Enabled</option>
-                      <option value="notenabled">Not Enabled</option>
+                      <option value="">Select Country</option>
+                      {countries.map((country, index) => (
+                        <option key={index} value={country}>
+                          {country}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="model--taxrate">
@@ -92,7 +97,7 @@ export default function TaxPage() {
                     Close
                   </button>
                   <button type="submit" className="model--add-button">
-                    Add Payment
+                    Add Tax
                   </button>
                 </div>
               </form>

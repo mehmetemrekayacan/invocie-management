@@ -120,6 +120,10 @@
   flex-direction: column;
   justify-content: center;
 }
+.model--countries-dropdown {
+  max-width: 150px;
+  overflow-y: auto;
+}
 /* Login */
 
 .login--container {
