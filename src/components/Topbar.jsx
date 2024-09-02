@@ -8,6 +8,7 @@ export default function Topbar() {
   const [userName, setUserName] = useState("");
   const [userSurname, setUserSurname] = useState("");
   const dropdownRef = useRef(null);
+  const darkModeRef = useRef(null);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -23,7 +24,12 @@ export default function Topbar() {
   };
 
   const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target) &&
+      darkModeRef.current &&
+      !darkModeRef.current.contains(event.target)
+    ) {
       setTimeout(() => {
         closeDropdown();
       }, 0);
@@ -109,13 +115,12 @@ export default function Topbar() {
                   >
                     Settings
                   </Link>
-                  <Link
-                    to="/profile/darklight"
-                    className="topbar--dropdown-item"
-                    onClick={closeDropdown}
+                  <div
+                    className="topbar--dropdown-item-darkmode"
+                    ref={darkModeRef}
                   >
-                    Dark/Light
-                  </Link>
+                    <Darkmode />
+                  </div>
                   <Link
                     className="topbar--dropdown-item"
                     onClick={handleSignOut}
@@ -133,6 +138,9 @@ export default function Topbar() {
               <Link to="/register" className="topbar--sign-title">
                 Sign up
               </Link>
+              <div className="topbar--item-darkmode">
+                <Darkmode />
+              </div>
             </div>
           )}
         </div>
@@ -142,9 +150,6 @@ export default function Topbar() {
             <div className="topbar--icon-badge"></div>
           </div>
         )}
-      </div>
-      <div className="topbar--darkmode">
-        <Darkmode />
       </div>
     </div>
   );

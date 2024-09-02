@@ -113,6 +113,10 @@
   display: block;
   font-size: 0.625rem;
 }
+.topbar--dropdown-item-darkmode {
+  padding: 5px;
+  font-size: 0.625rem;
+}
 
 .topbar--sign-box {
   font-size: 0.625rem;
@@ -125,6 +129,13 @@
 .topbar--sign-title {
   text-decoration: none;
   color: var(--title);
+}
+
+.topbar--item-darkmode {
+  display: flex;
+  align-items: center;
+  margin-left: -5px;
+  cursor: pointer;
 }
 
 .topbar--darkmode {
