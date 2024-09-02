@@ -4,7 +4,6 @@ import Invoicetable from "../data-table/Invoicetable";
 
 export default function InvoicePage() {
   const [showModal, setShowModal] = useState(false);
-  const [incomeType, setIncomeType] = useState("");
   const [status, setStatus] = useState("");
 
   const toggleModal = () => {
@@ -76,7 +75,7 @@ export default function InvoicePage() {
                     Close
                   </button>
                   <button type="submit" className="model--add-button">
-                    Add Income
+                    Add Invoice
                   </button>
                 </div>
               </form>
