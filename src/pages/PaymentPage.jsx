@@ -32,7 +32,7 @@ export default function PaymentPage() {
               className="light-icon"
               alt="light-add"
             />
-            <span>Add Payments</span>
+            <span>Add Payment</span>
           </div>
         </div>
       </div>

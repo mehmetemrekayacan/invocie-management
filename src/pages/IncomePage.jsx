@@ -19,7 +19,7 @@ export default function IncomePage() {
   return (
     <>
       <div className="heading">
-        <h1>Incomes</h1>
+        <h1>Income</h1>
         <div className="add-button" onClick={toggleModal}>
           <div>
             <img

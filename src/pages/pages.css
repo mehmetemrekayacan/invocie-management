@@ -90,6 +90,7 @@
 .model--dropdowns {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 }
 
 .model--dropdown-status,
@@ -112,6 +113,12 @@
   color: var(--title);
   border: none;
   cursor: pointer;
+}
+
+.model--taxrate {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 /* Login */
 

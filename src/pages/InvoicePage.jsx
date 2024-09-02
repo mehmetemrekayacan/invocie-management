@@ -31,7 +31,7 @@ export default function InvoicePage() {
               className="light-icon"
               alt="light-add"
             />
-            <span>Add Invoices</span>
+            <span>Add Invoice</span>
           </div>
         </div>
       </div>
