@@ -52,7 +52,7 @@ export default function IncomePage() {
                 <input type="number" id="amount" name="amount" />
 
                 <div className="model--dropdowns">
-                  <div>
+                  <div className="model--dropdown-type">
                     <label htmlFor="income-type">Income Type</label>
                     <select
                       id="income-type"
@@ -68,7 +68,7 @@ export default function IncomePage() {
                     </select>
                   </div>
 
-                  <div>
+                  <div className="model--dropdown-status">
                     <label htmlFor="income-status">Status</label>
                     <select
                       id="income-status"

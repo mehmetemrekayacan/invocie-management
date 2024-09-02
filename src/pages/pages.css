@@ -92,6 +92,12 @@
   justify-content: space-between;
 }
 
+.model--dropdown-status,
+.model--dropdown-type {
+  display: flex;
+  flex-direction: column;
+}
+
 .model--buttons {
   display: flex;
   justify-content: flex-end;
