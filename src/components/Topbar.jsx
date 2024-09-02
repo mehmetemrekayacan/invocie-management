@@ -5,6 +5,8 @@ import Darkmode from "../components/Darkmode";
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [userName, setUserName] = useState("");
+  const [userSurname, setUserSurname] = useState("");
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -14,6 +16,10 @@ export default function Topbar() {
 
   const closeDropdown = () => {
     setIsDropdownOpen(false);
+  };
+
+  const truncateString = (str, maxLength) => {
+    return str.length > maxLength ? `${str.slice(0, maxLength)}.` : str;
   };
 
   const handleClickOutside = (event) => {
@@ -35,6 +41,11 @@ export default function Topbar() {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
     if (loggedInStatus === "true") {
       setIsLoggedIn(true);
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        setUserName(user.name);
+        setUserSurname(user.surname);
+      }
     } else {
       setIsLoggedIn(false);
     }
@@ -73,7 +84,9 @@ export default function Topbar() {
                 ref={dropdownRef}
                 onClick={toggleDropdown}
               >
-                <span>Emre Kay.</span>
+                <span>
+                  {truncateString(userName, 8)} {truncateString(userSurname, 8)}
+                </span>
                 <img
                   className="topbar--dropdown-icon"
                   src="/src/assets/dropdown=dark.svg"
