@@ -27,7 +27,11 @@ export default function Register() {
 
     localStorage.setItem("users", JSON.stringify(existingUsers));
 
+    // Set initial empty income data for the user
     localStorage.setItem(`income_${email}`, JSON.stringify([]));
+
+    // Set the current user's email in localStorage
+    localStorage.setItem("currentUserEmail", email);
 
     navigate("/login");
   };

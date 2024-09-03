@@ -13,7 +13,6 @@ export default function Login() {
     e.preventDefault();
 
     const storedUsers = JSON.parse(localStorage.getItem("users")) || {};
-
     const storedUser = storedUsers[email];
 
     if (
@@ -21,7 +20,11 @@ export default function Login() {
       storedUser.email === email &&
       storedUser.password === password
     ) {
+      // Set user as logged in
       localStorage.setItem("isLoggedIn", "true");
+      // Store the current user's email
+      localStorage.setItem("currentUserEmail", email);
+      // Optionally store user details
       localStorage.setItem(
         "user",
         JSON.stringify({
