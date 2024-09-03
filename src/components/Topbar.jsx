@@ -94,9 +94,14 @@ export default function Topbar() {
                   {truncateString(userName, 8)} {truncateString(userSurname, 8)}
                 </span>
                 <img
-                  className="topbar--dropdown-icon"
+                  className="topbar--dropdown-icon dark-icon"
                   src="/src/assets/dropdown=dark.svg"
-                  alt="sort"
+                  alt="dark-sort"
+                />
+                <img
+                  className="topbar--dropdown-icon light-icon"
+                  src="/src/assets/dropdown=light.svg"
+                  alt="light-sort"
                 />
               </div>
               {isDropdownOpen && (
@@ -146,7 +151,16 @@ export default function Topbar() {
         </div>
         {isLoggedIn && (
           <div className="topbar--profile-icon">
-            <img src="/src/assets/notification=dark.svg" alt="notification" />
+            <img
+              src="/src/assets/notification=dark.svg"
+              className="dark-icon"
+              alt="dark-notification"
+            />
+            <img
+              src="/src/assets/notification=light.svg"
+              className="light-icon"
+              alt="light-notification"
+            />
             <div className="topbar--icon-badge"></div>
           </div>
         )}
