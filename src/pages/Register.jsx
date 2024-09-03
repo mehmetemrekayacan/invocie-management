@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./pages.css";
 import Darkmode from "../components/Darkmode";
 
@@ -19,10 +19,15 @@ export default function Register() {
       return;
     }
 
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ name, surname, email, password })
-    );
+    const user = { name, surname, email, password };
+
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || {};
+
+    existingUsers[email] = user;
+
+    localStorage.setItem("users", JSON.stringify(existingUsers));
+
+    localStorage.setItem(`income_${email}`, JSON.stringify([]));
 
     navigate("/login");
   };

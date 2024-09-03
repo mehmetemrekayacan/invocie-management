@@ -84,9 +84,7 @@ export default function Topbar() {
             <>
               <img src="/src/assets/profile image.png" alt="profile" />
               <div
-                className={`topbar--profile-title ${
-                  isDropdownOpen ? "topbar--dropdown-open" : ""
-                }`}
+                className="topbar--profile-title"
                 ref={dropdownRef}
                 onClick={toggleDropdown}
               >
@@ -104,6 +102,7 @@ export default function Topbar() {
                   alt="light-sort"
                 />
               </div>
+
               {isDropdownOpen && (
                 <div className="topbar--dropdown-menu">
                   <Link

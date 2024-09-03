@@ -11,13 +11,24 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || {};
+
+    const storedUser = storedUsers[email];
+
     if (
       storedUser &&
       storedUser.email === email &&
       storedUser.password === password
     ) {
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: storedUser.name,
+          surname: storedUser.surname,
+        })
+      );
 
       navigate("/dashboard");
     } else {
