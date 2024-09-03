@@ -1,58 +1,8 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import "./tables.css";
 
-const products = [
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Bank Transfer",
-    amount: 2450000000,
-    status: "Receipt",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Bank Transfer",
-    amount: 2450000,
-    status: "Receipt",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Credit Card",
-    amount: 24000,
-    status: "Not Received",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Credit Card",
-    amount: 2400,
-    status: "Not Received",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Credit Card",
-    amount: 240,
-    status: "Not Received",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    incomeDetail: "Salary ",
-    incomeType: "Credit Card",
-    amount: 24,
-    status: "Not Received",
-    action: "Edit",
-  },
-];
-
-export default function Incometable() {
+export default function Incometable({ products }) {
   const [filter, setFilter] = useState("All");
 
   const filteredProducts = products.filter(
