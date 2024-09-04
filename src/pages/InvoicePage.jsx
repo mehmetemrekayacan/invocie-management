@@ -1,18 +1,37 @@
-import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Invoicetable from "../data-table/Invoicetable";
+import InvoiceModal from "../models/InvoiceModal";
 
 export default function InvoicePage() {
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState("");
+  const [invoices, setInvoices] = useState([]);
+  const navigate = useNavigate();
+
+  const userEmail = localStorage.getItem("currentUserEmail");
+
+  useEffect(() => {
+    if (!userEmail) {
+      navigate("/login");
+      return;
+    }
+    const storedInvoices = localStorage.getItem(`invoice_${userEmail}`);
+    if (storedInvoices) {
+      setInvoices(JSON.parse(storedInvoices));
+    }
+  }, [userEmail, navigate]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toggleModal();
+  const addInvoice = (newInvoice) => {
+    const updatedInvoices = [...invoices, newInvoice];
+    setInvoices(updatedInvoices);
+    localStorage.setItem(
+      `invoice_${userEmail}`,
+      JSON.stringify(updatedInvoices)
+    );
   };
 
   return (
@@ -36,55 +55,9 @@ export default function InvoicePage() {
         </div>
       </div>
       {showModal && (
-        <div className="modal--overlay" onClick={toggleModal}>
-          <div className="model--box" onClick={(e) => e.stopPropagation()}>
-            <div className="modal--content">
-              <h2>Add Invoice</h2>
-              <form onSubmit={handleSubmit} className="model--form">
-                <label htmlFor="date">Date</label>
-                <input type="date" id="date" name="date" />
-
-                <label htmlFor="details">Client</label>
-                <textarea type="" id="details" name="details"></textarea>
-
-                <label htmlFor="amount">Billed Amount</label>
-                <input type="number" id="amount" name="amount" />
-
-                <div className="model--dropdowns">
-                  <div className="model--dropdown-status">
-                    <label htmlFor="invoice-status">Status</label>
-                    <select
-                      id="invoice-status"
-                      name="invoice-status"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                      <option value="">Select Status Type</option>
-                      <option value="receipt">Receipt</option>
-                      <option value="notreceived">Not Received</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="model--buttons">
-                  <button
-                    type="button"
-                    className="model--close-button"
-                    onClick={toggleModal}
-                  >
-                    Close
-                  </button>
-                  <button type="submit" className="model--add-button">
-                    Add Invoice
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <InvoiceModal toggleModal={toggleModal} addInvoice={addInvoice} />
       )}
-      <Invoicetable />
-
+      <Invoicetable invoices={invoices} />
       <Outlet />
     </>
   );

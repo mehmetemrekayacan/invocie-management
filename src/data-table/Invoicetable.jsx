@@ -1,28 +1,13 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import "./tables.css";
 
-const products = [
-  {
-    date: "01.02.2024",
-    client: "Enes Ataly",
-    billed: 864,
-    status: "Income",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    client: "Elextric Bill",
-    billed: 457,
-    status: "Expense",
-    action: "Edit",
-  },
-];
-
-export default function Invoicetable() {
+export default function Invoicetable({ invoices = [] }) {
+  // Default to an empty array
   const [filter, setFilter] = useState("All");
 
-  const filteredProducts = products.filter(
-    (product) => filter === "All" || product.status === filter
+  const filteredInvoices = invoices.filter(
+    (invoice) => filter === "All" || invoice.status === filter
   );
 
   function formatAmount(amount) {
@@ -41,8 +26,8 @@ export default function Invoicetable() {
         <thead>
           <tr className="datatable--filter-header">
             <th onClick={() => setFilter("All")}>All</th>
-            <th onClick={() => setFilter("Income")}>Income</th>
-            <th onClick={() => setFilter("Expense")}>Expense</th>
+            <th onClick={() => setFilter("Receipt")}>Receipt</th>
+            <th onClick={() => setFilter("Not Received")}>Not Received</th>
             <th></th>
             <th></th>
           </tr>
@@ -55,13 +40,13 @@ export default function Invoicetable() {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product, index) => (
+          {filteredInvoices.map((invoice, index) => (
             <tr key={index} className="datatable--items">
-              <td>{product.date}</td>
-              <td>{product.client}</td>
-              <td>${formatAmount(product.billed)}</td>
-              <td>{product.status}</td>
-              <td>{product.action}</td>
+              <td>{invoice.date}</td>
+              <td>{invoice.client}</td>
+              <td>${formatAmount(invoice.billed)}</td>
+              <td>{invoice.status}</td>
+              <td>{invoice.action}</td>
             </tr>
           ))}
         </tbody>
