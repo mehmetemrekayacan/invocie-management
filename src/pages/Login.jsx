@@ -20,11 +20,8 @@ export default function Login() {
       storedUser.email === email &&
       storedUser.password === password
     ) {
-      // Set user as logged in
       localStorage.setItem("isLoggedIn", "true");
-      // Store the current user's email
       localStorage.setItem("currentUserEmail", email);
-      // Optionally store user details
       localStorage.setItem(
         "user",
         JSON.stringify({
