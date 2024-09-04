@@ -8,7 +8,6 @@ export default function IncomePage() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
-  // Get the currently logged-in user's email
   const userEmail = localStorage.getItem("currentUserEmail");
 
   useEffect(() => {
@@ -16,8 +15,6 @@ export default function IncomePage() {
       navigate("/login");
       return;
     }
-
-    // Load data from localStorage when the component mounts
     const storedProducts = localStorage.getItem(`income_${userEmail}`);
     if (storedProducts) {
       setProducts(JSON.parse(storedProducts));
