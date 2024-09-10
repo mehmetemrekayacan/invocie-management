@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { formatStatus, formatAmount } from "../components/Utils";
+import { formatStatus, formatAmount, formatType } from "../components/Utils";
 import "./tables.css";
 
 export default function Paymenttable({ payments = [] }) {
@@ -36,7 +36,7 @@ export default function Paymenttable({ payments = [] }) {
             <tr key={index} className="datatable--items">
               <td>{payment.date}</td>
               <td>{payment.paymentDetail}</td>
-              <td>{payment.paymentType}</td>
+              <td>{formatType(payment.paymentType)}</td>
               <td>${formatAmount(payment.amount)}</td>
               <td>{formatStatus(payment.status)}</td>
               <td>{payment.action}</td>

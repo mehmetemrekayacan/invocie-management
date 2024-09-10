@@ -7,8 +7,19 @@ export const statusLabels = {
   notenabled: "Not Enabled",
 };
 
+export const typeLabels = {
+  creditcard: "Credit Card",
+  cash: "Cash",
+  banktransfer: "Bank Transfer",
+  other: "Other",
+};
+
 export function formatStatus(status) {
   return statusLabels[status.toLowerCase()] || status;
+}
+
+export function formatType(type) {
+  return typeLabels[type.toLowerCase()] || type;
 }
 
 export function formatAmount(amount) {
