@@ -1,33 +1,37 @@
-import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Taxtable from "../data-table/Taxtable";
-import countries from "./DataCountries";
+import TaxModal from "../models/TaxModal";
 
 export default function TaxPage() {
   const [showModal, setShowModal] = useState(false);
   const [taxRate, setTaxRate] = useState("");
-  const [status, setStatus] = useState("");
+  const [taxName, setTaxName] = useState("");
+  const [country, setCountry] = useState("");
+  const [taxes, setTaxes] = useState([]);
+  const navigate = useNavigate();
+  const userEmail = localStorage.getItem("currentUserEmail");
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toggleModal();
+  const addTax = (newTax) => {
+    const updatedTaxes = [...taxes, newTax];
+    setTaxes(updatedTaxes);
+    localStorage.setItem(`tax_${userEmail}`, JSON.stringify(updatedTaxes));
   };
 
-  const handleInputChange = (e) => {
-    let value = e.target.value;
-
-    if (value.length > 3) {
-      value = value.slice(0, 3);
+  useEffect(() => {
+    if (!userEmail) {
+      navigate("/login");
+      return;
     }
-
-    if (value === "" || (Number(value) >= 0 && Number(value) <= 100)) {
-      setTaxRate(value);
+    const storedTaxes = localStorage.getItem(`tax_${userEmail}`);
+    if (storedTaxes) {
+      setTaxes(JSON.parse(storedTaxes));
     }
-  };
+  }, [userEmail, navigate]);
 
   return (
     <>
@@ -49,64 +53,21 @@ export default function TaxPage() {
           </div>
         </div>
       </div>
+
       {showModal && (
-        <div className="modal--overlay" onClick={toggleModal}>
-          <div className="model--box" onClick={(e) => e.stopPropagation()}>
-            <div className="modal--content">
-              <h2>Add Tax</h2>
-              <form onSubmit={handleSubmit} className="model--form">
-                <label htmlFor="details">Tax Name</label>
-                <textarea id="details" name="details"></textarea>
-
-                <div className="model--dropdowns">
-                  <div className="model--dropdown-status">
-                    <label htmlFor="tax-status">Country</label>
-                    <select
-                      id="tax-status"
-                      name="tax-status"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                      className="model--countries-dropdown"
-                    >
-                      <option value="">Select Country</option>
-                      {countries.map((country, index) => (
-                        <option key={index} value={country}>
-                          {country}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="model--taxrate">
-                    <label htmlFor="taxrate">Tax Rate (%)</label>
-                    <input
-                      type="number"
-                      id="taxrate"
-                      name="taxrate"
-                      value={taxRate}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="model--buttons">
-                  <button
-                    type="button"
-                    className="model--close-button"
-                    onClick={toggleModal}
-                  >
-                    Close
-                  </button>
-                  <button type="submit" className="model--add-button">
-                    Add Tax
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <TaxModal
+          toggleModal={toggleModal}
+          addTax={addTax}
+          taxRate={taxRate}
+          setTaxRate={setTaxRate}
+          taxName={taxName}
+          setTaxName={setTaxName}
+          country={country}
+          setCountry={setCountry}
+        />
       )}
-      <Taxtable />
 
+      <Taxtable taxes={taxes} />
       <Outlet />
     </>
   );
