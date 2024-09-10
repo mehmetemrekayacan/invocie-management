@@ -1,23 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
 
 export default function Paymenttable({ payments = [] }) {
   const [filter, setFilter] = useState("All");
 
   const filteredPayments = payments.filter(
-    (payment) => filter === "All" || payment.status === filter
+    (payment) => filter === "All" || formatStatus(payment.status) === filter
   );
-
-  function formatAmount(amount) {
-    if (amount < 1000000) {
-      return new Intl.NumberFormat("en-US").format(amount);
-    } else if (amount < 1000000000) {
-      return (amount / 1000000).toFixed(3).replace(".", ",") + "M";
-    } else {
-      return (amount / 1000000000).toFixed(3).replace(".", ",") + "B";
-    }
-  }
 
   return (
     <div className="datatable">
@@ -47,7 +38,7 @@ export default function Paymenttable({ payments = [] }) {
               <td>{payment.paymentDetail}</td>
               <td>{payment.paymentType}</td>
               <td>${formatAmount(payment.amount)}</td>
-              <td>{payment.status}</td>
+              <td>{formatStatus(payment.status)}</td>
               <td>{payment.action}</td>
             </tr>
           ))}

@@ -1,24 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
 
 export default function Invoicetable({ invoices = [] }) {
-  // Default to an empty array
   const [filter, setFilter] = useState("All");
 
   const filteredInvoices = invoices.filter(
-    (invoice) => filter === "All" || invoice.status === filter
+    (invoice) => filter === "All" || formatStatus(invoice.status) === filter
   );
-
-  function formatAmount(amount) {
-    if (amount < 1000000) {
-      return new Intl.NumberFormat("en-US").format(amount);
-    } else if (amount < 1000000000) {
-      return (amount / 1000000).toFixed(3).replace(".", ",") + "M";
-    } else {
-      return (amount / 1000000000).toFixed(3).replace(".", ",") + "B";
-    }
-  }
 
   return (
     <div className="datatable">
@@ -45,7 +35,7 @@ export default function Invoicetable({ invoices = [] }) {
               <td>{invoice.date}</td>
               <td>{invoice.client}</td>
               <td>${formatAmount(invoice.billed)}</td>
-              <td>{invoice.status}</td>
+              <td>{formatStatus(invoice.status)}</td>
               <td>{invoice.action}</td>
             </tr>
           ))}

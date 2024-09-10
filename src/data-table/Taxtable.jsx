@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
 
 export default function Taxtable({ taxes = [] }) {
   const [filter, setFilter] = useState("All");
 
   const filteredTaxes = taxes.filter(
-    (tax) => filter === "All" || tax.status === filter
+    (tax) => filter === "All" || formatStatus(tax.status) === filter
   );
 
   return (
@@ -34,7 +35,7 @@ export default function Taxtable({ taxes = [] }) {
               <td>{tax.taxName}</td>
               <td>{tax.country}</td>
               <td>{tax.taxRate}</td>
-              <td>{tax.status}</td>
+              <td>{formatStatus(tax.status)}</td>
               <td>{tax.action}</td>
             </tr>
           ))}

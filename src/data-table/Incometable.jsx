@@ -1,23 +1,14 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
 
-export default function Incometable({ products }) {
+export default function Incometable({ products = [] }) {
   const [filter, setFilter] = useState("All");
 
   const filteredProducts = products.filter(
-    (product) => filter === "All" || product.status === filter
+    (product) => filter === "All" || formatStatus(product.status) === filter
   );
-
-  function formatAmount(amount) {
-    if (amount < 1000000) {
-      return new Intl.NumberFormat("en-US").format(amount);
-    } else if (amount < 1000000000) {
-      return (amount / 1000000).toFixed(3).replace(".", ",") + "M";
-    } else {
-      return (amount / 1000000000).toFixed(3).replace(".", ",") + "B";
-    }
-  }
 
   return (
     <div className="datatable">
@@ -47,7 +38,7 @@ export default function Incometable({ products }) {
               <td>{product.incomeDetail}</td>
               <td>{product.incomeType}</td>
               <td>${formatAmount(product.amount)}</td>
-              <td>{product.status}</td>
+              <td>{formatStatus(product.status)}</td>
               <td>{product.action}</td>
             </tr>
           ))}
