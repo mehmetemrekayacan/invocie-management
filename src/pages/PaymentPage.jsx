@@ -1,19 +1,38 @@
-import React, { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import Paymenttable from "../data-table/Paymenttable";
+import PaymentModal from "../models/PaymentModal";
 
 export default function PaymentPage() {
   const [showModal, setShowModal] = useState(false);
+  const [payments, setPayments] = useState([]);
   const [paymentType, setPaymentType] = useState("");
   const [status, setStatus] = useState("");
+
+  const userEmail = localStorage.getItem("currentUserEmail");
+
+  useEffect(() => {
+    if (!userEmail) {
+      // Handle redirect if userEmail is not available
+      return;
+    }
+    const storedPayments = localStorage.getItem(`payments_${userEmail}`);
+    if (storedPayments) {
+      setPayments(JSON.parse(storedPayments));
+    }
+  }, [userEmail]);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toggleModal();
+  const addPayment = (newPayment) => {
+    const updatedPayments = [...payments, newPayment];
+    setPayments(updatedPayments);
+    localStorage.setItem(
+      `payments_${userEmail}`,
+      JSON.stringify(updatedPayments)
+    );
   };
 
   return (
@@ -36,72 +55,12 @@ export default function PaymentPage() {
           </div>
         </div>
       </div>
+
       {showModal && (
-        <div className="modal--overlay" onClick={toggleModal}>
-          <div className="model--box" onClick={(e) => e.stopPropagation()}>
-            <div className="modal--content">
-              <h2>Add Payment</h2>
-              <form onSubmit={handleSubmit} className="model--form">
-                <label htmlFor="date">Date</label>
-                <input type="date" id="date" name="date" />
-
-                <label htmlFor="details">Payment Details</label>
-                <textarea id="details" name="details"></textarea>
-
-                <label htmlFor="amount">Amount</label>
-                <input type="number" id="amount" name="amount" />
-
-                <div className="model--dropdowns">
-                  <div className="model--dropdown-type">
-                    <label htmlFor="payment-type">Payment Type</label>
-                    <select
-                      id="payment-type"
-                      name="payment-type"
-                      value={paymentType}
-                      onChange={(e) => setPaymentType(e.target.value)}
-                    >
-                      <option value="">Select payment Type</option>
-                      <option value="creditcard">Credit Card</option>
-                      <option value="cash">Cash</option>
-                      <option value="banktransfer">Bank Transfer</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  <div className="model--dropdown-status">
-                    <label htmlFor="payment-status">Status</label>
-                    <select
-                      id="payment-status"
-                      name="payment-status"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                    >
-                      <option value="">Select Status Type</option>
-                      <option value="paid">Paid</option>
-                      <option value="unpaid">Unpaid</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="model--buttons">
-                  <button
-                    type="button"
-                    className="model--close-button"
-                    onClick={toggleModal}
-                  >
-                    Close
-                  </button>
-                  <button type="submit" className="model--add-button">
-                    Add Payment
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        <PaymentModal toggleModal={toggleModal} addPayment={addPayment} />
       )}
-      <Paymenttable />
 
+      <Paymenttable payments={payments} />
       <Outlet />
     </>
   );

@@ -1,62 +1,12 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import "./tables.css";
 
-const products = [
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Bank Transfer",
-    amount: 2450000000,
-    status: "Paid",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Bank Transfer",
-    amount: 2450000,
-    status: "Paid",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Credit Card",
-    amount: 24000,
-    status: "Unpaid",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Credit Card",
-    amount: 2400,
-    status: "Unpaid",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Credit Card",
-    amount: 240,
-    status: "Unpaid",
-    action: "Edit",
-  },
-  {
-    date: "01.02.2024",
-    paymentDetail: "Salary ",
-    paymentType: "Credit Card",
-    amount: 24,
-    status: "Unpaid",
-    action: "Edit",
-  },
-];
-
-export default function Paymenttable() {
+export default function Paymenttable({ payments = [] }) {
   const [filter, setFilter] = useState("All");
 
-  const filteredProducts = products.filter(
-    (product) => filter === "All" || product.status === filter
+  const filteredPayments = payments.filter(
+    (payment) => filter === "All" || payment.status === filter
   );
 
   function formatAmount(amount) {
@@ -91,14 +41,14 @@ export default function Paymenttable() {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product, index) => (
+          {filteredPayments.map((payment, index) => (
             <tr key={index} className="datatable--items">
-              <td>{product.date}</td>
-              <td>{product.paymentDetail}</td>
-              <td>{product.paymentType}</td>
-              <td>${formatAmount(product.amount)}</td>
-              <td>{product.status}</td>
-              <td>{product.action}</td>
+              <td>{payment.date}</td>
+              <td>{payment.paymentDetail}</td>
+              <td>{payment.paymentType}</td>
+              <td>${formatAmount(payment.amount)}</td>
+              <td>{payment.status}</td>
+              <td>{payment.action}</td>
             </tr>
           ))}
         </tbody>
