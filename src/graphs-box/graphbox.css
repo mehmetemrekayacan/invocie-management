@@ -145,6 +145,18 @@
   color: var(--bar-button-background-title-hover);
 }
 
+.bar--chart .recharts-cartesian-grid line {
+  stroke: var(--title); /* Grid line color */
+}
+
+.bar--chart .recharts-text {
+  fill: var(--title);
+}
+
+.bar--chart .recharts-yAxis .recharts-text {
+  fill: var(--title);
+}
+
 /* Pie */
 
 .pie--container {
