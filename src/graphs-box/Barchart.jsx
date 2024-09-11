@@ -10,81 +10,47 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { calculateTotals } from "../components/Utils";
 import "./graphbox.css";
 
-const data = [
-  {
-    name: "Jan",
-    Expense: 4000,
-    Income: 2400,
-  },
-  {
-    name: "Feb",
-    Expense: 3000,
-    Income: 1398,
-  },
-  {
-    name: "Mar",
-    Expense: 2000,
-    Income: 9800,
-  },
-  {
-    name: "Apr",
-    Expense: 2780,
-    Income: 3908,
-  },
-  {
-    name: "May",
-    Expense: 1890,
-    Income: 4800,
-  },
-  {
-    name: "Jun",
-    Expense: 2390,
-    Income: 3800,
-  },
-  {
-    name: "Jul",
-    Expense: 3490,
-    Income: 4300,
-  },
-  {
-    name: "Aug",
-    Expense: 3490,
-    Income: 4300,
-  },
-  {
-    name: "Sep",
-    Expense: 3490,
-    Income: 4300,
-  },
-  {
-    name: "Oct",
-    Expense: 3490,
-    Income: 4300,
-  },
-  {
-    name: "Nov",
-    Expense: 3490,
-    Income: 4300,
-  },
-  {
-    name: "Dec",
-    Expense: 3490,
-    Income: 4300,
-  },
-];
-
 export default class Barchart extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: [],
+      view: "year",
+    };
+  }
+
+  componentDidMount() {
+    this.updateChartData("year");
+  }
+
+  updateChartData = (view) => {
+    const email = "emre@test.tr";
+    const totals = calculateTotals(email, view);
+
+    const chartData = totals.map((item) => ({
+      name: item.name,
+      Income: item.totalIncome,
+      Expense: item.totalExpense,
+      Profit: item.profit,
+    }));
+
+    this.setState({ data: chartData, view });
+  };
+
   render() {
+    const { data, view } = this.state;
+
     return (
       <div className="bar--container">
         <div className="bar--header--layout">
           <h2 className="bar--header--title">Money Activity</h2>
           <div className="bar--header--buttons">
-            <button>Year</button>
-            <button>Month</button>
-            <button>Week</button>
+            <button onClick={() => this.updateChartData("year")}>Year</button>
+            <button onClick={() => this.updateChartData("month")}>Month</button>
+            <button onClick={() => this.updateChartData("week")}>Week</button>
           </div>
         </div>
         <div className="bar--chart">
@@ -106,7 +72,7 @@ export default class Barchart extends PureComponent {
                 tick={{ fill: "#000", fontSize: 10 }}
               />
               <YAxis
-                tickFormatter={(value) => `$${value / 1000}K`}
+                tickFormatter={(value) => `$${value}K`}
                 stroke="none"
                 tick={{ fill: "#000", fontSize: 14 }}
               />
@@ -116,8 +82,9 @@ export default class Barchart extends PureComponent {
                 itemStyle={{ fontSize: "14px" }}
                 wrapperStyle={{ backgroundColor: "#000" }}
               />
-              <Bar dataKey="Income" fill="#3F9E4E" activeBar={<Rectangle />} />
-              <Bar dataKey="Expense" fill="#B04343" activeBar={<Rectangle />} />
+              <Bar dataKey="Income" fill="#3F9E4E" />
+              <Bar dataKey="Expense" fill="#FF6347" />
+              <Bar dataKey="Profit" fill="#FFD700" />
             </BarChart>
           </ResponsiveContainer>
         </div>
