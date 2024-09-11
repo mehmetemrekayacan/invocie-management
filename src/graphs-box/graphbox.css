@@ -146,7 +146,7 @@
 }
 
 .bar--chart .recharts-cartesian-grid line {
-  stroke: var(--title); /* Grid line color */
+  stroke: var(--title);
 }
 
 .bar--chart .recharts-text {
