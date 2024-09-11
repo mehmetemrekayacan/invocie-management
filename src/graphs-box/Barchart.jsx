@@ -48,9 +48,24 @@ export default class Barchart extends PureComponent {
         <div className="bar--header--layout">
           <h2 className="bar--header--title">Money Activity</h2>
           <div className="bar--header--buttons">
-            <button onClick={() => this.updateChartData("year")}>Year</button>
-            <button onClick={() => this.updateChartData("month")}>Month</button>
-            <button onClick={() => this.updateChartData("week")}>Week</button>
+            <button
+              className={view === "year" ? "active" : ""}
+              onClick={() => this.updateChartData("year")}
+            >
+              Year
+            </button>
+            <button
+              className={view === "month" ? "active" : ""}
+              onClick={() => this.updateChartData("month")}
+            >
+              Month
+            </button>
+            <button
+              className={view === "week" ? "active" : ""}
+              onClick={() => this.updateChartData("week")}
+            >
+              Week
+            </button>
           </div>
         </div>
         <div className="bar--chart">

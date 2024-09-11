@@ -145,6 +145,11 @@
   color: var(--bar-button-background-title-hover);
 }
 
+.bar--header--buttons button.active {
+  background-color: var(--bar-button-background-hover);
+  color: var(--bar-button-background-title-hover);
+}
+
 .bar--chart .recharts-cartesian-grid line {
   stroke: var(--title);
 }
