@@ -70,7 +70,7 @@ export default function InvoiceModal({ toggleModal, addInvoice }) {
                 >
                   <option value="">Select Status Type</option>
                   <option value="receipt">Receipt</option>
-                  <option value="notreceived">Not Received</option>
+                  <option value="given">Given</option>
                 </select>
               </div>
             </div>

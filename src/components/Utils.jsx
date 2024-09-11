@@ -5,6 +5,7 @@ export const statusLabels = {
   unpaid: "Unpaid",
   enabled: "Enabled",
   notenabled: "Not Enabled",
+  given: "Given",
 };
 
 export const typeLabels = {
@@ -83,7 +84,7 @@ export const calculateTotals = (email, view) => {
     if (item.status === "receipt") {
       groupData(item.date, "income", item.billed);
     }
-    if (item.status === "notreceived") {
+    if (item.status === "given") {
       groupData(item.date, "expense", item.billed);
     }
   });

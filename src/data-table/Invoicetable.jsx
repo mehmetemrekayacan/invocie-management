@@ -17,7 +17,7 @@ export default function Invoicetable({ invoices = [] }) {
           <tr className="datatable--filter-header">
             <th onClick={() => setFilter("All")}>All</th>
             <th onClick={() => setFilter("Receipt")}>Receipt</th>
-            <th onClick={() => setFilter("Not Received")}>Not Received</th>
+            <th onClick={() => setFilter("Given")}>Given</th>
             <th></th>
             <th></th>
           </tr>
