@@ -2,12 +2,10 @@ import React, { PureComponent } from "react";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import { calculateTotals } from "../components/Utils";
@@ -19,16 +17,24 @@ export default class Barchart extends PureComponent {
     this.state = {
       data: [],
       view: "year",
+      currentUserEmail: "",
     };
   }
 
   componentDidMount() {
-    this.updateChartData("year");
+    const currentUserEmail = localStorage.getItem("currentUserEmail");
+    if (currentUserEmail) {
+      this.setState({ currentUserEmail }, () => {
+        this.updateChartData("year");
+      });
+    }
   }
 
   updateChartData = (view) => {
-    const email = "emre@test.tr";
-    const totals = calculateTotals(email, view);
+    const { currentUserEmail } = this.state;
+    if (!currentUserEmail) return;
+
+    const totals = calculateTotals(currentUserEmail, view);
 
     const chartData = totals.map((item) => ({
       name: item.name,
