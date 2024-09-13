@@ -129,3 +129,110 @@ export const calculateTotals = (email, view) => {
     ...(groupedData[label] || { totalIncome: 0, totalExpense: 0, profit: 0 }),
   }));
 };
+
+export const calculateTotalsHor = (email, view) => {
+  const incomeData = JSON.parse(localStorage.getItem(`income_${email}`)) || [];
+  const invoiceData =
+    JSON.parse(localStorage.getItem(`invoice_${email}`)) || [];
+  const paymentData =
+    JSON.parse(localStorage.getItem(`payments_${email}`)) || [];
+
+  let groupedData = {};
+
+  const getDateRange = (view) => {
+    const now = new Date();
+    let start;
+
+    switch (view) {
+      case "year":
+        start = new Date(now.getFullYear() - 1, 0, 1);
+        break;
+      case "month":
+        start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        break;
+      case "week":
+        start = new Date(now);
+        start.setDate(start.getDate() - 7);
+        break;
+      default:
+        start = now;
+    }
+
+    return { start, end: now };
+  };
+
+  const { start, end } = getDateRange(view);
+
+  const isWithinRange = (date) => {
+    const d = new Date(date);
+    return d >= start && d <= end;
+  };
+
+  const groupData = (date, category, amount) => {
+    const key =
+      view === "month"
+        ? new Date(date).getMonth()
+        : view === "week"
+        ? `Week ${Math.ceil(
+            ((new Date(date) - start) / 86400000 + start.getDay() + 1) / 7
+          )}`
+        : new Date(date).getFullYear();
+
+    if (!groupedData[key]) {
+      groupedData[key] = { totalIncome: 0, totalExpense: 0, profit: 0 };
+    }
+
+    if (category === "income") {
+      groupedData[key].totalIncome += amount;
+    } else if (category === "expense") {
+      groupedData[key].totalExpense += amount;
+    }
+  };
+
+  incomeData.forEach((item) => {
+    if (item.status === "receipt" && isWithinRange(item.date)) {
+      groupData(item.date, "income", item.amount);
+    }
+  });
+
+  invoiceData.forEach((item) => {
+    if (item.status === "receipt" && isWithinRange(item.date)) {
+      groupData(item.date, "income", item.billed);
+    }
+    if (item.status === "given" && isWithinRange(item.date)) {
+      groupData(item.date, "expense", item.billed);
+    }
+  });
+
+  paymentData.forEach((item) => {
+    if (item.status === "paid" && isWithinRange(item.date)) {
+      groupData(item.date, "expense", item.amount);
+    }
+  });
+
+  Object.keys(groupedData).forEach((key) => {
+    groupedData[key].profit =
+      groupedData[key].totalIncome - groupedData[key].totalExpense;
+  });
+
+  // Filter for the most recent period
+  const recentKey =
+    view === "month"
+      ? new Date().getMonth()
+      : view === "week"
+      ? `Week ${Math.ceil(
+          ((new Date() - start) / 86400000 + start.getDay() + 1) / 7
+        )}`
+      : new Date().getFullYear();
+
+  return groupedData[recentKey]
+    ? [
+        {
+          name: recentKey,
+          income: groupedData[recentKey].totalIncome,
+          expense: groupedData[recentKey].totalExpense,
+          profit: groupedData[recentKey].profit,
+        },
+      ]
+    : [];
+};

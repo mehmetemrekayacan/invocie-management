@@ -91,6 +91,49 @@
   color: var(--horizontal-text-color);
   padding: 1px;
 }
+.horizontal--title {
+  font-size: 0.625rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.horizontal--dropdown {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.horizontal--dropdown.open .horizontal--dropdown-menu {
+  display: block;
+}
+
+.horizontal--dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--graphbox-background);
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  width: 100px;
+  z-index: 1000;
+}
+
+.horizontal--dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.horizontal--dropdown-item:hover {
+  background-color: var(--graphbox-background);
+}
+
+.dark-icon,
+.light-icon {
+  height: 16px;
+}
 
 /* Bar */
 .bar--container {
