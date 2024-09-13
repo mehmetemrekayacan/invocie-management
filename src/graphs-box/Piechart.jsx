@@ -1,108 +1,181 @@
-/* eslint-disable react-refresh/only-export-components */
-import React, { PureComponent } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { calculateTotalPie } from "../components/Utils";
+import "./graphbox.css";
 
-const data = [
-  { name: "Payment", value: 400 },
-  { name: "Tax", value: 200 },
-  { name: "Invoice", value: 100 },
-];
 const COLORS = ["#B30000", "#5E1F1F", "#881717"];
 
-export default class Piechart extends PureComponent {
-  render() {
-    return (
-      <div className="pie--container">
-        <div className="pie--header">
-          <h2 className="pie--header--title">Expenses Structure</h2>
-          <div className="pie--header--sort">
-            <span>SORT BY</span>
-            <img
-              src="/src/assets/dropdown=dark.svg"
-              className="dark-icon"
-              alt="sort"
-            />
-            <img
-              src="/src/assets/dropdown=light.svg"
-              className="light-icon"
-              alt="sort"
-            />
-          </div>
-        </div>
-        <div className="pie--chart">
-          <ResponsiveContainer width="100%" height={200}>
-            <PieChart>
-              <Pie
-                data={data}
-                innerRadius={50}
-                outerRadius={60}
-                fill="#8884d8"
-                dataKey="value"
-                label={({
-                  name,
-                  cx,
-                  cy,
-                  midAngle,
-                  innerRadius,
-                  outerRadius,
-                  percent,
-                  index,
-                }) => {
-                  const RADIAN = Math.PI / 180;
-                  const radius = 25 + innerRadius + (outerRadius - innerRadius);
-                  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-                  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+export default function Piechart() {
+  const [data, setData] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedView, setSelectedView] = useState("year");
+  const dropdownRef = useRef(null);
 
-                  return (
-                    <g>
-                      <rect
-                        x={x - 40}
-                        y={y - 15}
-                        width={80}
-                        height={30}
-                        rx={5}
-                        ry={5}
-                      />
-                      <text
-                        x={x}
-                        y={y}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        {name}
-                      </text>
-                    </g>
-                  );
-                }}
-                labelLine={false}
+  useEffect(() => {
+    const currentUserEmail = localStorage.getItem("currentUserEmail");
+    if (currentUserEmail) {
+      updateChartData(selectedView);
+    }
+  }, [selectedView]);
+
+  const updateChartData = (view) => {
+    const currentUserEmail = localStorage.getItem("currentUserEmail");
+    if (!currentUserEmail) return;
+
+    const totals = calculateTotalPie(currentUserEmail, view);
+    setData(totals);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      closeDropdown();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+
+  const handleDropdownOptionClick = (view) => {
+    setSelectedView(view);
+    closeDropdown();
+  };
+
+  return (
+    <div className="pie--container">
+      <div className="pie--header">
+        <h2 className="pie--header--title">Expenses Structure</h2>
+        <div
+          className={`pie--header--sort ${isDropdownOpen ? "open" : ""}`}
+          onClick={toggleDropdown}
+          ref={dropdownRef}
+        >
+          <span>SORT BY</span>
+          <img
+            src="/src/assets/dropdown=dark.svg"
+            className="dark-icon"
+            alt="sort"
+          />
+          <img
+            src="/src/assets/dropdown=light.svg"
+            className="light-icon"
+            alt="sort"
+          />
+          {isDropdownOpen && (
+            <div className="pie--dropdown-menu">
+              <div
+                className={`pie--dropdown-item ${
+                  selectedView === "year" ? "selected" : ""
+                }`}
+                onClick={() => handleDropdownOptionClick("year")}
               >
-                {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+                Year
+              </div>
+              <div
+                className={`pie--dropdown-item ${
+                  selectedView === "month" ? "selected" : ""
+                }`}
+                onClick={() => handleDropdownOptionClick("month")}
+              >
+                Month
+              </div>
+              <div
+                className={`pie--dropdown-item ${
+                  selectedView === "week" ? "selected" : ""
+                }`}
+                onClick={() => handleDropdownOptionClick("week")}
+              >
+                Week
+              </div>
+            </div>
+          )}
         </div>
-        <div>
-          <div className="pie--footer">
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Payments:</h2>
-              <h2 className="pie--footer--amount">$ 500</h2>
-            </div>
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Taxes:</h2>
-              <h2 className="pie--footer--amount">$ 200</h2>
-            </div>
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Invoices:</h2>
-              <h2 className="pie--footer--amount">$ 100</h2>
-            </div>
+      </div>
+      <div className="pie--chart">
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie
+              data={data}
+              innerRadius={50}
+              outerRadius={60}
+              fill="#8884d8"
+              dataKey="value"
+              label={({
+                name,
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                percent,
+                index,
+              }) => {
+                const RADIAN = Math.PI / 180;
+                const radius = 25 + innerRadius + (outerRadius - innerRadius);
+                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                return (
+                  <g>
+                    <rect
+                      x={x - 40}
+                      y={y - 15}
+                      width={80}
+                      height={30}
+                      rx={5}
+                      ry={5}
+                    />
+                    <text
+                      x={x}
+                      y={y}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      {name}
+                    </text>
+                  </g>
+                );
+              }}
+              labelLine={false}
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      <div>
+        <div className="pie--footer">
+          <div className="pie--footer--item">
+            <h2 className="pie--footer--title">Payments:</h2>
+            <h2 className="pie--footer--amount">$ {data[0]?.value || 0}</h2>
+          </div>
+          <div className="pie--footer--item">
+            <h2 className="pie--footer--title">Taxes:</h2>
+            <h2 className="pie--footer--amount">$ {data[1]?.value || 0}</h2>
+          </div>
+          <div className="pie--footer--item">
+            <h2 className="pie--footer--title">Invoices:</h2>
+            <h2 className="pie--footer--amount">$ {data[2]?.value || 0}</h2>
           </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }

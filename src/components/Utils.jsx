@@ -215,7 +215,6 @@ export const calculateTotalsHor = (email, view) => {
       groupedData[key].totalIncome - groupedData[key].totalExpense;
   });
 
-  // Filter for the most recent period
   const recentKey =
     view === "month"
       ? new Date().getMonth()
@@ -235,4 +234,70 @@ export const calculateTotalsHor = (email, view) => {
         },
       ]
     : [];
+};
+
+export const calculateTotalPie = (currentUserEmail, view) => {
+  if (!currentUserEmail) {
+    return [];
+  }
+
+  const payments =
+    JSON.parse(localStorage.getItem(`payments_${currentUserEmail}`)) || [];
+  const invoices =
+    JSON.parse(localStorage.getItem(`invoice_${currentUserEmail}`)) || [];
+  const income =
+    JSON.parse(localStorage.getItem(`income_${currentUserEmail}`)) || [];
+  const tax = JSON.parse(localStorage.getItem(`tax_${currentUserEmail}`)) || [];
+
+  const getDateRange = (view) => {
+    const now = new Date();
+    let start;
+
+    switch (view) {
+      case "year":
+        start = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+        break;
+      case "month":
+        start = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        break;
+      case "week":
+        start = new Date(now);
+        start.setDate(now.getDate() - 7);
+        break;
+      default:
+        start = now;
+    }
+
+    return { start, end: now };
+  };
+
+  const { start, end } = getDateRange(view);
+
+  const isWithinRange = (date) => {
+    const d = new Date(date);
+    return d >= start && d <= end;
+  };
+
+  const totalPayments = payments
+    .filter((item) => item.status === "paid" && isWithinRange(item.date))
+    .reduce((acc, item) => acc + item.amount, 0);
+
+  const totalInvoices = invoices
+    .filter((item) => item.status === "receipt" && isWithinRange(item.date))
+    .reduce((acc, item) => acc + item.billed, 0);
+
+  const totalIncome = income
+    .filter((item) => item.status === "receipt" && isWithinRange(item.date))
+    .reduce((acc, item) => acc + item.amount, 0);
+
+  const totalTax = tax.reduce(
+    (acc, item) => acc + (totalIncome * item.taxRate) / 100,
+    0
+  );
+
+  return [
+    { name: "Payments", value: totalPayments },
+    { name: "Tax", value: totalTax },
+    { name: "Invoices", value: totalInvoices },
+  ];
 };

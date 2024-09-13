@@ -277,3 +277,43 @@
   font-size: 0.75rem;
   font-weight: bold;
 }
+
+.pie--header--sort {
+  font-size: 0.625rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.pie--dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--graphbox-background);
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 120px;
+  z-index: 1000;
+  display: none;
+}
+
+.pie--dropdown-menu {
+  display: block;
+}
+
+.pie--dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.pie--dropdown-item:hover,
+.pie--dropdown-item.selected {
+  background-color: var(--graphbox-background);
+}
+
+.dark-icon,
+.light-icon {
+  height: 16px;
+}
