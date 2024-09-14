@@ -317,3 +317,91 @@
 .light-icon {
   height: 16px;
 }
+
+/* Mobile (default) */
+
+/* Tablet */
+@media (min-width: 768px) {
+  .horizontal--container,
+  .bar--container,
+  .pie--container {
+    padding: 20px;
+    max-width: 800px;
+    gap: 20px;
+  }
+
+  .horizontal--title,
+  .bar--header--title,
+  .pie--header--title {
+    font-size: 0.875rem;
+  }
+
+  .horizontal--amount,
+  .bar--header--buttons button,
+  .pie--footer--title,
+  .pie--footer--amount {
+    font-size: 0.875rem;
+  }
+
+  .horizontal--dropdown-item,
+  .pie--dropdown-item {
+    font-size: 0.875rem;
+  }
+
+  .horizontal--header-item,
+  .pie--footer--item {
+    gap: 15px;
+  }
+
+  .bar--header--buttons button {
+    padding: 10px;
+  }
+
+  .pie--footer--item {
+    font-size: 0.875rem;
+    gap: 15px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .horizontal--container,
+  .bar--container,
+  .pie--container {
+    padding: 30px;
+    max-width: 1000px;
+    gap: 30px;
+  }
+
+  .horizontal--title,
+  .bar--header--title,
+  .pie--header--title {
+    font-size: 1rem;
+  }
+
+  .horizontal--amount,
+  .bar--header--buttons button,
+  .pie--footer--title,
+  .pie--footer--amount {
+    font-size: 1rem;
+  }
+
+  .horizontal--dropdown-item,
+  .pie--dropdown-item {
+    font-size: 1rem;
+  }
+
+  .horizontal--header-item,
+  .pie--footer--item {
+    gap: 20px;
+  }
+
+  .bar--header--buttons button {
+    padding: 15px;
+  }
+
+  .pie--footer--item {
+    font-size: 1rem;
+    gap: 20px;
+  }
+}

@@ -71,3 +71,49 @@
   font-weight: normal;
   padding: 10px 15px;
 }
+
+/* Mobile (default) */
+
+/* Tablet */
+@media (min-width: 768px) {
+  .datatable {
+    padding: 15px;
+  }
+
+  .datatable--filter-header th {
+    font-size: 0.875rem;
+    padding: 10px 15px;
+  }
+
+  .datatable--header th {
+    font-size: 0.75rem;
+    padding: 7px 10px;
+  }
+
+  .datatable--items td {
+    font-size: 0.625rem;
+    padding: 12px 20px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .datatable {
+    padding: 20px;
+  }
+
+  .datatable--filter-header th {
+    font-size: 1rem;
+    padding: 15px 20px;
+  }
+
+  .datatable--header th {
+    font-size: 0.875rem;
+    padding: 10px 15px;
+  }
+
+  .datatable--items td {
+    font-size: 0.75rem;
+    padding: 15px 25px;
+  }
+}

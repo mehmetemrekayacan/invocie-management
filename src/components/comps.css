@@ -285,3 +285,67 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+/* Mobile (default) */
+
+/* Tablet */
+@media (min-width: 768px) {
+  .topbar {
+    padding: 15px 20px;
+  }
+
+  .topbar--logo h2 {
+    font-size: 1rem;
+  }
+
+  .topbar--profile-box img {
+    height: 40px;
+  }
+
+  .topbar--profile-title {
+    font-size: 0.75rem;
+  }
+
+  .navbar--title h2 {
+    font-size: 1rem;
+  }
+
+  .footer h2 {
+    font-size: 1rem;
+  }
+
+  .footer {
+    padding: 30px 20px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .topbar {
+    padding: 20px 30px;
+  }
+
+  .topbar--logo h2 {
+    font-size: 1.25rem;
+  }
+
+  .topbar--profile-box img {
+    height: 50px;
+  }
+
+  .topbar--profile-title {
+    font-size: 0.875rem;
+  }
+
+  .navbar--title h2 {
+    font-size: 1.25rem;
+  }
+
+  .footer h2 {
+    font-size: 1.25rem;
+  }
+
+  .footer {
+    padding: 35px 30px;
+  }
+}
