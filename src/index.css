@@ -42,6 +42,9 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--body-background);
+  max-width: 375px;
+  margin: 0 auto;
+  overflow-x: hidden;
 }
 
 .App {

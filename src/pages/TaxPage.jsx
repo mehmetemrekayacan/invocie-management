@@ -40,12 +40,12 @@ export default function TaxPage() {
         <div className="add-button" onClick={toggleModal}>
           <div>
             <img
-              src="/src/assets/add=dark.svg"
+              src="/assets/add=dark.svg"
               className="dark-icon"
               alt="dark-add"
             />
             <img
-              src="/src/assets/add=light.svg"
+              src="/assets/add=light.svg"
               className="light-icon"
               alt="light-add"
             />

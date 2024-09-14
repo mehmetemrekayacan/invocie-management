@@ -67,12 +67,12 @@ export default function Topbar() {
     <div className="topbar">
       <div className="topbar--logo">
         <img
-          src="/src/assets/logo-dark.svg"
+          src="/assets/logo-dark.svg"
           alt="dark-logo"
           className="dark-icon"
         />
         <img
-          src="/src/assets/logo-light.svg"
+          src="/assets/logo-light.svg"
           alt="light-logo"
           className="light-icon"
         />
@@ -82,7 +82,7 @@ export default function Topbar() {
         <div className="topbar--profile-box">
           {isLoggedIn ? (
             <>
-              <img src="/src/assets/profile image.png" alt="profile" />
+              <img src="/assets/profile image.png" alt="profile" />
               <div
                 className="topbar--profile-title"
                 ref={dropdownRef}
@@ -93,12 +93,12 @@ export default function Topbar() {
                 </span>
                 <img
                   className="topbar--dropdown-icon dark-icon"
-                  src="/src/assets/dropdown=dark.svg"
+                  src="/assets/dropdown=dark.svg"
                   alt="dark-sort"
                 />
                 <img
                   className="topbar--dropdown-icon light-icon"
-                  src="/src/assets/dropdown=light.svg"
+                  src="/assets/dropdown=light.svg"
                   alt="light-sort"
                 />
               </div>
@@ -151,12 +151,12 @@ export default function Topbar() {
         {isLoggedIn && (
           <div className="topbar--profile-icon">
             <img
-              src="/src/assets/notification=dark.svg"
+              src="/assets/notification=dark.svg"
               className="dark-icon"
               alt="dark-notification"
             />
             <img
-              src="/src/assets/notification=light.svg"
+              src="/assets/notification=light.svg"
               className="light-icon"
               alt="light-notification"
             />

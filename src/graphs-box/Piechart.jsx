@@ -64,12 +64,12 @@ export default function Piechart() {
         >
           <span>SORT BY</span>
           <img
-            src="/src/assets/dropdown=dark.svg"
+            src="/assets/dropdown=dark.svg"
             className="dark-icon"
             alt="sort"
           />
           <img
-            src="/src/assets/dropdown=light.svg"
+            src="/assets/dropdown=light.svg"
             className="light-icon"
             alt="sort"
           />

@@ -61,12 +61,12 @@ export default function HorBarchart() {
           onClick={toggleDropdown}
         >
           <img
-            src="/src/assets/dropdown=dark.svg"
+            src="/assets/dropdown=dark.svg"
             className="dark-icon"
             alt="sort"
           />
           <img
-            src="/src/assets/dropdown=light.svg"
+            src="/assets/dropdown=light.svg"
             className="light-icon"
             alt="sort"
           />
