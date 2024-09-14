@@ -283,7 +283,7 @@ export const calculateTotalPie = (currentUserEmail, view) => {
     .reduce((acc, item) => acc + item.amount, 0);
 
   const totalInvoices = invoices
-    .filter((item) => item.status === "receipt" && isWithinRange(item.date))
+    .filter((item) => item.status === "given" && isWithinRange(item.date))
     .reduce((acc, item) => acc + item.billed, 0);
 
   const totalIncome = income
