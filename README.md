@@ -8,6 +8,8 @@ Check out the live demo: [Invoicify](https://invoiciify.netlify.app)
 
 Upon entering the site, you will see pre-loaded sample data to explore the application's features. For a complete experience and to test the functionality, you can sign up and create your own invoices locally.
 
+### Currently the interface is only mobile compatible
+
 ## Features
 
 - **Create and Manage Invoices**: Easily add, edit, and delete invoices.
