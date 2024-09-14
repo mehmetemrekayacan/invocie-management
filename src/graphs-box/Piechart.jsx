@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
@@ -10,12 +11,17 @@ export default function Piechart() {
   const [data, setData] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedView, setSelectedView] = useState("year");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const currentUserEmail = localStorage.getItem("currentUserEmail");
-    if (currentUserEmail) {
+    const isLoggedInValue = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(isLoggedInValue);
+
+    if (isLoggedInValue) {
       updateChartData(selectedView);
+    } else {
+      loadMockData();
     }
   }, [selectedView]);
 
@@ -25,6 +31,15 @@ export default function Piechart() {
 
     const totals = calculateTotalPie(currentUserEmail, view);
     setData(totals);
+  };
+
+  const loadMockData = () => {
+    const mockData = [
+      { name: "Payments", value: 3000 },
+      { name: "Tax", value: 1500 },
+      { name: "Invoices", value: 4500 },
+    ];
+    setData(mockData);
   };
 
   const toggleDropdown = () => {
@@ -56,7 +71,9 @@ export default function Piechart() {
   return (
     <div className="pie--container">
       <div className="pie--header">
-        <h2 className="pie--header--title">Expenses Structure</h2>
+        <h2 className="pie--header--title">
+          {isLoggedIn ? "Expenses Structure" : "Sample Data"}
+        </h2>
         <div
           className={`pie--header--sort ${isDropdownOpen ? "open" : ""}`}
           onClick={toggleDropdown}
@@ -112,16 +129,17 @@ export default function Piechart() {
               outerRadius={60}
               fill="#8884d8"
               dataKey="value"
-              label={({
-                name,
-                cx,
-                cy,
-                midAngle,
-                innerRadius,
-                outerRadius,
-                percent,
-                index,
-              }) => {
+              label={(props) => {
+                const {
+                  name,
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  percent,
+                  index,
+                } = props;
                 const RADIAN = Math.PI / 180;
                 const radius = 25 + innerRadius + (outerRadius - innerRadius);
                 const x = cx + radius * Math.cos(-midAngle * RADIAN);

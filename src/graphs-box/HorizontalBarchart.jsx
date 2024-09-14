@@ -14,12 +14,17 @@ import "./graphbox.css";
 export default function HorBarchart() {
   const [data, setData] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const currentUserEmail = localStorage.getItem("currentUserEmail");
-    if (currentUserEmail) {
+    const isLoggedInValue = localStorage.getItem("isLoggedIn") === "true";
+    setIsLoggedIn(isLoggedInValue);
+
+    if (isLoggedInValue) {
       updateChartData("year"); // Default to year
+    } else {
+      loadMockData();
     }
   }, []);
 
@@ -29,6 +34,16 @@ export default function HorBarchart() {
 
     const totals = calculateTotalsHor(currentUserEmail, view);
     setData(totals);
+  };
+
+  const loadMockData = () => {
+    const mockData = [
+      { name: "Week 1", income: 2000, expense: 1200, profit: 800 },
+      { name: "Week 2", income: 1800, expense: 1300, profit: 500 },
+      { name: "Week 3", income: 2400, expense: 1000, profit: 1400 },
+      { name: "Week 4", income: 2200, expense: 1500, profit: 700 },
+    ];
+    setData(mockData);
   };
 
   const toggleDropdown = () => {

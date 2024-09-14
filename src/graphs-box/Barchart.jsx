@@ -18,21 +18,36 @@ export default class Barchart extends PureComponent {
       data: [],
       view: "year",
       currentUserEmail: "",
+      isLoggedIn: false,
     };
   }
 
   componentDidMount() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"; // Check if the user is logged in
     const currentUserEmail = localStorage.getItem("currentUserEmail");
-    if (currentUserEmail) {
-      this.setState({ currentUserEmail }, () => {
+
+    if (isLoggedIn && currentUserEmail) {
+      this.setState({ currentUserEmail, isLoggedIn }, () => {
         this.updateChartData("year");
       });
+    } else {
+      this.setState({ isLoggedIn: false }, this.loadMockData); // Load mock data if not logged in
     }
   }
 
+  loadMockData = () => {
+    // Define some mock data to display when user is not logged in
+    const mockData = [
+      { name: "January", Income: 5000, Expense: 2000, Profit: 3000 },
+      { name: "February", Income: 6000, Expense: 2500, Profit: 3500 },
+      { name: "March", Income: 7000, Expense: 3000, Profit: 4000 },
+    ];
+    this.setState({ data: mockData });
+  };
+
   updateChartData = (view) => {
-    const { currentUserEmail } = this.state;
-    if (!currentUserEmail) return;
+    const { currentUserEmail, isLoggedIn } = this.state;
+    if (!isLoggedIn || !currentUserEmail) return; // Return if not logged in
 
     const totals = calculateTotals(currentUserEmail, view);
 
