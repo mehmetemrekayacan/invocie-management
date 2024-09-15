@@ -6,6 +6,8 @@ Invoicify is a simple and efficient invoice management system built with React. 
 
 Check out the live demo: [Invoicify](https://invoiciify.netlify.app)
 
+Figma design: [Invoice-management design](https://www.figma.com/design/JH7rJGjM8jrcizTBLKF47M/invoicer-management?node-id=0-1&m=dev&t=m3vYWtX3zRl4ozY6-1)
+
 Upon entering the site, you will see pre-loaded sample data to explore the application's features. For a complete experience and to test the functionality, you can sign up and create your own invoices locally.
 
 ### Currently the interface is only mobile compatible
