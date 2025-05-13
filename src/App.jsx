@@ -5,6 +5,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { useEffect } from "react";
 import "./App.css";
 import Barchart from "./graphs-box/Barchart";
 import HorizontalBarchart from "./graphs-box/HorizontalBarchart";
@@ -19,12 +20,15 @@ import PaymentPage from "./pages/PaymentPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import { ToastProvider } from "./components/ToastProvider";
 
 function App() {
   return (
-    <Router>
-      <Main />
-    </Router>
+    <ToastProvider>
+      <Router>
+        <Main />
+      </Router>
+    </ToastProvider>
   );
 }
 
@@ -32,6 +36,18 @@ function Main() {
   const location = useLocation();
   const isLoginPage =
     location.pathname === "/login" || location.pathname === "/register";
+
+  // Scrollbar'ı önlemek için
+  useEffect(() => {
+    // Sayfa açıldığında scrollbar'ı önle
+    document.documentElement.style.overflowX = 'hidden';
+    document.body.style.overflowX = 'hidden';
+
+    return () => {
+      document.documentElement.style.overflowX = '';
+      document.body.style.overflowX = '';
+    };
+  }, []);
 
   return (
     <div className="App">
@@ -63,10 +79,14 @@ function Home() {
       <div className="heading">
         <h1>Dashboard</h1>
       </div>
+      
+      {/* İlk panel - Özet bilgiler */}
+      <div className="panel">
+        <HorizontalBarchart />
+      </div>
+      
+      {/* Grafikler için grid container */}
       <div className="box">
-        <div className="horbar">
-          <HorizontalBarchart />
-        </div>
         <div className="bar">
           <Barchart />
         </div>

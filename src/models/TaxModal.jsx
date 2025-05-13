@@ -14,6 +14,13 @@ export default function TaxModal({
 }) {
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Form validation
+    if (!taxName || !country || !taxRate) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     const newTax = {
       taxName,
       country,

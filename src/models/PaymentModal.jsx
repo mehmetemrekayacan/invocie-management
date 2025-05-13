@@ -11,6 +11,12 @@ export default function PaymentModal({ toggleModal, addPayment }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Form validation
+    if (!date || !paymentDetail || !amount || !paymentType || !status) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     const newPayment = {
       date: new Date(date).toLocaleDateString("en-US"),
       paymentDetail,

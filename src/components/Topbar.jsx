@@ -1,146 +1,204 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Darkmode from "../components/Darkmode";
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState("");
   const [userSurname, setUserSurname] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   const dropdownRef = useRef(null);
   const darkModeRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // useCallback ile fonksiyonları memoize ediyoruz
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpen(prev => !prev);
+  }, []);
 
-  const closeDropdown = () => {
+  const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
-  };
+  }, []);
 
-  const truncateString = (str, maxLength) => {
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
+  const truncateString = useCallback((str, maxLength) => {
     return str.length > maxLength ? `${str.slice(0, maxLength)}.` : str;
-  };
+  }, []);
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = useCallback((event) => {
     if (
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target) &&
       darkModeRef.current &&
       !darkModeRef.current.contains(event.target)
     ) {
-      setTimeout(() => {
-        closeDropdown();
-      }, 0);
+      closeDropdown();
     }
-  };
+
+    if (
+      mobileMenuRef.current &&
+      !mobileMenuRef.current.contains(event.target)
+    ) {
+      closeMobileMenu();
+    }
+  }, [closeDropdown, closeMobileMenu]);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside, true);
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
     };
-  });
+  }, [handleClickOutside]);
 
   useEffect(() => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
-    if (loggedInStatus === "true") {
-      setIsLoggedIn(true);
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (user) {
-        setUserName(user.name);
-        setUserSurname(user.surname);
-      }
-    } else {
-      setIsLoggedIn(false);
+    const user = JSON.parse(localStorage.getItem("user"));
+    
+    setIsLoggedIn(loggedInStatus === "true");
+    if (user) {
+      setUserName(user.name);
+      setUserSurname(user.surname);
     }
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     localStorage.setItem("isLoggedIn", "false");
     setIsLoggedIn(false);
     navigate("/dashboard");
-  };
+  }, [navigate]);
+
+  // useMemo ile hesaplamaları optimize ediyoruz
+  const displayName = useMemo(() => {
+    return `${truncateString(userName, 8)} ${truncateString(userSurname, 8)}`;
+  }, [userName, userSurname, truncateString]);
 
   return (
-    <div className="topbar">
+    <div className="topbar" role="banner">
       <div className="topbar--logo">
         <img
           src="/assets/logo-dark.svg"
-          alt="dark-logo"
+          alt="Invoicify Logo"
           className="dark-icon"
+          width="24"
+          height="24"
         />
         <img
           src="/assets/logo-light.svg"
-          alt="light-logo"
+          alt="Invoicify Logo"
           className="light-icon"
+          width="24"
+          height="24"
         />
         <h2>Invoicify</h2>
       </div>
-      <div className="topbar--profile">
+
+      <button 
+        className="topbar--hamburger" 
+        onClick={toggleMobileMenu}
+        aria-label="Menüyü aç/kapat"
+        aria-expanded={mobileMenuOpen}
+      >
+        <div className={`hamburger-icon ${mobileMenuOpen ? 'open' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+
+      <nav 
+        className={`topbar--profile ${mobileMenuOpen ? 'mobile-open' : ''}`} 
+        ref={mobileMenuRef}
+        role="navigation"
+        aria-label="Ana menü"
+      >
         <div className="topbar--profile-box">
           {isLoggedIn ? (
             <>
-              <img src="/assets/profile image.png" alt="profile" />
-              <div
+              <img 
+                src="/assets/profile image.png" 
+                alt="Profil resmi" 
+                width="24"
+                height="24"
+              />
+              <button
                 className="topbar--profile-title"
                 ref={dropdownRef}
                 onClick={toggleDropdown}
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="true"
               >
-                <span>
-                  {truncateString(userName, 8)} {truncateString(userSurname, 8)}
-                </span>
+                <span>{displayName}</span>
                 <img
                   className="topbar--dropdown-icon dark-icon"
                   src="/assets/dropdown=dark.svg"
-                  alt="dark-sort"
+                  alt=""
+                  width="16"
+                  height="16"
                 />
                 <img
                   className="topbar--dropdown-icon light-icon"
                   src="/assets/dropdown=light.svg"
-                  alt="light-sort"
+                  alt=""
+                  width="16"
+                  height="16"
                 />
-              </div>
+              </button>
 
               {isDropdownOpen && (
-                <div className="topbar--dropdown-menu">
+                <div 
+                  className="topbar--dropdown-menu"
+                  role="menu"
+                >
                   <Link
                     to="/profile"
                     className="topbar--dropdown-item"
                     onClick={closeDropdown}
+                    role="menuitem"
                   >
-                    Profile
+                    Profil
                   </Link>
                   <Link
                     to="/settings"
                     className="topbar--dropdown-item"
                     onClick={closeDropdown}
+                    role="menuitem"
                   >
-                    Settings
+                    Ayarlar
                   </Link>
                   <div
                     className="topbar--dropdown-item-darkmode"
                     ref={darkModeRef}
+                    role="menuitem"
                   >
                     <Darkmode />
                   </div>
-                  <Link
+                  <button
                     className="topbar--dropdown-item"
                     onClick={handleSignOut}
+                    role="menuitem"
                   >
-                    Sign out
-                  </Link>
+                    Çıkış Yap
+                  </button>
                 </div>
               )}
             </>
           ) : (
             <div className="topbar--sign-box">
               <Link to="/login" className="topbar--sign-title">
-                Sign In
+                Giriş Yap
               </Link>
               <Link to="/register" className="topbar--sign-title">
-                Sign up
+                Kayıt Ol
               </Link>
               <div className="topbar--item-darkmode">
                 <Darkmode />
@@ -149,21 +207,28 @@ export default function Topbar() {
           )}
         </div>
         {isLoggedIn && (
-          <div className="topbar--profile-icon">
+          <button 
+            className="topbar--profile-icon"
+            aria-label="Bildirimler"
+          >
             <img
               src="/assets/notification=dark.svg"
               className="dark-icon"
-              alt="dark-notification"
+              alt=""
+              width="16"
+              height="16"
             />
             <img
               src="/assets/notification=light.svg"
               className="light-icon"
-              alt="light-notification"
+              alt=""
+              width="16"
+              height="16"
             />
-            <div className="topbar--icon-badge"></div>
-          </div>
+            <div className="topbar--icon-badge" aria-hidden="true"></div>
+          </button>
         )}
-      </div>
+      </nav>
     </div>
   );
 }

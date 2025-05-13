@@ -10,6 +10,12 @@ export default function InvoiceModal({ toggleModal, addInvoice }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Form validation
+    if (!date || !client || !amount || !status) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     const newInvoice = {
       date: new Date(date).toLocaleDateString("en-US"),
       client,

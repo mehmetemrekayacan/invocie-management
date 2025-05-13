@@ -11,6 +11,12 @@ export default function IncomeModal({ toggleModal, addIncome }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Form validation
+    if (!date || !incomeDetail || !incomeType || !amount || !status) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
     const newIncome = {
       date: new Date(date).toLocaleDateString("en-US"),
       incomeDetail,
