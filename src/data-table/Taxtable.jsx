@@ -11,11 +11,14 @@ export default function Taxtable({ taxes: initialTaxes = [], isLoading = false }
       key: 'taxType', 
       label: 'TAX TYPE', 
       sortable: true,
-      render: (item) => (
-        <span className={`tax-type ${item.taxType.toLowerCase()}`}>
-          {item.taxType}
-        </span>
-      )
+      render: (item) => {
+        const taxType = item.taxType || '';
+        return (
+          <span className={`tax-type ${taxType.toLowerCase()}`}>
+            {taxType}
+          </span>
+        );
+      }
     },
     { 
       key: 'amount', 
@@ -29,11 +32,14 @@ export default function Taxtable({ taxes: initialTaxes = [], isLoading = false }
       key: 'status', 
       label: 'STATUS', 
       sortable: false,
-      render: (item) => (
-        <span className={`status-badge ${item.status === 1 ? 'status-paid' : 'status-unpaid'}`}>
-          {formatStatus(item.status)}
-        </span>
-      )
+      render: (item) => {
+        const status = item.status || 0;
+        return (
+          <span className={`status-badge ${status === 1 ? 'status-paid' : 'status-unpaid'}`}>
+            {formatStatus(status)}
+          </span>
+        );
+      }
     }
   ];
 

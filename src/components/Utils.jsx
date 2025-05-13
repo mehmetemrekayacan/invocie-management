@@ -16,14 +16,29 @@ export const typeLabels = {
 };
 
 export function formatStatus(status) {
-  return statusLabels[status.toLowerCase()] || status;
+  if (!status && status !== 0) return "Unknown";
+  
+  if (typeof status === 'number') {
+    // Sayısal değerler için
+    return status === 1 ? "Paid" : "Unpaid";
+  }
+  
+  // String değerler için
+  return statusLabels[(status + "").toLowerCase()] || status;
 }
 
 export function formatType(type) {
-  return typeLabels[type.toLowerCase()] || type;
+  if (!type) return "Unknown";
+  return typeLabels[(type + "").toLowerCase()] || type;
 }
 
 export function formatAmount(amount) {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return "0";
+  }
+  
+  amount = Number(amount);
+  
   if (amount < 1000000) {
     return new Intl.NumberFormat("en-US").format(amount);
   } else if (amount < 1000000000) {
@@ -75,22 +90,22 @@ export const calculateTotals = (email, view) => {
   };
 
   incomeData.forEach((item) => {
-    if (item.status === "receipt") {
+    if (item.status && item.status.toLowerCase() === "receipt") {
       groupData(item.date, "income", item.amount);
     }
   });
 
   invoiceData.forEach((item) => {
-    if (item.status === "receipt") {
+    if (item.status && item.status.toLowerCase() === "receipt") {
       groupData(item.date, "income", item.billed);
     }
-    if (item.status === "given") {
+    if (item.status && item.status.toLowerCase() === "given") {
       groupData(item.date, "expense", item.billed);
     }
   });
 
   paymentData.forEach((item) => {
-    if (item.status === "paid") {
+    if (item.status && item.status.toLowerCase() === "paid") {
       groupData(item.date, "expense", item.amount);
     }
   });
@@ -190,22 +205,22 @@ export const calculateTotalsHor = (email, view) => {
   };
 
   incomeData.forEach((item) => {
-    if (item.status === "receipt" && isWithinRange(item.date)) {
+    if (item.status && item.status.toLowerCase() === "receipt" && isWithinRange(item.date)) {
       groupData(item.date, "income", item.amount);
     }
   });
 
   invoiceData.forEach((item) => {
-    if (item.status === "receipt" && isWithinRange(item.date)) {
+    if (item.status && item.status.toLowerCase() === "receipt" && isWithinRange(item.date)) {
       groupData(item.date, "income", item.billed);
     }
-    if (item.status === "given" && isWithinRange(item.date)) {
+    if (item.status && item.status.toLowerCase() === "given" && isWithinRange(item.date)) {
       groupData(item.date, "expense", item.billed);
     }
   });
 
   paymentData.forEach((item) => {
-    if (item.status === "paid" && isWithinRange(item.date)) {
+    if (item.status && item.status.toLowerCase() === "paid" && isWithinRange(item.date)) {
       groupData(item.date, "expense", item.amount);
     }
   });
@@ -279,15 +294,15 @@ export const calculateTotalPie = (currentUserEmail, view) => {
   };
 
   const totalPayments = payments
-    .filter((item) => item.status === "paid" && isWithinRange(item.date))
+    .filter((item) => item.status && item.status.toLowerCase() === "paid" && isWithinRange(item.date))
     .reduce((acc, item) => acc + item.amount, 0);
 
   const totalInvoices = invoices
-    .filter((item) => item.status === "given" && isWithinRange(item.date))
+    .filter((item) => item.status && item.status.toLowerCase() === "given" && isWithinRange(item.date))
     .reduce((acc, item) => acc + item.billed, 0);
 
   const totalIncome = income
-    .filter((item) => item.status === "receipt" && isWithinRange(item.date))
+    .filter((item) => item.status && item.status.toLowerCase() === "receipt" && isWithinRange(item.date))
     .reduce((acc, item) => acc + item.amount, 0);
 
   const totalTax = tax.reduce(
