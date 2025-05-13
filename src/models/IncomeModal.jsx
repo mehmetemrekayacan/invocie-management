@@ -1,40 +1,45 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
+import "./models.css";
 
-export default function IncomeModal({ toggleModal, addIncome }) {
-  const [date, setDate] = useState("");
-  const [incomeDetail, setIncomeDetail] = useState("");
-  const [incomeType, setIncomeType] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [status, setStatus] = useState("");
+const IncomeModal = memo(({ toggleModal, addIncome }) => {
+  const [formData, setFormData] = useState({
+    date: "",
+    incomeDetail: "",
+    incomeType: "",
+    amount: "",
+    status: ""
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
     // Form validation
-    if (!date || !incomeDetail || !incomeType || !amount || !status) {
-      alert("Please fill in all fields.");
+    const requiredFields = ['date', 'incomeDetail', 'incomeType', 'amount', 'status'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      alert(`Lütfen tüm alanları doldurun.`);
       return;
     }
 
     const newIncome = {
-      date: new Date(date).toLocaleDateString("en-US"),
-      incomeDetail,
-      incomeType,
-      amount: parseInt(amount, 10),
-      status,
+      date: new Date(formData.date).toLocaleDateString("en-US"),
+      incomeDetail: formData.incomeDetail,
+      incomeType: formData.incomeType,
+      amount: parseInt(formData.amount, 10),
+      status: formData.status,
       action: "Edit",
     };
 
     addIncome(newIncome);
-    setDate("");
-    setIncomeDetail("");
-    setIncomeType("");
-    setAmount(0);
-    setStatus("");
-
     toggleModal();
-  };
+  }, [formData, addIncome, toggleModal]);
 
   return (
     <div className="modal--overlay" onClick={toggleModal}>
@@ -42,40 +47,53 @@ export default function IncomeModal({ toggleModal, addIncome }) {
         <div className="modal--content">
           <h2>Add Income</h2>
           <form onSubmit={handleSubmit} className="model--form">
-            <label htmlFor="date">Date</label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="date">Date</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="model--input"
+              />
+            </div>
 
-            <label htmlFor="details">Income Details</label>
-            <textarea
-              id="details"
-              name="details"
-              value={incomeDetail}
-              onChange={(e) => setIncomeDetail(e.target.value)}
-            ></textarea>
+            <div className="model--form-group">
+              <label htmlFor="incomeDetail">Income Details</label>
+              <textarea
+                id="incomeDetail"
+                name="incomeDetail"
+                value={formData.incomeDetail}
+                onChange={handleChange}
+                className="model--textarea"
+                placeholder="Enter income details"
+              ></textarea>
+            </div>
 
-            <label htmlFor="amount">Amount</label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className="model--input"
+                placeholder="Enter amount"
+                min="0"
+              />
+            </div>
 
-            <div className="model--dropdowns">
-              <div className="model--dropdown-type">
-                <label htmlFor="income-type">Income Type</label>
+            <div className="model--form-grid">
+              <div className="model--form-group">
+                <label htmlFor="incomeType">Income Type</label>
                 <select
-                  id="income-type"
-                  name="income-type"
-                  value={incomeType}
-                  onChange={(e) => setIncomeType(e.target.value)}
+                  id="incomeType"
+                  name="incomeType"
+                  value={formData.incomeType}
+                  onChange={handleChange}
+                  className="model--select"
                 >
                   <option value="">Select Income Type</option>
                   <option value="creditcard">Credit Card</option>
@@ -85,13 +103,14 @@ export default function IncomeModal({ toggleModal, addIncome }) {
                 </select>
               </div>
 
-              <div className="model--dropdown-status">
-                <label htmlFor="income-status">Status</label>
+              <div className="model--form-group">
+                <label htmlFor="status">Status</label>
                 <select
-                  id="income-status"
-                  name="income-status"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="model--select"
                 >
                   <option value="">Select Status Type</option>
                   <option value="receipt">Receipt</option>
@@ -106,7 +125,7 @@ export default function IncomeModal({ toggleModal, addIncome }) {
                 className="model--close-button"
                 onClick={toggleModal}
               >
-                Close
+                Cancel
               </button>
               <button type="submit" className="model--add-button">
                 Add Income
@@ -117,4 +136,6 @@ export default function IncomeModal({ toggleModal, addIncome }) {
       </div>
     </div>
   );
-}
+});
+
+export default IncomeModal;

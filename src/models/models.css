@@ -1,0 +1,222 @@
+:root {
+  --modal-overlay: rgba(0, 0, 0, 0.6);
+  --modal-bg: #3d3d3d;
+  --modal-border: rgba(255, 255, 255, 0.1);
+  --modal-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  --input-bg: #2a2a2a;
+  --input-border: #4a4a4a;
+  --input-border-focus: #6a6a6a;
+  --input-text: #fff;
+  --placeholder-text: rgba(255, 255, 255, 0.5);
+  --button-primary-bg: #3F9E4E;
+  --button-primary-hover: #4bbd5d;
+  --button-secondary-bg: #3a3a3a;
+  --button-secondary-hover: #4a4a4a;
+  --button-text: #fff;
+  --label-text: rgba(255, 255, 255, 0.8);
+  --error-color: #FF6347;
+}
+
+[data-theme="light"] {
+  --modal-bg: #f5f5f5;
+  --modal-border: rgba(0, 0, 0, 0.1);
+  --modal-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  --input-bg: #ffffff;
+  --input-border: #d0d0d0;
+  --input-border-focus: #999;
+  --input-text: #333;
+  --placeholder-text: rgba(0, 0, 0, 0.5);
+  --button-primary-bg: #3F9E4E;
+  --button-primary-hover: #4bbd5d;
+  --button-secondary-bg: #e0e0e0;
+  --button-secondary-hover: #d0d0d0;
+  --button-text: #fff;
+  --label-text: rgba(0, 0, 0, 0.8);
+  --error-color: #FF6347;
+}
+
+/* Modal Overlay */
+.modal--overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal Box */
+.model--box {
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: var(--modal-bg);
+  border-radius: 8px;
+  box-shadow: var(--modal-shadow);
+  border: 1px solid var(--modal-border);
+  animation: slideIn 0.3s ease;
+  position: relative;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modal Content */
+.modal--content {
+  padding: 24px;
+}
+
+.modal--content h2 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--input-text);
+}
+
+/* Form Layout */
+.model--form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.model--form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .model--form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.model--form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Form Elements */
+.model--input, 
+.model--select, 
+.model--textarea {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  width: 100%;
+}
+
+.model--input:focus, 
+.model--select:focus, 
+.model--textarea:focus {
+  border-color: var(--input-border-focus);
+  box-shadow: 0 0 0 2px rgba(75, 189, 93, 0.2);
+}
+
+.model--textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.model--input::placeholder, 
+.model--textarea::placeholder {
+  color: var(--placeholder-text);
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--label-text);
+}
+
+/* Buttons */
+.model--buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.model--add-button, 
+.model--close-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  border: none;
+  outline: none;
+}
+
+.model--add-button {
+  background-color: var(--button-primary-bg);
+  color: var(--button-text);
+}
+
+.model--add-button:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.model--close-button {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-text);
+}
+
+.model--close-button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.model--add-button:active, 
+.model--close-button:active {
+  transform: translateY(1px);
+}
+
+/* Status specific styles */
+.status-paid {
+  color: #4caf50;
+}
+
+.status-unpaid {
+  color: #f44336;
+}
+
+/* Scrollbar Styles */
+.model--box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.model--box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.model--box::-webkit-scrollbar-thumb {
+  background-color: var(--input-border);
+  border-radius: 4px;
+}
+
+.model--box::-webkit-scrollbar-thumb:hover {
+  background-color: var(--input-border-focus);
+} 

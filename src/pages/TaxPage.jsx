@@ -1,43 +1,60 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Taxtable from "../data-table/Taxtable";
 import TaxModal from "../models/TaxModal";
+import { useModal } from "../components/ToastProvider";
 
 export default function TaxPage() {
   const [showModal, setShowModal] = useState(false);
-  const [taxRate, setTaxRate] = useState("");
-  const [taxName, setTaxName] = useState("");
-  const [country, setCountry] = useState("");
   const [taxes, setTaxes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const userEmail = localStorage.getItem("currentUserEmail");
+  const modal = useModal();
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  const toggleModal = useCallback(() => {
+    setShowModal(prev => !prev);
+  }, []);
 
-  const addTax = (newTax) => {
-    const updatedTaxes = [...taxes, newTax];
-    setTaxes(updatedTaxes);
-    localStorage.setItem(`tax_${userEmail}`, JSON.stringify(updatedTaxes));
-  };
+  const addTax = useCallback((newTax) => {
+    setTaxes(prevTaxes => {
+      const updatedTaxes = [...prevTaxes, newTax];
+      localStorage.setItem(`tax_${userEmail}`, JSON.stringify(updatedTaxes));
+      return updatedTaxes;
+    });
+    
+    modal.showModal("Tax record added successfully!", "success");
+  }, [userEmail, modal]);
 
+  // Load taxes from localStorage
   useEffect(() => {
     if (!userEmail) {
       navigate("/login");
       return;
     }
-    const storedTaxes = localStorage.getItem(`tax_${userEmail}`);
-    if (storedTaxes) {
-      setTaxes(JSON.parse(storedTaxes));
+    
+    setIsLoading(true);
+    try {
+      const storedTaxes = localStorage.getItem(`tax_${userEmail}`);
+      if (storedTaxes) {
+        setTaxes(JSON.parse(storedTaxes));
+      }
+    } catch (error) {
+      console.error("Error loading tax data:", error);
+      modal.showModal("Failed to load tax records", "error");
+    } finally {
+      setIsLoading(false);
     }
-  }, [userEmail, navigate]);
+  }, [userEmail, navigate, modal]);
+
+  // Memoize taxes to prevent unnecessary re-renders
+  const memoizedTaxes = useMemo(() => taxes, [taxes]);
 
   return (
     <>
       <div className="heading">
         <h1>Taxes</h1>
-        <div className="add-button" onClick={toggleModal}>
+        <button className="add-button" onClick={toggleModal}>
           <div>
             <img
               src="/assets/add=dark.svg"
@@ -51,23 +68,17 @@ export default function TaxPage() {
             />
             <span>Add Tax</span>
           </div>
-        </div>
+        </button>
       </div>
 
       {showModal && (
         <TaxModal
           toggleModal={toggleModal}
           addTax={addTax}
-          taxRate={taxRate}
-          setTaxRate={setTaxRate}
-          taxName={taxName}
-          setTaxName={setTaxName}
-          country={country}
-          setCountry={setCountry}
         />
       )}
 
-      <Taxtable taxes={taxes} />
+      <Taxtable taxes={memoizedTaxes} isLoading={isLoading} />
       <Outlet />
     </>
   );

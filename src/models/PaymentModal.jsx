@@ -1,40 +1,45 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
+import "./models.css";
 
-export default function PaymentModal({ toggleModal, addPayment }) {
-  const [date, setDate] = useState("");
-  const [paymentDetail, setPaymentDetail] = useState("");
-  const [amount, setAmount] = useState("");
-  const [paymentType, setPaymentType] = useState("");
-  const [status, setStatus] = useState("");
+const PaymentModal = memo(({ toggleModal, addPayment }) => {
+  const [formData, setFormData] = useState({
+    date: "",
+    paymentDetail: "",
+    amount: "",
+    paymentType: "",
+    status: ""
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
     // Form validation
-    if (!date || !paymentDetail || !amount || !paymentType || !status) {
-      alert("Please fill in all fields.");
+    const requiredFields = ['date', 'paymentDetail', 'amount', 'paymentType', 'status'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      alert(`Lütfen tüm alanları doldurun.`);
       return;
     }
 
     const newPayment = {
-      date: new Date(date).toLocaleDateString("en-US"),
-      paymentDetail,
-      paymentType,
-      amount: parseFloat(amount),
-      status,
+      date: new Date(formData.date).toLocaleDateString("en-US"),
+      paymentDetail: formData.paymentDetail,
+      paymentType: formData.paymentType,
+      amount: parseFloat(formData.amount),
+      status: formData.status,
       action: "Edit",
     };
 
     addPayment(newPayment);
-    setDate("");
-    setPaymentDetail("");
-    setAmount("");
-    setPaymentType("");
-    setStatus("");
-
     toggleModal();
-  };
+  }, [formData, addPayment, toggleModal]);
 
   return (
     <div className="modal--overlay" onClick={toggleModal}>
@@ -42,40 +47,54 @@ export default function PaymentModal({ toggleModal, addPayment }) {
         <div className="modal--content">
           <h2>Add Payment</h2>
           <form onSubmit={handleSubmit} className="model--form">
-            <label htmlFor="date">Date</label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="date">Date</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="model--input"
+              />
+            </div>
 
-            <label htmlFor="details">Payment Details</label>
-            <textarea
-              id="details"
-              name="details"
-              value={paymentDetail}
-              onChange={(e) => setPaymentDetail(e.target.value)}
-            ></textarea>
+            <div className="model--form-group">
+              <label htmlFor="paymentDetail">Payment Details</label>
+              <textarea
+                id="paymentDetail"
+                name="paymentDetail"
+                value={formData.paymentDetail}
+                onChange={handleChange}
+                className="model--textarea"
+                placeholder="Enter payment details"
+              ></textarea>
+            </div>
 
-            <label htmlFor="amount">Amount</label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="amount">Amount</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className="model--input"
+                placeholder="Enter amount"
+                min="0"
+                step="0.01"
+              />
+            </div>
 
-            <div className="model--dropdowns">
-              <div className="model--dropdown-type">
-                <label htmlFor="payment-type">Payment Type</label>
+            <div className="model--form-grid">
+              <div className="model--form-group">
+                <label htmlFor="paymentType">Payment Type</label>
                 <select
-                  id="payment-type"
-                  name="payment-type"
-                  value={paymentType}
-                  onChange={(e) => setPaymentType(e.target.value)}
+                  id="paymentType"
+                  name="paymentType"
+                  value={formData.paymentType}
+                  onChange={handleChange}
+                  className="model--select"
                 >
                   <option value="">Select Payment Type</option>
                   <option value="creditcard">Credit Card</option>
@@ -85,13 +104,14 @@ export default function PaymentModal({ toggleModal, addPayment }) {
                 </select>
               </div>
 
-              <div className="model--dropdown-status">
-                <label htmlFor="payment-status">Status</label>
+              <div className="model--form-group">
+                <label htmlFor="status">Status</label>
                 <select
-                  id="payment-status"
-                  name="payment-status"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className="model--select"
                 >
                   <option value="">Select Status Type</option>
                   <option value="paid">Paid</option>
@@ -106,7 +126,7 @@ export default function PaymentModal({ toggleModal, addPayment }) {
                 className="model--close-button"
                 onClick={toggleModal}
               >
-                Close
+                Cancel
               </button>
               <button type="submit" className="model--add-button">
                 Add Payment
@@ -117,4 +137,6 @@ export default function PaymentModal({ toggleModal, addPayment }) {
       </div>
     </div>
   );
-}
+});
+
+export default PaymentModal;

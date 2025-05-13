@@ -1,37 +1,43 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
+import "./models.css";
 
-export default function InvoiceModal({ toggleModal, addInvoice }) {
-  const [date, setDate] = useState("");
-  const [client, setClient] = useState("");
-  const [amount, setAmount] = useState(0);
-  const [status, setStatus] = useState("");
+const InvoiceModal = memo(({ toggleModal, addInvoice }) => {
+  const [formData, setFormData] = useState({
+    date: "",
+    client: "",
+    amount: "",
+    status: ""
+  });
 
-  const handleSubmit = (e) => {
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
+
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
 
     // Form validation
-    if (!date || !client || !amount || !status) {
-      alert("Please fill in all fields.");
+    const requiredFields = ['date', 'client', 'amount', 'status'];
+    const missingFields = requiredFields.filter(field => !formData[field]);
+    
+    if (missingFields.length > 0) {
+      alert(`Lütfen tüm alanları doldurun.`);
       return;
     }
 
     const newInvoice = {
-      date: new Date(date).toLocaleDateString("en-US"),
-      client,
-      billed: parseInt(amount, 10),
-      status,
+      date: new Date(formData.date).toLocaleDateString("en-US"),
+      client: formData.client,
+      billed: parseInt(formData.amount, 10),
+      status: formData.status,
       action: "Edit",
     };
 
     addInvoice(newInvoice);
-    setDate("");
-    setClient("");
-    setAmount(0);
-    setStatus("");
-
     toggleModal();
-  };
+  }, [formData, addInvoice, toggleModal]);
 
   return (
     <div className="modal--overlay" onClick={toggleModal}>
@@ -39,46 +45,57 @@ export default function InvoiceModal({ toggleModal, addInvoice }) {
         <div className="modal--content">
           <h2>Add Invoice</h2>
           <form onSubmit={handleSubmit} className="model--form">
-            <label htmlFor="date">Date</label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="date">Date</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="model--input"
+              />
+            </div>
 
-            <label htmlFor="client">Client</label>
-            <textarea
-              id="client"
-              name="client"
-              value={client}
-              onChange={(e) => setClient(e.target.value)}
-            ></textarea>
+            <div className="model--form-group">
+              <label htmlFor="client">Client</label>
+              <textarea
+                id="client"
+                name="client"
+                value={formData.client}
+                onChange={handleChange}
+                className="model--textarea"
+                placeholder="Enter client details"
+              ></textarea>
+            </div>
 
-            <label htmlFor="amount">Billed Amount</label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
+            <div className="model--form-group">
+              <label htmlFor="amount">Billed Amount</label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className="model--input"
+                placeholder="Enter amount"
+                min="0"
+              />
+            </div>
 
-            <div className="model--dropdowns">
-              <div className="model--dropdown-status">
-                <label htmlFor="invoice-status">Status</label>
-                <select
-                  id="invoice-status"
-                  name="invoice-status"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="">Select Status Type</option>
-                  <option value="receipt">Receipt</option>
-                  <option value="given">Given</option>
-                </select>
-              </div>
+            <div className="model--form-group">
+              <label htmlFor="status">Status</label>
+              <select
+                id="status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="model--select"
+              >
+                <option value="">Select Status Type</option>
+                <option value="receipt">Receipt</option>
+                <option value="given">Given</option>
+              </select>
             </div>
 
             <div className="model--buttons">
@@ -87,7 +104,7 @@ export default function InvoiceModal({ toggleModal, addInvoice }) {
                 className="model--close-button"
                 onClick={toggleModal}
               >
-                Close
+                Cancel
               </button>
               <button type="submit" className="model--add-button">
                 Add Invoice
@@ -98,4 +115,6 @@ export default function InvoiceModal({ toggleModal, addInvoice }) {
       </div>
     </div>
   );
-}
+});
+
+export default InvoiceModal;
