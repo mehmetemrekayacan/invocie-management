@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
-import { useToast } from "../components/ToastProvider";
+import { useModal } from "../components/ToastProvider";
 
 export default function Taxtable({ taxes: initialTaxes = [], isLoading = false }) {
   const [taxes, setTaxes] = useState(initialTaxes);
@@ -12,7 +12,7 @@ export default function Taxtable({ taxes: initialTaxes = [], isLoading = false }
   const [itemsPerPage] = useState(10);
   const [activeMenu, setActiveMenu] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const toast = useToast();
+  const modal = useModal();
 
   // Prop değişikliklerini takip et
   useEffect(() => {
@@ -200,34 +200,41 @@ export default function Taxtable({ taxes: initialTaxes = [], isLoading = false }
   const handleSaveEdit = () => {
     if (!editItem) return;
     
-    // İçerideki tax array'ini güncelle
     const updatedTaxes = [...taxes];
     const index = updatedTaxes.findIndex(t => t.id === editItem.id);
     
     if (index !== -1) {
-      // Mevcut vergiyi güncelle
       updatedTaxes[index] = editItem;
     } else {
-      // Yeni vergi ekle (id yoksa)
       updatedTaxes.push({
         ...editItem,
         id: editItem.id || Math.random().toString(36).substr(2, 9)
       });
     }
     
-    // State'i güncelle
     setTaxes(updatedTaxes);
     
-    // Kullanıcıya bildir
-    toast.showToast("Changes saved!", "success");
+    modal.showModal("Changes saved successfully!", "success");
     
-    // Düzenleme modundan çık
     setEditItem(null);
   };
 
   // Düzenlemeyi iptal etme
   const handleCancelEdit = () => {
     setEditItem(null);
+  };
+
+  // Silme işlemi
+  const handleDelete = (tax) => {
+    modal.showModal(
+      "Are you sure you want to delete this tax?",
+      "error",
+      () => {
+        const updatedTaxes = taxes.filter(t => t.id !== tax.id);
+        setTaxes(updatedTaxes);
+        modal.showModal("Tax deleted successfully!", "success");
+      }
+    );
   };
 
   if (isLoading) {

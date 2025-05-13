@@ -1,30 +1,75 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+// Navbar öğelerini ayrı bir yapıda tanımlayalım
+const NAV_ITEMS = [
+  {
+    path: "/",
+    icon: {
+      dark: "/assets/dashboard=dark.svg",
+      light: "/assets/dashboard=light.svg"
+    },
+    label: "Dashboard",
+    alt: "Dashboard icon"
+  },
+  {
+    path: "/income",
+    icon: {
+      dark: "/assets/income=dark.svg",
+      light: "/assets/income=light.svg"
+    },
+    label: "Income",
+    alt: "Income icon"
+  },
+  {
+    path: "/invoice",
+    icon: {
+      dark: "/assets/invoice=dark.svg",
+      light: "/assets/invoice=light.svg"
+    },
+    label: "Invoice",
+    alt: "Invoice icon"
+  },
+  {
+    path: "/expense",
+    icon: {
+      dark: "/assets/expense=dark.svg",
+      light: "/assets/expense=light.svg"
+    },
+    label: "Expense",
+    alt: "Expense icon",
+    dropdown: [
+      { path: "/expense/payment", label: "Payment" },
+      { path: "/expense/tax", label: "Tax" }
+    ]
+  }
+];
 
 export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [navbarCollapsed, setNavbarCollapsed] = useState(false);
   const dropdownRef = useRef(null);
   const navbarRef = useRef(null);
+  const location = useLocation();
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // useCallback ile fonksiyonları memoize ediyoruz
+  const toggleDropdown = useCallback(() => {
+    setIsDropdownOpen(prev => !prev);
+  }, []);
 
-  const closeDropdown = () => {
+  const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
-  };
+  }, []);
 
-  const toggleNavbar = () => {
-    setNavbarCollapsed(!navbarCollapsed);
-  };
+  const toggleNavbar = useCallback(() => {
+    setNavbarCollapsed(prev => !prev);
+  }, []);
 
-  const handleClickOutside = (event) => {
+  const handleClickOutside = useCallback((event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       closeDropdown();
     }
 
-    // Navbar dışında bir tıklama olduğunda mobil menüyü kapat
     if (
       navbarRef.current && 
       !navbarRef.current.contains(event.target) &&
@@ -32,134 +77,150 @@ export default function Navbar() {
     ) {
       setNavbarCollapsed(false);
     }
-  };
+  }, [closeDropdown]);
+
+  // Ekran boyutu değişikliğini yöneten fonksiyon
+  const handleResize = useCallback(() => {
+    if (window.innerWidth > 768) {
+      setNavbarCollapsed(false);
+    }
+  }, []);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside, true);
-    
-    // Ekran boyutu değiştiğinde menü durumunu resetle
-    const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setNavbarCollapsed(false);
-      }
-    };
-    
     window.addEventListener('resize', handleResize);
     
     return () => {
       document.removeEventListener("click", handleClickOutside, true);
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [handleClickOutside, handleResize]);
+
+  // Aktif menü öğesini belirle
+  const activePath = useMemo(() => {
+    return location.pathname;
+  }, [location.pathname]);
+
+  // Navbar öğelerini render eden fonksiyon
+  const renderNavItem = useCallback((item) => {
+    const isActive = activePath === item.path;
+    const isDropdownItem = !!item.dropdown;
+
+    if (isDropdownItem) {
+      return (
+        <div
+          key={item.path}
+          className={`navbar--title ${
+            isDropdownOpen ? "navbar--dropdown-open" : ""
+          } ${isActive ? "active" : ""}`}
+          ref={dropdownRef}
+        >
+          <button
+            className="navbar--title-active"
+            onClick={toggleDropdown}
+            aria-expanded={isDropdownOpen}
+            aria-haspopup="true"
+          >
+            <img
+              src={item.icon.dark}
+              className="dark-icon"
+              alt={item.alt}
+              width="20"
+              height="20"
+            />
+            <img
+              src={item.icon.light}
+              className="light-icon"
+              alt={item.alt}
+              width="20"
+              height="20"
+            />
+            <h2>{item.label}</h2>
+            <img
+              className="navbar--dropdown-icon dark-icon"
+              src="/assets/dropdown=dark.svg"
+              alt=""
+              width="16"
+              height="16"
+            />
+            <img
+              className="navbar--dropdown-icon light-icon"
+              src="/assets/dropdown=light.svg"
+              alt=""
+              width="16"
+              height="16"
+            />
+          </button>
+          {isDropdownOpen && (
+            <div 
+              className="navbar--dropdown-menu"
+              role="menu"
+            >
+              {item.dropdown.map(subItem => (
+                <Link
+                  key={subItem.path}
+                  to={subItem.path}
+                  className={`navbar--dropdown-item ${activePath === subItem.path ? 'active' : ''}`}
+                  onClick={closeDropdown}
+                  role="menuitem"
+                >
+                  {subItem.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div 
+        key={item.path}
+        className={`navbar--title ${isActive ? "active" : ""}`}
+      >
+        <Link to={item.path}>
+          <img
+            src={item.icon.dark}
+            className="dark-icon"
+            alt={item.alt}
+            width="20"
+            height="20"
+          />
+          <img
+            src={item.icon.light}
+            className="light-icon"
+            alt={item.alt}
+            width="20"
+            height="20"
+          />
+          <h2>{item.label}</h2>
+        </Link>
+      </div>
+    );
+  }, [isDropdownOpen, activePath, toggleDropdown, closeDropdown]);
 
   return (
-    <div className="navbar" ref={navbarRef}>
-      {/* Mobil için toggle butonu */}
-      <div className="navbar--toggle" onClick={toggleNavbar}>
+    <nav className="navbar" ref={navbarRef} role="navigation" aria-label="Main menu">
+      <button 
+        className="navbar--toggle" 
+        onClick={toggleNavbar}
+        aria-label="Toggle menu"
+        aria-expanded={navbarCollapsed}
+      >
         <div className={`navbar-toggle-icon ${navbarCollapsed ? 'open' : ''}`}>
           <span></span>
           <span></span>
           <span></span>
         </div>
         <span className="navbar--toggle-text">Menu</span>
-      </div>
+      </button>
     
-      {/* Navbar içeriği - mobilde gizlenecek/açılacak, desktopda yatay gösterilecek */}
-      <div className={`navbar--content ${navbarCollapsed ? 'navbar--content-open' : ''}`}>
-        <div className="navbar--title">
-          <Link to="/">
-            <img
-              src="/assets/dashboard=dark.svg"
-              className="dark-icon"
-              alt="dark-dashboard"
-            />
-            <img
-              src="/assets/dashboard=light.svg"
-              className="light-icon"
-              alt="light-dashboard"
-            />
-            <h2>Dashboard</h2>
-          </Link>
-        </div>
-        <div className="navbar--title">
-          <Link to="/income">
-            <img
-              src="/assets/income=dark.svg"
-              className="dark-icon"
-              alt="dark-income"
-            />
-            <img
-              src="/assets/income=light.svg"
-              className="light-icon"
-              alt="light-income"
-            />
-            <h2>Income</h2>
-          </Link>
-        </div>
-        <div className="navbar--title">
-          <Link to="/invoice">
-            <img
-              src="/assets/invoice=dark.svg"
-              className="dark-icon"
-              alt="dark-invoice"
-            />
-            <img
-              src="/assets/invoice=light.svg"
-              className="light-icon"
-              alt="light-invoice"
-            />
-            <h2>Invoice</h2>
-          </Link>
-        </div>
-        <div
-          className={`navbar--title ${
-            isDropdownOpen ? "navbar--dropdown-open" : ""
-          }`}
-          ref={dropdownRef}
-        >
-          <div className="navbar--title-active" onClick={toggleDropdown}>
-            <img
-              src="/assets/expense=dark.svg"
-              className="dark-icon"
-              alt="dark-expense"
-            />
-            <img
-              src="/assets/expense=light.svg"
-              className="light-icon"
-              alt="light-expense"
-            />
-            <h2>Expense</h2>
-            <img
-              className="navbar--dropdown-icon dark-icon"
-              src="/assets/dropdown=dark.svg"
-              alt="dark-sort"
-            />
-            <img
-              className="navbar--dropdown-icon light-icon"
-              src="/assets/dropdown=light.svg"
-              alt="light-sort"
-            />
-          </div>
-          {isDropdownOpen && (
-            <div className="navbar--dropdown-menu">
-              <Link
-                to="/expense/payment"
-                className="navbar--dropdown-item"
-                onClick={closeDropdown}
-              >
-                Payment
-              </Link>
-              <Link
-                to="/expense/tax"
-                className="navbar--dropdown-item"
-                onClick={closeDropdown}
-              >
-                Tax
-              </Link>
-            </div>
-          )}
-        </div>
+      <div 
+        className={`navbar--content ${navbarCollapsed ? 'navbar--content-open' : ''}`}
+        role="menubar"
+      >
+        {NAV_ITEMS.map(renderNavItem)}
       </div>
-    </div>
+    </nav>
   );
 }

@@ -1,23 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
+import "./comps.css";
 
-export default function Toast({ message, type = "info", onClose }) {
-  useEffect(() => {
-    const timer = setTimeout(() => {
+export default function Modal({ message, type = "info", onClose, onConfirm }) {
+  const handleEscape = useCallback((e) => {
+    if (e.key === "Escape") {
       onClose();
-    }, 3000);
-    return () => clearTimeout(timer);
+    }
   }, [onClose]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
+    
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [handleEscape]);
+
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div className={`fixed top-6 right-6 z-[99999] px-6 py-3 rounded shadow-lg text-white transition-all duration-300 ${
-      type === "success"
-        ? "bg-green-600"
-        : type === "error"
-        ? "bg-red-600"
-        : "bg-gray-800"
-    }`}
+    <div 
+      className="modal-backdrop" 
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
     >
-      {message}
+      <div className={`modal-content ${type}`}>
+        <h3 id="modal-title" className="modal-title">
+          {type === "success" ? "Success" : type === "error" ? "Error" : "Information"}
+        </h3>
+        <p className="modal-message">{message}</p>
+        <div className="modal-actions">
+          {onConfirm && (
+            <button 
+              className="modal-button confirm"
+              onClick={onConfirm}
+              aria-label="Confirm action"
+            >
+              Confirm
+            </button>
+          )}
+          <button 
+            className="modal-button cancel"
+            onClick={onClose}
+            aria-label="Cancel action"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
   );
 } 

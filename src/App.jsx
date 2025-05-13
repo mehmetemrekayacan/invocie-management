@@ -20,15 +20,15 @@ import PaymentPage from "./pages/PaymentPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import { ToastProvider } from "./components/ToastProvider";
+import { ModalProvider } from "./components/ToastProvider";
 
 function App() {
   return (
-    <ToastProvider>
+    <ModalProvider>
       <Router>
         <Main />
       </Router>
-    </ToastProvider>
+    </ModalProvider>
   );
 }
 

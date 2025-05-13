@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { formatStatus, formatAmount, formatType } from "../components/Utils";
 import "./tables.css";
-import { useToast } from "../components/ToastProvider";
+import { useModal } from "../components/ToastProvider";
 
 export default function Paymenttable({ payments: initialPayments = [], isLoading = false }) {
   const [payments, setPayments] = useState(initialPayments);
@@ -12,7 +12,7 @@ export default function Paymenttable({ payments: initialPayments = [], isLoading
   const [itemsPerPage] = useState(10);
   const [activeMenu, setActiveMenu] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const toast = useToast();
+  const modal = useModal();
 
   // Prop değişikliklerini takip et
   useEffect(() => {
@@ -200,34 +200,41 @@ export default function Paymenttable({ payments: initialPayments = [], isLoading
   const handleSaveEdit = () => {
     if (!editItem) return;
     
-    // İçerideki payment array'ini güncelle
     const updatedPayments = [...payments];
     const index = updatedPayments.findIndex(p => p.id === editItem.id);
     
     if (index !== -1) {
-      // Mevcut ödemeyi güncelle
       updatedPayments[index] = editItem;
     } else {
-      // Yeni ödeme ekle (id yoksa)
       updatedPayments.push({
         ...editItem,
         id: editItem.id || Math.random().toString(36).substr(2, 9)
       });
     }
     
-    // State'i güncelle
     setPayments(updatedPayments);
     
-    // Kullanıcıya bildir
-    toast.showToast("Changes saved!", "success");
+    modal.showModal("Changes saved successfully!", "success");
     
-    // Düzenleme modundan çık
     setEditItem(null);
   };
 
   // Düzenlemeyi iptal etme
   const handleCancelEdit = () => {
     setEditItem(null);
+  };
+
+  // Silme işlemi
+  const handleDelete = (payment) => {
+    modal.showModal(
+      "Are you sure you want to delete this payment?",
+      "error",
+      () => {
+        const updatedPayments = payments.filter(p => p.id !== payment.id);
+        setPayments(updatedPayments);
+        modal.showModal("Payment deleted successfully!", "success");
+      }
+    );
   };
 
   if (isLoading) {

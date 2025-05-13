@@ -1,27 +1,41 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import Toast from "./Toast";
+import Modal from "./Toast";
 
-const ToastContext = createContext();
+const ModalContext = createContext();
 
-export function useToast() {
-  return useContext(ToastContext);
+export function useModal() {
+  return useContext(ModalContext);
 }
 
-export function ToastProvider({ children }) {
-  const [toast, setToast] = useState(null);
+export function ModalProvider({ children }) {
+  const [modal, setModal] = useState(null);
 
-  const showToast = useCallback((message, type = "info") => {
-    setToast({ message, type });
+  const showModal = useCallback((message, type = "info", onConfirm) => {
+    setModal({ message, type, onConfirm });
   }, []);
 
-  const handleClose = () => setToast(null);
+  const handleClose = useCallback(() => {
+    setModal(null);
+  }, []);
+
+  const handleConfirm = useCallback(() => {
+    if (modal?.onConfirm) {
+      modal.onConfirm();
+    }
+    handleClose();
+  }, [modal, handleClose]);
 
   return (
-    <ToastContext.Provider value={{ showToast }}>
+    <ModalContext.Provider value={{ showModal }}>
       {children}
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={handleClose} />
+      {modal && (
+        <Modal
+          message={modal.message}
+          type={modal.type}
+          onClose={handleClose}
+          onConfirm={modal.onConfirm ? handleConfirm : undefined}
+        />
       )}
-    </ToastContext.Provider>
+    </ModalContext.Provider>
   );
 } 

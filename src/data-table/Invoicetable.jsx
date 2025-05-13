@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { formatStatus, formatAmount } from "../components/Utils";
 import "./tables.css";
-import { useToast } from "../components/ToastProvider";
+import { useModal } from "../components/ToastProvider";
 
 export default function Invoicetable({ invoices: initialInvoices = [], isLoading = false }) {
   const [invoices, setInvoices] = useState(initialInvoices);
@@ -12,7 +12,7 @@ export default function Invoicetable({ invoices: initialInvoices = [], isLoading
   const [itemsPerPage] = useState(10);
   const [activeMenu, setActiveMenu] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const toast = useToast();
+  const modal = useModal();
 
   // Prop değişikliklerini takip et
   useEffect(() => {

@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { formatStatus, formatAmount, formatType } from "../components/Utils";
 import "./tables.css";
-import { useToast } from "../components/ToastProvider";
+import { useModal } from "../components/ToastProvider";
 
 export default function Incometable({ products: initialProducts = [], isLoading = false }) {
   const [products, setProducts] = useState(initialProducts);
@@ -12,7 +12,7 @@ export default function Incometable({ products: initialProducts = [], isLoading 
   const [itemsPerPage] = useState(10);
   const [activeMenu, setActiveMenu] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const toast = useToast();
+  const modal = useModal();
 
   // Prop değişikliklerini takip et
   useEffect(() => {
@@ -200,26 +200,21 @@ export default function Incometable({ products: initialProducts = [], isLoading 
   const handleSaveEdit = () => {
     if (!editItem) return;
     
-    // İçerideki product array'ini güncelle
     const updatedProducts = [...products];
     const index = updatedProducts.findIndex(p => p.id === editItem.id);
     
     if (index !== -1) {
-      // Mevcut ürünü güncelle
       updatedProducts[index] = editItem;
     } else {
-      // Yeni ürün ekle (id yoksa)
       updatedProducts.push({
         ...editItem,
         id: editItem.id || Math.random().toString(36).substr(2, 9)
       });
     }
     
-    // State'i güncelle
     setProducts(updatedProducts);
     
-    // Kullanıcıya bildir
-    toast.showToast("Changes saved!", "success");
+    modal.showModal("Changes saved successfully!", "success");
     
     // Düzenleme modundan çık
     setEditItem(null);
