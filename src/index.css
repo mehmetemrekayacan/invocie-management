@@ -1,7 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
+
 :root {
   --body-background: #272727;
   --title: #ffffff;
+  --primary-color: #30335a;
+  --primary-hover: #3f4176;
+  --primary-active: #252747;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --graphbox-background: rgba(255, 255, 255, 0.05);
+  --top-background: #30335a;
   
   /* Modern spacing values */
   --space-xs: 4px;
@@ -22,6 +31,7 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-full: 9999px;
   
   /* Modern shadow values */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -33,18 +43,34 @@
   --container-md: 720px;
   --container-lg: 960px;
   --container-xl: 1140px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
 
 [data-theme="dark"] {
   --body-background: #272727;
   --title: #fff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.5);
+  --graphbox-background: rgba(255, 255, 255, 0.05);
+  --top-background: #30335a;
 }
 
 [data-theme="light"] {
   --body-background: #f6f6f6;
   --title: #000;
+  --text-primary: #333333;
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --text-muted: rgba(0, 0, 0, 0.5);
+  --graphbox-background: rgba(0, 0, 0, 0.02);
+  --top-background: #787fd7;
 }
 
+/* Theme icons */
 .dark-icon {
   display: block;
 }
@@ -69,36 +95,60 @@
   display: block;
 }
 
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   width: 100%;
   max-width: 100%;
+  scrollbar-width: none; /* Firefox için */
+  -ms-overflow-style: none; /* IE ve Edge için */
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari ve Opera için */
+  width: 0;
+  background: transparent;
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--body-background);
+  color: var(--text-primary);
   font-size: var(--text-md);
   line-height: 1.5;
   min-width: 320px;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
-/* Container for tablets and desktops */
-@media screen and (min-width: 768px) {
-  body {
-    width: 100%;
-  }
-  
-  .App {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    overflow-x: hidden;
-  }
+button, input, select, textarea {
+  font-family: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* App layout */
 .App {
   display: flex;
   flex-direction: column;
@@ -116,11 +166,24 @@ body {
   top: 100%;
 }
 
+/* Heading styles */
 .heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: var(--space-md);
+  animation: slideDown var(--transition-normal);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .heading h1 {
@@ -138,19 +201,16 @@ body {
   margin: var(--space-md) auto;
   width: 95%;
   max-width: var(--container-lg);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  animation: fadeIn var(--transition-normal);
 }
 
-@media screen and (min-width: 992px) {
-  .panel {
-    max-width: 1200px;
-    width: 85%;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-}
-
-@media screen and (min-width: 1440px) {
-  .panel {
-    max-width: 1400px;
-    width: 80%;
+  to {
+    opacity: 1;
   }
 }
 
@@ -163,6 +223,15 @@ body {
   gap: var(--space-lg);
   width: 95%;
   max-width: var(--container-lg);
+  animation-delay: 0.1s;
+  animation: fadeIn var(--transition-normal);
+}
+
+.box > div {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  background-color: var(--graphbox-background);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
 }
 
 .horbar {
@@ -180,7 +249,71 @@ body {
   grid-row: 2;
 }
 
-/* Responsive grid for tablets */
+/* Add button styles */
+.add-button {
+  cursor: pointer;
+  background-color: var(--top-background);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  border: none;
+  transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.add-button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.add-button:active {
+  transform: translateY(0);
+  background-color: var(--primary-active);
+}
+
+.add-button div {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.add-button span {
+  color: var(--title);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+/* Media queries for responsive design */
+@media screen and (max-width: 480px) {
+  .heading {
+    margin: var(--space-sm);
+  }
+  
+  .heading h1 {
+    font-size: var(--text-lg);
+  }
+  
+  .add-button {
+    padding: 6px 12px;
+  }
+  
+  .add-button span {
+    font-size: var(--text-xs);
+  }
+  
+  .panel, .box {
+    width: 92%;
+    margin: var(--space-sm) auto;
+  }
+  
+  .box {
+    gap: var(--space-md);
+  }
+}
+
+/* Tablet screens */
 @media screen and (min-width: 600px) {
   .heading h1 {
     font-size: var(--text-2xl);
@@ -211,10 +344,10 @@ body {
   }
 }
 
-/* Responsive grid for desktops */
+/* Desktop screens */
 @media screen and (min-width: 992px) {
   .heading {
-    margin: var(--space-lg);
+    margin: var(--space-lg) var(--space-xl);
   }
   
   .heading h1 {
@@ -224,6 +357,7 @@ body {
   .panel, .box {
     width: 85%;
     margin: var(--space-lg) auto;
+    max-width: var(--container-xl);
   }
   
   .box {
@@ -231,7 +365,7 @@ body {
   }
   
   .add-button {
-    padding: 10px 16px;
+    padding: 10px 20px;
   }
   
   .add-button span {
@@ -239,12 +373,13 @@ body {
   }
 }
 
-/* Çok büyük ekranlar için */
+/* Large screens */
 @media screen and (min-width: 1440px) {
   .heading {
-    margin-left: 30px;
-    margin-right: 30px;
-    margin-top: 20px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--space-xl);
   }
   
   .heading h1 {
@@ -258,43 +393,16 @@ body {
     width: 80%;
   }
   
+  .panel {
+    max-width: 1400px;
+    width: 80%;
+  }
+  
   .add-button {
-    padding: 12px 20px;
+    padding: 12px 24px;
   }
   
   .add-button span {
     font-size: 1rem;
-  }
-}
-
-/* Responsive styles for add button */
-.add-button {
-  cursor: pointer;
-  background-color: var(--top-background);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-}
-
-.add-button div {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.add-button span {
-  color: var(--title);
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
-@media screen and (max-width: 480px) {
-  .add-button {
-    padding: 6px 8px;
-  }
-  
-  .add-button span {
-    font-size: 0.65rem;
   }
 }

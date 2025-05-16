@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Darkmode from "../components/Darkmode";
+import { useModal } from "../components/ToastProvider";
 
 export default function Topbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -13,6 +14,7 @@ export default function Topbar() {
   const darkModeRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
+  const modal = useModal();
 
   // useCallback ile fonksiyonları memoize ediyoruz
   const toggleDropdown = useCallback(() => {
@@ -32,6 +34,7 @@ export default function Topbar() {
   }, []);
 
   const truncateString = useCallback((str, maxLength) => {
+    if (!str) return '';
     return str.length > maxLength ? `${str.slice(0, maxLength)}.` : str;
   }, []);
 
@@ -60,22 +63,40 @@ export default function Topbar() {
     };
   }, [handleClickOutside]);
 
+  // Check login status whenever the component renders or route changes
   useEffect(() => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
     const user = JSON.parse(localStorage.getItem("user"));
     
     setIsLoggedIn(loggedInStatus === "true");
     if (user) {
-      setUserName(user.name);
-      setUserSurname(user.surname);
+      setUserName(user.name || '');
+      setUserSurname(user.surname || '');
+    } else {
+      setUserName('');
+      setUserSurname('');
     }
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = useCallback(() => {
-    localStorage.setItem("isLoggedIn", "false");
-    setIsLoggedIn(false);
-    navigate("/dashboard");
-  }, [navigate]);
+    try {
+      // Clear all session data
+      localStorage.removeItem("user");
+      localStorage.removeItem("currentUserEmail");
+      localStorage.setItem("isLoggedIn", "false");
+      
+      setIsLoggedIn(false);
+      setUserName('');
+      setUserSurname('');
+      
+      // Show success message and redirect to login
+      modal?.showModal && modal.showModal("Logged out successfully", "success");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      modal?.showModal && modal.showModal("An error occurred during logout", "error");
+    }
+  }, [navigate, modal]);
 
   // useMemo ile hesaplamaları optimize ediyoruz
   const displayName = useMemo(() => {
@@ -165,7 +186,7 @@ export default function Topbar() {
                     onClick={closeDropdown}
                     role="menuitem"
                   >
-                    Profil
+                    Profile
                   </Link>
                   <Link
                     to="/settings"
@@ -173,7 +194,7 @@ export default function Topbar() {
                     onClick={closeDropdown}
                     role="menuitem"
                   >
-                    Ayarlar
+                    Settings
                   </Link>
                   <div
                     className="topbar--dropdown-item-darkmode"
@@ -183,11 +204,11 @@ export default function Topbar() {
                     <Darkmode />
                   </div>
                   <button
-                    className="topbar--dropdown-item"
+                    className="topbar--dropdown-item topbar--signout-button"
                     onClick={handleSignOut}
                     role="menuitem"
                   >
-                    Çıkış Yap
+                    Sign Out
                   </button>
                 </div>
               )}
@@ -195,10 +216,10 @@ export default function Topbar() {
           ) : (
             <div className="topbar--sign-box">
               <Link to="/login" className="topbar--sign-title">
-                Giriş Yap
+                Sign In
               </Link>
               <Link to="/register" className="topbar--sign-title">
-                Kayıt Ol
+                Sign Up
               </Link>
               <div className="topbar--item-darkmode">
                 <Darkmode />
@@ -209,7 +230,7 @@ export default function Topbar() {
         {isLoggedIn && (
           <button 
             className="topbar--profile-icon"
-            aria-label="Bildirimler"
+            aria-label="Notifications"
           >
             <img
               src="/assets/notification=dark.svg"

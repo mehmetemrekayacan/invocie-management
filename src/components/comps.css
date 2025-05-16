@@ -92,8 +92,10 @@ img {
   color: var(--text-light);
   padding: var(--space-sm) var(--space-md);
   box-shadow: var(--shadow-md);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: var(--z-header);
   transition: all var(--transition-normal) ease;
 }
@@ -349,11 +351,14 @@ img {
   flex-direction: column;
   background-color: var(--navbar-background);
   color: var(--text-light);
-  padding: var(--space-xs) var(--space-md);
-  box-shadow: var(--shadow-sm);
-  position: relative;
+  padding: 0;
+  min-height: 48px;
+  position: fixed;
+  top: 48px;
+  left: 0;
+  right: 0;
   z-index: calc(var(--z-header) - 10);
-  transition: background-color var(--transition-normal) ease;
+  transition: all var(--transition-normal) ease;
 }
 
 .navbar--content {
@@ -685,120 +690,119 @@ input:checked + .slider:active:before {
 
 /* Responsive Media Queries */
 @media screen and (max-width: 768px) {
-  /* Topbar Responsive Styles */
+  /* Mobil görünüm için topbar düzenlemeleri */
   .topbar {
-    padding: var(--space-xs) var(--space-md);
-    position: relative;
+    padding: var(--space-xs) var(--space-sm);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 42px; /* Mobil cihazda daha küçük yükseklik */
   }
-  
+
   .topbar--logo h2 {
     font-size: var(--text-sm);
   }
-  
+
   .topbar--hamburger {
     display: block;
   }
-  
+
   .topbar--profile {
     position: fixed;
-    top: 0;
+    top: 42px; /* Topbar yüksekliği */
     right: 0;
-    background-color: var(--navbar-background);
-    width: 250px;
-    height: 100vh;
+    background-color: var(--top-background);
+    padding: var(--space-md);
+    width: 200px;
+    box-shadow: var(--shadow-md);
+    border-radius: 0 0 0 var(--radius-md);
     flex-direction: column;
     align-items: flex-start;
-    padding: var(--space-xl) var(--space-md) var(--space-md);
-    box-shadow: var(--shadow-lg);
-    z-index: var(--z-modal);
     transform: translateX(100%);
-    transition: transform var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
+    transition: transform var(--transition-normal) ease;
+    z-index: var(--z-header);
   }
-  
+
   .topbar--profile.mobile-open {
     transform: translateX(0);
   }
-  
+
   .topbar--profile-box {
-    width: 100%;
-    padding: var(--space-sm) 0;
-    margin: var(--space-xs) 0;
-    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
   }
-  
+
   .topbar--sign-box {
-    flex-direction: row;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-xs) var(--space-sm);
     width: 100%;
-    padding: var(--space-sm);
-    margin: var(--space-xs) 0;
-    border-radius: var(--radius-md);
   }
-  
+
   .topbar--sign-title {
-    width: 100%;
+    margin-top: var(--space-xs);
   }
-  
+
   .topbar--dropdown-menu {
     position: relative;
+    top: 0;
     width: 100%;
     margin-top: var(--space-sm);
-    box-shadow: none;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius-md);
   }
-  
-  /* Navbar Responsive Styles */
+
+  /* Mobil görünüm için navbar düzenlemeleri */
   .navbar {
-    padding: var(--space-xs);
+    position: fixed;
+    top: 42px; /* Mobil topbar yüksekliği */
+    left: 0;
+    right: 0;
+    height: 42px; /* Mobil navbar yüksekliği */
   }
-  
+
   .navbar--toggle {
     display: flex;
-    width: 100%;
   }
-  
+
   .navbar--content {
-    display: none;
-    flex-direction: column;
-    padding: var(--space-sm) 0;
-    gap: var(--space-sm);
-    transform: translateY(-10px);
-    opacity: 0;
+    position: fixed;
+    top: 84px; /* Topbar + navbar yüksekliği: 42px + 42px */
+    left: 0;
+    background-color: var(--navbar-background);
+    width: 200px;
+    padding: var(--space-md);
+    height: calc(100vh - 84px);
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal) ease;
+    z-index: calc(var(--z-header) - 20);
   }
-  
+
   .navbar--content-open {
-    display: flex;
-    transform: translateY(0);
-    opacity: 1;
+    transform: translateX(0);
+    box-shadow: var(--shadow-lg);
   }
-  
+
   .navbar--title {
-    width: 100%;
-    margin: var(--space-xs) 0;
+    margin-bottom: var(--space-md);
   }
-  
+
   .navbar--title a,
-  .navbar--title-active {
-    padding: var(--space-sm);
+  .navbar--title button {
     justify-content: flex-start;
   }
-  
+
   .navbar--dropdown-menu {
     position: relative;
+    left: 0;
+    top: 0;
     width: 100%;
-    margin-top: var(--space-xs);
-    box-shadow: none;
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: var(--radius-sm);
+    margin-top: var(--space-sm);
   }
-  
+
   .navbar--dropdown-item {
-    text-align: center;
-    width: 100%;
+    padding: var(--space-xs);
   }
-  
+
   /* Footer Responsive Styles */
   .footer {
     flex-direction: column;
@@ -1061,6 +1065,23 @@ button:focus-visible {
   
   .modal-button {
     width: 100%;
+  }
+}
+
+/* App bileşenindeki içeriği düşürmek için padding ekleyeceğiz */
+.App {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  padding-top: 96px; /* Topbar ve navbar yüksekliklerinin toplamı */
+}
+
+@media screen and (max-width: 768px) {
+  .App {
+    padding-top: 84px; /* Topbar ve navbar mobil yüksekliklerinin toplamı: 42px + 42px */
   }
 }
 

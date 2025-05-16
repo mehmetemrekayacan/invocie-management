@@ -1,45 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Paymenttable from "../data-table/Paymenttable";
 import PaymentModal from "../models/PaymentModal";
+import { useModal } from "../components/ToastProvider";
 
 export default function PaymentPage() {
   const [showModal, setShowModal] = useState(false);
   const [payments, setPayments] = useState([]);
-  const [paymentType, setPaymentType] = useState("");
-  const [status, setStatus] = useState("");
-
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
   const userEmail = localStorage.getItem("currentUserEmail");
+  const modal = useModal();
 
   useEffect(() => {
     if (!userEmail) {
-      // Handle redirect if userEmail is not available
+      navigate("/login");
       return;
     }
-    const storedPayments = localStorage.getItem(`payments_${userEmail}`);
-    if (storedPayments) {
-      setPayments(JSON.parse(storedPayments));
+    
+    setIsLoading(true);
+    try {
+      const storedPayments = localStorage.getItem(`payments_${userEmail}`);
+      if (storedPayments) {
+        setPayments(JSON.parse(storedPayments));
+      }
+    } catch (error) {
+      console.error("Error loading payment data:", error);
+      modal?.showModal && modal.showModal("Failed to load payment data", "error");
+    } finally {
+      setIsLoading(false);
     }
-  }, [userEmail]);
+  }, [userEmail, navigate, modal]);
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  const toggleModal = useCallback(() => {
+    setShowModal(prev => !prev);
+  }, []);
 
-  const addPayment = (newPayment) => {
-    const updatedPayments = [...payments, newPayment];
-    setPayments(updatedPayments);
-    localStorage.setItem(
-      `payments_${userEmail}`,
-      JSON.stringify(updatedPayments)
-    );
-  };
+  const addPayment = useCallback((newPayment) => {
+    setPayments(prevPayments => {
+      const updatedPayments = [...prevPayments, newPayment];
+      localStorage.setItem(`payments_${userEmail}`, JSON.stringify(updatedPayments));
+      return updatedPayments;
+    });
+    
+    modal?.showModal && modal.showModal("Payment added successfully!", "success");
+  }, [userEmail, modal]);
+
+  // Memoize payments to prevent unnecessary re-renders
+  const memoizedPayments = useMemo(() => payments, [payments]);
 
   return (
     <>
       <div className="heading">
         <h1>Payments</h1>
-        <div className="add-button" onClick={toggleModal}>
+        <button className="add-button" onClick={toggleModal}>
           <div>
             <img
               src="/assets/add=dark.svg"
@@ -53,14 +67,14 @@ export default function PaymentPage() {
             />
             <span>Add Payment</span>
           </div>
-        </div>
+        </button>
       </div>
 
       {showModal && (
         <PaymentModal toggleModal={toggleModal} addPayment={addPayment} />
       )}
 
-      <Paymenttable payments={payments} />
+      <Paymenttable payments={memoizedPayments} isLoading={isLoading} />
       <Outlet />
     </>
   );

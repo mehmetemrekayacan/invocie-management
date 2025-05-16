@@ -1,44 +1,59 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import Invoicetable from "../data-table/Invoicetable";
 import InvoiceModal from "../models/InvoiceModal";
+import { useModal } from "../components/ToastProvider";
 
 export default function InvoicePage() {
   const [showModal, setShowModal] = useState(false);
   const [invoices, setInvoices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
   const userEmail = localStorage.getItem("currentUserEmail");
+  const modal = useModal();
 
   useEffect(() => {
     if (!userEmail) {
       navigate("/login");
       return;
     }
-    const storedInvoices = localStorage.getItem(`invoice_${userEmail}`);
-    if (storedInvoices) {
-      setInvoices(JSON.parse(storedInvoices));
+    
+    setIsLoading(true);
+    try {
+      const storedInvoices = localStorage.getItem(`invoice_${userEmail}`);
+      if (storedInvoices) {
+        setInvoices(JSON.parse(storedInvoices));
+      }
+    } catch (error) {
+      console.error("Error loading invoice data:", error);
+      modal?.showModal && modal.showModal("Failed to load invoice data", "error");
+    } finally {
+      setIsLoading(false);
     }
-  }, [userEmail, navigate]);
+  }, [userEmail, navigate, modal]);
 
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  const toggleModal = useCallback(() => {
+    setShowModal(prev => !prev);
+  }, []);
 
-  const addInvoice = (newInvoice) => {
-    const updatedInvoices = [...invoices, newInvoice];
-    setInvoices(updatedInvoices);
-    localStorage.setItem(
-      `invoice_${userEmail}`,
-      JSON.stringify(updatedInvoices)
-    );
-  };
+  const addInvoice = useCallback((newInvoice) => {
+    setInvoices(prevInvoices => {
+      const updatedInvoices = [...prevInvoices, newInvoice];
+      localStorage.setItem(`invoice_${userEmail}`, JSON.stringify(updatedInvoices));
+      return updatedInvoices;
+    });
+    
+    modal?.showModal && modal.showModal("Invoice added successfully!", "success");
+  }, [userEmail, modal]);
+
+  // Memoize invoices to prevent unnecessary re-renders
+  const memoizedInvoices = useMemo(() => invoices, [invoices]);
 
   return (
     <>
       <div className="heading">
         <h1>Invoices</h1>
-        <div className="add-button" onClick={toggleModal}>
+        <button className="add-button" onClick={toggleModal}>
           <div>
             <img
               src="/assets/add=dark.svg"
@@ -52,12 +67,14 @@ export default function InvoicePage() {
             />
             <span>Add Invoice</span>
           </div>
-        </div>
+        </button>
       </div>
+      
       {showModal && (
         <InvoiceModal toggleModal={toggleModal} addInvoice={addInvoice} />
       )}
-      <Invoicetable invoices={invoices} />
+      
+      <Invoicetable invoices={memoizedInvoices} isLoading={isLoading} />
       <Outlet />
     </>
   );
