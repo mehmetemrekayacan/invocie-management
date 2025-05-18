@@ -1,23 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap");
 
 :root {
-  --body-background: #272727;
-  --title: #ffffff;
-  --primary-color: #30335a;
-  --primary-hover: #3f4176;
-  --primary-active: #252747;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
-  --graphbox-background: rgba(255, 255, 255, 0.05);
-  --top-background: #30335a;
+  /* Lüks Renk Paleti */
+  --body-background: #1E2A47;  /* Koyu lacivert arka plan */
+  --title: #FFFFFF;
+  --primary-color: #D4AF37;  /* Altın sarısı */
+  --primary-hover: #E5C158;  /* Açık altın */
+  --primary-active: #C09C20;  /* Koyu altın */
+  --secondary-color: #C0C0C0;  /* Gümüş gri */
+  --accent-color: #4B0082;  /* Koyu mor */
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.65);
+  --graphbox-background: rgba(255, 255, 255, 0.07);
+  --top-background: #1A2544;  /* Biraz daha koyu lacivert */
+  --navbar-background: #15203A;  /* En koyu lacivert */
+  --success-color: #10B981;  /* Zarif yeşil */
+  --warning-color: #F59E0B;  /* Amber */
+  --danger-color: #EF4444;  /* Kırmızı */
+  --info-color: #3B82F6;  /* Mavi */
   
   /* Modern spacing values */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-xxl: 64px;
   
   /* Modern sizing values */
   --text-xs: 12px;
@@ -26,48 +38,59 @@
   --text-lg: 20px;
   --text-xl: 24px;
   --text-2xl: 32px;
+  --text-3xl: 40px;
   
   /* Modern radius values */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
   
-  /* Modern shadow values */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* Lüks gölge değerleri */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.3);  /* Altın gölge */
   
   /* Container widths */
-  --container-sm: 540px;
-  --container-md: 720px;
-  --container-lg: 960px;
-  --container-xl: 1140px;
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
   
   /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Z-index values */
+  --z-dropdown: 100;
+  --z-header: 200;
+  --z-modal: 300;
+  --z-toast: 400;
 }
 
 [data-theme="dark"] {
-  --body-background: #272727;
+  --body-background: #1E2A47;  /* Koyu lacivert arka plan */
   --title: #fff;
   --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --text-muted: rgba(255, 255, 255, 0.5);
-  --graphbox-background: rgba(255, 255, 255, 0.05);
-  --top-background: #30335a;
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  --text-muted: rgba(255, 255, 255, 0.65);
+  --graphbox-background: rgba(255, 255, 255, 0.07);
+  --top-background: #1A2544;
+  --navbar-background: #15203A;
 }
 
 [data-theme="light"] {
-  --body-background: #f6f6f6;
-  --title: #000;
+  --body-background: #F7F9FC;
+  --title: #1A2544;
   --text-primary: #333333;
-  --text-secondary: rgba(0, 0, 0, 0.7);
-  --text-muted: rgba(0, 0, 0, 0.5);
-  --graphbox-background: rgba(0, 0, 0, 0.02);
-  --top-background: #787fd7;
+  --text-secondary: rgba(26, 37, 68, 0.85);
+  --text-muted: rgba(26, 37, 68, 0.65);
+  --graphbox-background: rgba(26, 37, 68, 0.03);
+  --top-background: #D4AF37;  /* Altın rengi üst bar */
+  --navbar-background: #E5C158;  /* Açık altın */
 }
 
 /* Theme icons */
@@ -121,17 +144,46 @@ body::-webkit-scrollbar {
 }
 
 body {
-  font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--body-background);
   color: var(--text-primary);
   font-size: var(--text-md);
-  line-height: 1.5;
+  line-height: 1.6;
   min-width: 320px;
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 button, input, select, textarea {
   font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display", serif;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 0;
+  margin-bottom: var(--space-sm);
+  color: var(--title);
+}
+
+h1 {
+  font-size: var(--text-3xl);
+}
+
+h2 {
+  font-size: var(--text-2xl);
+}
+
+h3 {
+  font-size: var(--text-xl);
+}
+
+h4 {
+  font-size: var(--text-lg);
+}
+
+h5, h6 {
+  font-size: var(--text-md);
 }
 
 button {
@@ -218,9 +270,9 @@ a:hover {
 .box {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: repeat(2, minmax(450px, auto));
   margin: var(--space-md) auto;
-  gap: var(--space-lg);
+  gap: var(--space-xl);
   width: 95%;
   max-width: var(--container-lg);
   animation-delay: 0.1s;
@@ -232,6 +284,9 @@ a:hover {
   background-color: var(--graphbox-background);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  min-height: 500px; /* Minimum yüksekliği artırdık */
+  display: flex;
+  flex-direction: column;
 }
 
 .horbar {
@@ -321,7 +376,8 @@ a:hover {
   
   .box {
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-lg);
+    grid-template-rows: minmax(550px, auto);
+    gap: var(--space-xl);
     width: 90%;
   }
   

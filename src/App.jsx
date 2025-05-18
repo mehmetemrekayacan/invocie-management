@@ -157,27 +157,56 @@ const Home = memo(() => {
   return (
     <>
       <div className="heading">
-        <h1>Dashboard</h1>
+        <h1>Finansal Genel Bakış</h1>
+        <button className="dashboard-action-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="16"></line>
+            <line x1="8" y1="12" x2="16" y2="12"></line>
+          </svg>
+          Yeni İşlem
+        </button>
       </div>
       
-      {/* Summary panel */}
+      {/* Panel - sadece horizontal bar chart */}
       <div className="panel">
-        <Suspense fallback={<div className="chart-loading">Loading chart...</div>}>
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3 className="chart-title">Aylık Özet</h3>
+          </div>
+          <div className="chart-content">
+            <Suspense fallback={<div className="chart-loading">Grafik yükleniyor...</div>}>
           <HorizontalBarchart />
         </Suspense>
+          </div>
+        </div>
       </div>
       
       {/* Charts grid container */}
       <div className="box">
         <div className="bar">
-          <Suspense fallback={<div className="chart-loading">Loading chart...</div>}>
+          <div className="chart-container">
+            <div className="chart-header">
+              <h3 className="chart-title">Gelir Dağılımı</h3>
+            </div>
+            <div className="chart-content">
+              <Suspense fallback={<div className="chart-loading">Grafik yükleniyor...</div>}>
             <Barchart />
           </Suspense>
+            </div>
+          </div>
         </div>
         <div className="pie">
-          <Suspense fallback={<div className="chart-loading">Loading chart...</div>}>
+          <div className="chart-container">
+            <div className="chart-header">
+              <h3 className="chart-title">Harcama Kategorileri</h3>
+            </div>
+            <div className="chart-content">
+              <Suspense fallback={<div className="chart-loading">Grafik yükleniyor...</div>}>
             <Piechart />
           </Suspense>
+            </div>
+          </div>
         </div>
       </div>
     </>

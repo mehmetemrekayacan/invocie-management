@@ -5,66 +5,97 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recha
 import { calculateTotalPie } from "../components/Utils";
 import "./graphbox.css";
 
+// Zaman periyodu seçenekleri
 const TIME_VIEWS = [
-  { value: "week", label: "Week" },
-  { value: "month", label: "Month" },
-  { value: "year", label: "Year" }
+  { value: "week", label: "Hafta" },
+  { value: "month", label: "Ay" },
+  { value: "year", label: "Yıl" }
 ];
 
+// Örnek veri - API bağlantısı olmadığında kullanılır
 const MOCK_DATA = [
-  { name: "Payments", value: 3000 },
-  { name: "Tax", value: 1500 },
-  { name: "Invoices", value: 4500 },
+  { name: "Ödemeler", value: 2957 },
+  { name: "Vergiler", value: 15642 },
 ];
 
-const CHART_COLORS = ["#B30000", "#5E1F1F", "#881717"];
+// Finverso lüks renk şeması - lüks temaya uygun
+const CHART_COLORS = ["#CD4C58", "#4B67AD", "#D4AF37"];
 
-const RADIAN = Math.PI / 180;
+// Veri yok gösterimi
+const EmptyState = () => (
+  <div className="chart-empty-state">
+    <div className="chart-empty-icon">📊</div>
+    <h3>Gösterilecek veri yok</h3>
+    <p>Verilerinizi burada görmek için işlem ekleyin</p>
+  </div>
+);
+
+// Özelleştirilmiş tooltip bileşeni
+const CustomTooltip = ({ active, payload }) => {
+  if (!active || !payload || !payload.length) return null;
+  
+  const data = payload[0];
+  return (
+    <div className="custom-tooltip">
+      <p className="tooltip-label">{data.name}</p>
+      <p className="tooltip-item" style={{ color: data.color }}>
+        {`Değer: ${data.value.toLocaleString('tr-TR')} ₺`}
+      </p>
+      <p className="tooltip-item" style={{ color: data.color }}>
+        {`Yüzde: ${((data.value / data.payload.total) * 100).toFixed(1)}%`}
+      </p>
+    </div>
+  );
+};
+
+// Özelleştirilmiş gösterge bileşeni
+const CustomLegend = ({ payload }) => (
+  <ul className="pie-legend">
+    {payload.map((entry, index) => (
+      <li key={`legend-${index}`} className="pie-legend-item">
+        <span 
+          className="pie-legend-icon" 
+          style={{ backgroundColor: entry.color }}
+        />
+        <span className="pie-legend-text">
+          {`${entry.value}: ${((entry.payload.value / entry.payload.total) * 100).toFixed(0)}%`}
+        </span>
+      </li>
+    ))}
+  </ul>
+);
+
+// Pasta grafiği üzerindeki etiketler için özel fonksiyon
 const renderCustomizedLabel = ({
   cx,
   cy,
   midAngle,
   innerRadius,
   outerRadius,
+  percent,
   name,
-  percent
+  index
 }) => {
-  if (percent === 0) return null;
-  
-  const radius = 25 + innerRadius + (outerRadius - innerRadius);
+  const RADIAN = Math.PI / 180;
+  // Etiketler pastanın içinde gösterilir
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+  // Yüzde çok küçükse etiketi gösterme
+  if (percent < 0.05) return null;
 
   return (
     <g>
-      <rect
-        x={x - 40}
-        y={y - 15}
-        width={80}
-        height={30}
-        rx={5}
-        ry={5}
-        fill="var(--pie-legend-background)"
-        opacity={0.8}
-      />
+      {/* İç etiket - sadece yüzde */}
       <text
         x={x}
-        y={y - 5}
+        y={y} 
+        fill="white" 
         textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--pie-legend-text)"
-        fontSize={12}
+        dominantBaseline="central"
+        fontSize={14}
         fontWeight="bold"
-      >
-        {name}
-      </text>
-      <text
-        x={x}
-        y={y + 10}
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fill="var(--pie-legend-text)"
-        fontSize={10}
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -72,29 +103,58 @@ const renderCustomizedLabel = ({
   );
 };
 
-const EmptyState = () => (
-  <div className="chart-empty-state">
-    <div className="chart-empty-icon">📊</div>
-    <h3>No data to display</h3>
-    <p>Add some transactions to see your data here</p>
-  </div>
-);
-
-const CustomTooltip = ({ active, payload }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip">
-        <p className="tooltip-label">{payload[0].name}</p>
-        <p className="tooltip-item" style={{ color: payload[0].color }}>
-          {`Value: $${payload[0].value.toLocaleString()}`}
-        </p>
-        <p className="tooltip-item" style={{ color: payload[0].color }}>
-          {`Percentage: ${((payload[0].value / payload[0].payload.total) * 100).toFixed(1)}%`}
-        </p>
-      </div>
-    );
+// Örnek veri oluşturmak için manuel fonksiyon
+const generateDemoData = () => {
+  // Kullanıcı e-postası var mı?
+  const userEmail = localStorage.getItem("currentUserEmail");
+  
+  if (!userEmail) return MOCK_DATA;
+  
+  // Kullanıcının vergi ve ödeme verileri
+  let taxData = localStorage.getItem(`tax_${userEmail}`);
+  let paymentData = localStorage.getItem(`payments_${userEmail}`);
+  
+  try {
+    if (taxData) taxData = JSON.parse(taxData);
+    if (paymentData) paymentData = JSON.parse(paymentData);
+    
+    // Toplam değerleri hesapla
+    let taxTotal = 0;
+    let paymentTotal = 0;
+    
+    // Vergi tutarları
+    if (Array.isArray(taxData)) {
+      taxTotal = taxData.reduce((sum, item) => {
+        if (item && item.amount) {
+          return sum + parseFloat(item.amount);
+        }
+        return sum;
+      }, 0);
+    }
+    
+    // Ödeme tutarları
+    if (Array.isArray(paymentData)) {
+      paymentTotal = paymentData.reduce((sum, item) => {
+        if (item && item.amount) {
+          return sum + parseFloat(item.amount);
+        }
+        return sum;
+      }, 0);
+    }
+    
+    // Veri yoksa boş dizi döndür
+    if (taxTotal === 0 && paymentTotal === 0) {
+      return [];
+    }
+    
+    return [
+      { name: "Ödemeler", value: paymentTotal },
+      { name: "Vergiler", value: taxTotal }
+    ];
+  } catch (error) {
+    console.error("Veri işleme hatası:", error);
+    return MOCK_DATA;
   }
-  return null;
 };
 
 export default function Piechart() {
@@ -104,9 +164,11 @@ export default function Piechart() {
   const [isLoading, setIsLoading] = useState(true);
   const chartRef = useRef(null);
 
+  // Veriyi güncelleyen yardımcı fonksiyon
   const updateChartData = useCallback((selectedView) => {
     setIsLoading(true);
     const currentUserEmail = localStorage.getItem("currentUserEmail");
+    
     if (!currentUserEmail) {
       setData(MOCK_DATA);
       setIsLoading(false);
@@ -114,23 +176,22 @@ export default function Piechart() {
     }
 
     try {
-      const totals = calculateTotalPie(currentUserEmail, selectedView);
-      // Add the total value for percentage calculations in tooltip
-      const totalValue = totals.reduce((sum, item) => sum + item.value, 0);
+      // Seçili periyoda göre veri hesapla
+      const chartData = calculateTotalPie(currentUserEmail, selectedView);
       
-      // %0 değere sahip olan kalemleri filtrele
-      const filteredTotals = totals.filter(item => item.value > 0);
+      // Veri boşsa veya yoksa örnek veriyi kullan
+      if (!chartData || chartData.length === 0 || chartData.every(item => item.value === 0)) {
+        setData(MOCK_DATA);
+      } else {
+        // Gösterilen her veri noktasına toplam değeri ekle (yüzde hesaplamaları için)
+        const total = chartData.reduce((sum, item) => sum + item.value, 0);
+        setData(chartData.map(item => ({ ...item, total })));
+      }
       
-      const dataWithTotal = filteredTotals.map(item => ({
-        ...item,
-        total: totalValue
-      }));
-      
-      setData(dataWithTotal);
       setView(selectedView);
     } catch (error) {
-      console.error("Error loading chart data:", error);
-      setData([]);
+      console.error("Veri yüklenirken hata:", error);
+      setData(MOCK_DATA);
     } finally {
       setIsLoading(false);
     }
@@ -140,32 +201,39 @@ export default function Piechart() {
     const isLoggedInValue = localStorage.getItem("isLoggedIn") === "true";
     setIsLoggedIn(isLoggedInValue);
     
-    // Immediate call to load data
-    updateChartData("week");
+    // Varsayılan görünümle veri yükle
+    updateChartData(view);
     
-    // Add animation to chart on mount
+    // Bileşen yüklendikten sonra animasyon ekle
     if (chartRef.current) {
       chartRef.current.classList.add('fade-in');
     }
-  }, [updateChartData]);
+  }, [updateChartData, view]);
 
+  // Görünüm değiştiğinde veriyi güncelle
   const handleViewChange = useCallback((selectedView) => {
+    if (selectedView !== view) {
     updateChartData(selectedView);
-  }, [updateChartData]);
+    }
+  }, [updateChartData, view]);
 
-  const chartData = useMemo(() => data, [data]);
+  // Hesaplanan değerler
+  const chartData = useMemo(() => data.length > 0 ? data : MOCK_DATA, [data]);
+  const totalAmount = useMemo(() => 
+    chartData.reduce((sum, item) => sum + item.value, 0), 
+    [chartData]
+  );
 
-  const totals = useMemo(() => ({
-    payments: data[0]?.value || 0,
-    taxes: data[1]?.value || 0,
-    invoices: data[2]?.value || 0
-  }), [data]);
+  // Veri miktarına göre grafik yüksekliğini ayarla (görünürlük sorunlarını çözmek için)
+  const chartHeight = useMemo(() => {
+    return chartData.length > 0 ? '350px' : '250px';
+  }, [chartData]);
 
   return (
-    <div className="pie--container" ref={chartRef}>
+    <div className="pie--container luxury-shadow" ref={chartRef}>
       <div className="pie--header">
         <h2 className="pie--header--title">
-          {isLoggedIn ? "Expenses Structure" : "Sample Data"}
+          {isLoggedIn ? "Gider Analizi" : "Örnek Veriler"}
         </h2>
         <div className="bar--header--buttons">
           {TIME_VIEWS.map(({ value, label }) => (
@@ -183,52 +251,67 @@ export default function Piechart() {
       {isLoading ? (
         <div className="chart-loading">
           <div className="chart-loader"></div>
-          <p>Loading data...</p>
+          <p>Veriler yükleniyor...</p>
         </div>
-      ) : data.length === 0 || data.every(item => item.value === 0) ? (
+      ) : chartData.length === 0 ? (
         <EmptyState />
       ) : (
         <>
-          <div className="pie--chart">
-            <ResponsiveContainer width="100%" height={250}>
+          <div className="pie--main">
+            <div className="pie--chart" style={{ height: chartHeight }}>
+              <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={chartData}
-                  innerRadius={60}
-                  outerRadius={80}
-                  fill="#8884d8"
+                  innerRadius={65}
+                    outerRadius={105}
+                    paddingAngle={3}
                   dataKey="value"
                   label={renderCustomizedLabel}
                   labelLine={false}
                   animationBegin={0}
-                  animationDuration={1000}
-                  animationEasing="ease-in-out"
+                  animationDuration={1200}
+                    animationEasing="ease-out"
+                    cx="50%"
+                    cy="50%"
                 >
                   {chartData.map((entry, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={CHART_COLORS[index % CHART_COLORS.length]}
+                        stroke="rgba(255, 255, 255, 0.2)"
+                        strokeWidth={1.5}
                     />
                   ))}
                 </Pie>
                 <Tooltip content={<CustomTooltip />} />
-                <Legend />
+                  <Legend 
+                    content={<CustomLegend />}
+                    verticalAlign="bottom"
+                    height={40}
+                    layout="horizontal"
+                  />
               </PieChart>
             </ResponsiveContainer>
+            </div>
           </div>
 
-          <div className="pie--footer">
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Payments:</h2>
-              <h2 className="pie--footer--amount">$ {totals.payments.toLocaleString()}</h2>
+          {/* Özet bilgileri */}
+          <div className="pie--summary">
+            <div className="pie--summary-header">
+              <h3 className="pie--summary-title">Toplam Giderler</h3>
+              <span className="pie--summary-amount">{totalAmount.toLocaleString('tr-TR')} ₺</span>
             </div>
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Taxes:</h2>
-              <h2 className="pie--footer--amount">$ {totals.taxes.toLocaleString()}</h2>
+            
+            <div className="pie--summary-items">
+              {chartData.map((item, index) => (
+                <div key={`summary-${index}`} className="pie--summary-item">
+                  <span className="pie--summary-dot" style={{ backgroundColor: CHART_COLORS[index % CHART_COLORS.length] }}></span>
+                  <span className="pie--summary-name">{item.name}</span>
+                  <span className="pie--summary-value">{item.value.toLocaleString('tr-TR')} ₺</span>
+                  <span className="pie--summary-percent">{((item.value / totalAmount) * 100).toFixed(0)}%</span>
             </div>
-            <div className="pie--footer--item">
-              <h2 className="pie--footer--title">Invoices:</h2>
-              <h2 className="pie--footer--amount">$ {totals.invoices.toLocaleString()}</h2>
+              ))}
             </div>
           </div>
         </>

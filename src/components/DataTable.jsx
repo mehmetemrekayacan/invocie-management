@@ -217,12 +217,78 @@ export default function DataTable({
     return pageNumbers;
   }, [currentPage, totalPages]);
 
+  // Boş durum gösterimi için daha modern bir tasarım
+  const EmptyState = ({ message, subMessage }) => (
+    <div className="datatable-empty">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ margin: '0 auto 16px' }}>
+        <path d="M19 5V19H5V5H19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="currentColor" opacity="0.2"/>
+        <path d="M14 17H7V15H14V17ZM17 13H7V11H17V13ZM17 9H7V7H17V9Z" fill="currentColor" opacity="0.5"/>
+      </svg>
+      <h3>{message}</h3>
+      <p>{subMessage}</p>
+    </div>
+  );
+
+  // Yükleme durumu için daha modern bir tasarım
+  const LoadingState = () => (
+    <div className="datatable-loader">
+      <div className="loader-spinner"></div>
+      <div className="loader-text">Yükleniyor...</div>
+    </div>
+  );
+
+  // Pagination bileşeninde daha detaylı bilgi gösterimi
+  const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    // ... existing code ...
+    
+    return (
+      <div className="datatable-pagination">
+        <div className="pagination-info">
+          Sayfa {currentPage} / {totalPages}
+        </div>
+        <div className="pagination-controls">
+          {/* Navigation buttons */}
+          <button
+            className="pagination-button"
+            onClick={() => onPageChange(1)}
+            disabled={currentPage === 1}
+          >
+            &laquo;
+          </button>
+          <button
+            className="pagination-button"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            &lsaquo;
+          </button>
+          
+          {/* Page buttons */}
+          {renderPaginationButtons()}
+          
+          <button
+            className="pagination-button"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            &rsaquo;
+          </button>
+          <button
+            className="pagination-button"
+            onClick={() => onPageChange(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            &raquo;
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="datatable">
-        <div className="datatable-loader">
-          <div className="loader-spinner"></div>
-        </div>
+        <LoadingState />
       </div>
     );
   }
@@ -230,10 +296,7 @@ export default function DataTable({
   if (!data || data.length === 0) {
     return (
       <div className="datatable">
-        <div className="datatable-empty">
-          <h3>{emptyMessage}</h3>
-          <p>{emptySubMessage}</p>
-        </div>
+        <EmptyState message={emptyMessage} subMessage={emptySubMessage} />
       </div>
     );
   }
@@ -298,11 +361,18 @@ export default function DataTable({
               <th 
                 key={column.key}
                 onClick={() => column.sortable !== false && requestSort(column.key)}
-                style={{ cursor: column.sortable !== false ? 'pointer' : 'default' }}
+                style={{ cursor: column.sortable !== false ? 'pointer' : 'default', textAlign: column.key === 'amount' ? 'center' : 'left' }}
               >
-                {column.label} {column.sortable !== false && getSortIndicator(column.key)}
+                <span style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                  {column.icon && <span className="column-icon">{column.icon}</span>}
+                  <span className="column-label">{column.label}</span>
+                </span>
+                {column.sortable !== false && getSortIndicator(column.key) && 
+                  <span className="sort-indicator">{getSortIndicator(column.key)}</span>
+                }
               </th>
             ))}
+            <th style={{ width: 48 }}></th>
           </tr>
         </thead>
         <tbody>
@@ -351,9 +421,7 @@ export default function DataTable({
       </table>
       
       {totalPages > 1 && (
-        <div className="datatable-pagination">
-          {renderPaginationButtons()}
-        </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       )}
     </div>
   );

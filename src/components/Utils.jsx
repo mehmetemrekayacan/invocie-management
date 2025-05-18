@@ -57,6 +57,37 @@ export const calculateTotals = (email, view) => {
 
   let groupedData = {};
 
+  // Tarih aralığı için yardımcı fonksiyon
+  const getDateRange = (view) => {
+    const now = new Date();
+    let start;
+
+    switch (view) {
+      case "year":
+        start = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+        break;
+      case "month":
+        start = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        break;
+      case "week":
+        start = new Date(now);
+        start.setDate(now.getDate() - 7);
+        break;
+      default:
+        start = now;
+    }
+
+    return { start, end: now };
+  };
+
+  const { start, end } = getDateRange(view);
+
+  const isWithinRange = (date) => {
+    if (!date) return false;
+    const d = new Date(date);
+    return d >= start && d <= end;
+  };
+
   const getYear = (date) => new Date(date).getFullYear();
   const getMonth = (date) =>
     new Date(date).toLocaleString("default", { month: "short" });
@@ -73,6 +104,8 @@ export const calculateTotals = (email, view) => {
   };
 
   const groupData = (date, category, amount) => {
+    if (!isWithinRange(date)) return;
+    
     const key =
       view === "month"
         ? getMonth(date)
@@ -125,17 +158,22 @@ export const calculateTotals = (email, view) => {
       labels.unshift(monthKey);
     }
   } else if (view === "year") {
-    labels = [...new Set(Object.keys(groupedData))].sort((a, b) => a - b);
+    const now = new Date();
+    // Son 3 yıl
+    for (let i = 0; i < 3; i++) {
+      labels.push(now.getFullYear() - i);
+    }
+    labels.sort((a, b) => a - b); // Kronolojik sıralama
   } else if (view === "week") {
     const now = new Date();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 6; i >= 0; i--) {
       const day = new Date(
         now.getFullYear(),
         now.getMonth(),
         now.getDate() - i
       );
       const dayKey = getDayOfWeek(day);
-      labels.unshift(dayKey);
+      labels.push(dayKey);
     }
   }
 
@@ -256,6 +294,7 @@ export const calculateTotalPie = (currentUserEmail, view) => {
     return [];
   }
 
+  // Get data from local storage
   const payments =
     JSON.parse(localStorage.getItem(`payments_${currentUserEmail}`)) || [];
   const invoices =
@@ -264,6 +303,7 @@ export const calculateTotalPie = (currentUserEmail, view) => {
     JSON.parse(localStorage.getItem(`income_${currentUserEmail}`)) || [];
   const tax = JSON.parse(localStorage.getItem(`tax_${currentUserEmail}`)) || [];
 
+  // Create date range based on selected period
   const getDateRange = (view) => {
     const now = new Date();
     let start;
@@ -288,31 +328,41 @@ export const calculateTotalPie = (currentUserEmail, view) => {
 
   const { start, end } = getDateRange(view);
 
+  // Check if date is within range
   const isWithinRange = (date) => {
+    if (!date) return false;
     const d = new Date(date);
     return d >= start && d <= end;
   };
 
+  // Total amount of payments
   const totalPayments = payments
     .filter((item) => item.status && item.status.toLowerCase() === "paid" && isWithinRange(item.date))
-    .reduce((acc, item) => acc + item.amount, 0);
+    .reduce((acc, item) => acc + (Number(item.amount) || 0), 0);
 
+  // Total amount of invoices
   const totalInvoices = invoices
     .filter((item) => item.status && item.status.toLowerCase() === "given" && isWithinRange(item.date))
-    .reduce((acc, item) => acc + item.billed, 0);
+    .reduce((acc, item) => acc + (Number(item.billed) || 0), 0);
 
+  // Total income (for tax calculation)
   const totalIncome = income
     .filter((item) => item.status && item.status.toLowerCase() === "receipt" && isWithinRange(item.date))
-    .reduce((acc, item) => acc + item.amount, 0);
+    .reduce((acc, item) => acc + (Number(item.amount) || 0), 0);
 
+  // Calculate total tax based on tax rates
   const totalTax = tax.reduce(
-    (acc, item) => acc + (totalIncome * item.taxRate) / 100,
+    (acc, item) => acc + (totalIncome * (Number(item.taxRate) || 0)) / 100,
     0
   );
 
-  return [
+  // Filter out zero values
+  const result = [
     { name: "Payments", value: totalPayments },
-    { name: "Tax", value: totalTax },
+    { name: "Taxes", value: totalTax },
     { name: "Invoices", value: totalInvoices },
-  ];
+  ].filter(item => item.value > 0);
+
+  // If no data, return empty array
+  return result.length > 0 ? result : [];
 };

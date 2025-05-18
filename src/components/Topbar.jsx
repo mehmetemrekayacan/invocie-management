@@ -9,6 +9,7 @@ export default function Topbar() {
   const [userName, setUserName] = useState("");
   const [userSurname, setUserSurname] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
   
   const dropdownRef = useRef(null);
   const darkModeRef = useRef(null);
@@ -55,6 +56,15 @@ export default function Topbar() {
       closeMobileMenu();
     }
   }, [closeDropdown, closeMobileMenu]);
+
+  // Saat güncellemesi için
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutside, true);
@@ -103,53 +113,78 @@ export default function Topbar() {
     return `${truncateString(userName, 8)} ${truncateString(userSurname, 8)}`;
   }, [userName, userSurname, truncateString]);
 
+  // Zamanı formatlama
+  const formattedTime = useMemo(() => {
+    return currentTime.toLocaleTimeString('tr-TR', { 
+      hour: '2-digit', 
+      minute: '2-digit'
+    });
+  }, [currentTime]);
+
+  // Tarihi formatlama
+  const formattedDate = useMemo(() => {
+    return currentTime.toLocaleDateString('tr-TR', { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric'
+    });
+  }, [currentTime]);
+
   return (
     <div className="topbar" role="banner">
       <div className="topbar--logo">
         <img
-          src="/assets/logo-dark.svg"
-          alt="Invoicify Logo"
+          src="/assets/luxury/logo-dark.svg"
+          alt="Finverso Logo"
           className="dark-icon"
-          width="24"
-          height="24"
+          width="40"
+          height="40"
         />
         <img
-          src="/assets/logo-light.svg"
-          alt="Invoicify Logo"
+          src="/assets/luxury/logo-light.svg"
+          alt="Finverso Logo"
           className="light-icon"
-          width="24"
-          height="24"
+          width="40"
+          height="40"
         />
-        <h2>Invoicify</h2>
+        <h2>Finverso</h2>
       </div>
 
-      <button 
-        className="topbar--hamburger" 
-        onClick={toggleMobileMenu}
-        aria-label="Menüyü aç/kapat"
-        aria-expanded={mobileMenuOpen}
-      >
-        <div className={`hamburger-icon ${mobileMenuOpen ? 'open' : ''}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
+      {/* Orta kısım: saat ve tarih */}
+      <div className="topbar--datetime">
+        <div className="topbar--time">{formattedTime}</div>
+        <div className="topbar--date">{formattedDate}</div>
+      </div>
 
-      <nav 
-        className={`topbar--profile ${mobileMenuOpen ? 'mobile-open' : ''}`} 
-        ref={mobileMenuRef}
-        role="navigation"
-        aria-label="Ana menü"
-      >
+      <div className="topbar--right-section">
+        <div className="topbar--notifications">
+          <button className="topbar--icon-button" aria-label="Bildirimler">
+            <img 
+              src="/assets/notification=dark.svg" 
+              alt="Bildirimler" 
+              className="dark-icon"
+              width="24"
+              height="24"
+            />
+            <img 
+              src="/assets/notification=light.svg" 
+              alt="Bildirimler" 
+              className="light-icon"
+              width="24"
+              height="24"
+            />
+            <span className="topbar--icon-badge"></span>
+          </button>
+        </div>
+      
         <div className="topbar--profile-box">
           {isLoggedIn ? (
             <>
               <img 
                 src="/assets/profile image.png" 
                 alt="Profil resmi" 
-                width="24"
-                height="24"
+                width="36"
+                height="36"
               />
               <button
                 className="topbar--profile-title"
@@ -160,14 +195,14 @@ export default function Topbar() {
               >
                 <span>{displayName}</span>
                 <img
-                  className="topbar--dropdown-icon dark-icon"
+                  className={`topbar--dropdown-icon dark-icon ${isDropdownOpen ? "open" : ""}`}
                   src="/assets/dropdown=dark.svg"
                   alt=""
                   width="16"
                   height="16"
                 />
                 <img
-                  className="topbar--dropdown-icon light-icon"
+                  className={`topbar--dropdown-icon light-icon ${isDropdownOpen ? "open" : ""}`}
                   src="/assets/dropdown=light.svg"
                   alt=""
                   width="16"
@@ -186,7 +221,8 @@ export default function Topbar() {
                     onClick={closeDropdown}
                     role="menuitem"
                   >
-                    Profile
+                    <i className="dropdown-icon profile-icon"></i>
+                    Profil
                   </Link>
                   <Link
                     to="/settings"
@@ -194,61 +230,96 @@ export default function Topbar() {
                     onClick={closeDropdown}
                     role="menuitem"
                   >
-                    Settings
+                    <i className="dropdown-icon settings-icon"></i>
+                    Ayarlar
                   </Link>
                   <div
                     className="topbar--dropdown-item-darkmode"
                     ref={darkModeRef}
-                    role="menuitem"
                   >
                     <Darkmode />
                   </div>
                   <button
-                    className="topbar--dropdown-item topbar--signout-button"
-                    onClick={handleSignOut}
+                    className="topbar--dropdown-item"
+                    onClick={() => {
+                      closeDropdown();
+                      handleSignOut();
+                    }}
                     role="menuitem"
                   >
-                    Sign Out
+                    <i className="dropdown-icon logout-icon"></i>
+                    Çıkış Yap
                   </button>
                 </div>
               )}
             </>
           ) : (
-            <div className="topbar--sign-box">
-              <Link to="/login" className="topbar--sign-title">
-                Sign In
+            <Link to="/login" className="topbar--sign-box">
+              <span className="topbar--sign-title">Giriş Yap</span>
               </Link>
-              <Link to="/register" className="topbar--sign-title">
-                Sign Up
-              </Link>
-              <div className="topbar--item-darkmode">
-                <Darkmode />
-              </div>
-            </div>
           )}
         </div>
-        {isLoggedIn && (
+      </div>
+
           <button 
-            className="topbar--profile-icon"
-            aria-label="Notifications"
+        className="topbar--hamburger" 
+        onClick={toggleMobileMenu}
+        aria-label="Menüyü aç/kapat"
+        aria-expanded={mobileMenuOpen}
           >
-            <img
-              src="/assets/notification=dark.svg"
-              className="dark-icon"
-              alt=""
-              width="16"
-              height="16"
+        <div className={`hamburger-icon ${mobileMenuOpen ? 'open' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </button>
+
+      <nav 
+        className={`topbar--mobile-menu ${mobileMenuOpen ? 'mobile-open' : ''}`} 
+        ref={mobileMenuRef}
+        role="navigation"
+        aria-label="Ana menü"
+      >
+        {isLoggedIn ? (
+          <div className="topbar--mobile-profile">
+            <img 
+              src="/assets/profile image.png" 
+              alt="Profil resmi" 
+              width="36"
+              height="36"
             />
-            <img
-              src="/assets/notification=light.svg"
-              className="light-icon"
-              alt=""
-              width="16"
-              height="16"
-            />
-            <div className="topbar--icon-badge" aria-hidden="true"></div>
+            <div className="topbar--mobile-user">
+              <span>{displayName}</span>
+            </div>
+          </div>
+        ) : (
+          <Link to="/login" className="topbar--mobile-login">
+            Giriş Yap
+          </Link>
+        )}
+        
+        <div className="topbar--mobile-links">
+          <Link to="/profile" className="topbar--mobile-link">
+            <i className="dropdown-icon profile-icon"></i>
+            Profil
+          </Link>
+          <Link to="/settings" className="topbar--mobile-link">
+            <i className="dropdown-icon settings-icon"></i>
+            Ayarlar
+          </Link>
+          <div className="topbar--mobile-darkmode">
+            <Darkmode />
+          </div>
+          {isLoggedIn && (
+            <button 
+              className="topbar--mobile-link" 
+              onClick={handleSignOut}
+            >
+              <i className="dropdown-icon logout-icon"></i>
+              Çıkış Yap
           </button>
         )}
+        </div>
       </nav>
     </div>
   );

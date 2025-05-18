@@ -9,7 +9,7 @@ const NAV_ITEMS = [
       dark: "/assets/dashboard=dark.svg",
       light: "/assets/dashboard=light.svg"
     },
-    label: "Dashboard",
+    label: "Genel Bakış",
     alt: "Dashboard icon"
   },
   {
@@ -18,7 +18,7 @@ const NAV_ITEMS = [
       dark: "/assets/income=dark.svg",
       light: "/assets/income=light.svg"
     },
-    label: "Income",
+    label: "Gelirler",
     alt: "Income icon"
   },
   {
@@ -27,7 +27,7 @@ const NAV_ITEMS = [
       dark: "/assets/invoice=dark.svg",
       light: "/assets/invoice=light.svg"
     },
-    label: "Invoice",
+    label: "Faturalar",
     alt: "Invoice icon"
   },
   {
@@ -36,11 +36,11 @@ const NAV_ITEMS = [
       dark: "/assets/expense=dark.svg",
       light: "/assets/expense=light.svg"
     },
-    label: "Expense",
+    label: "Giderler",
     alt: "Expense icon",
     dropdown: [
-      { path: "/expense/payment", label: "Payment" },
-      { path: "/expense/tax", label: "Tax" }
+      { path: "/expense/payment", label: "Ödemeler" },
+      { path: "/expense/tax", label: "Vergiler" }
     ]
   }
 ];
@@ -103,8 +103,10 @@ export default function Navbar() {
 
   // Navbar öğelerini render eden fonksiyon
   const renderNavItem = useCallback((item) => {
-    const isActive = activePath === item.path;
+    const isActive = activePath === item.path || 
+                    (item.path === "/" && activePath === "/dashboard");
     const isDropdownItem = !!item.dropdown;
+    const isMainDropdownActive = item.dropdown?.some(subItem => activePath === subItem.path);
 
     if (isDropdownItem) {
       return (
@@ -112,7 +114,7 @@ export default function Navbar() {
           key={item.path}
           className={`navbar--title ${
             isDropdownOpen ? "navbar--dropdown-open" : ""
-          } ${isActive ? "active" : ""}`}
+          } ${isActive || isMainDropdownActive ? "active" : ""}`}
           ref={dropdownRef}
         >
           <button
@@ -137,14 +139,14 @@ export default function Navbar() {
             />
             <h2>{item.label}</h2>
             <img
-              className="navbar--dropdown-icon dark-icon"
+              className={`navbar--dropdown-icon dark-icon ${isDropdownOpen ? "open" : ""}`}
               src="/assets/dropdown=dark.svg"
               alt=""
               width="16"
               height="16"
             />
             <img
-              className="navbar--dropdown-icon light-icon"
+              className={`navbar--dropdown-icon light-icon ${isDropdownOpen ? "open" : ""}`}
               src="/assets/dropdown=light.svg"
               alt=""
               width="16"
@@ -200,24 +202,38 @@ export default function Navbar() {
   }, [isDropdownOpen, activePath, toggleDropdown, closeDropdown]);
 
   return (
-    <nav className="navbar" ref={navbarRef} role="navigation" aria-label="Main menu">
+    <nav 
+      className="navbar" 
+      role="navigation"
+      aria-label="Ana navigasyon"
+      ref={navbarRef}
+    >
       <button 
         className="navbar--toggle" 
         onClick={toggleNavbar}
-        aria-label="Toggle menu"
         aria-expanded={navbarCollapsed}
+        aria-controls="navbar-content"
       >
-        <div className={`navbar-toggle-icon ${navbarCollapsed ? 'open' : ''}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <span className="navbar--toggle-text">Menu</span>
+        <span>Menü</span>
+        <img
+          src="/assets/dropdown=dark.svg"
+          className={`dark-icon ${navbarCollapsed ? "open" : ""}`}
+          alt=""
+          width="16"
+          height="16"
+        />
+        <img
+          src="/assets/dropdown=light.svg"
+          className={`light-icon ${navbarCollapsed ? "open" : ""}`}
+          alt=""
+          width="16"
+          height="16"
+        />
       </button>
     
       <div 
+        id="navbar-content"
         className={`navbar--content ${navbarCollapsed ? 'navbar--content-open' : ''}`}
-        role="menubar"
       >
         {NAV_ITEMS.map(renderNavItem)}
       </div>

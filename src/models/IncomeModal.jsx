@@ -7,6 +7,7 @@ const IncomeModal = memo(({ toggleModal, addIncome }) => {
     date: "",
     incomeDetail: "",
     incomeType: "",
+    otherIncomeType: "",
     amount: "",
     status: ""
   });
@@ -28,10 +29,16 @@ const IncomeModal = memo(({ toggleModal, addIncome }) => {
       return;
     }
 
+    // Other seçeneği için özel kontrol
+    if (formData.incomeType === "7" && !formData.otherIncomeType) {
+      alert(`Lütfen diğer gelir tipini belirtin.`);
+      return;
+    }
+
     const newIncome = {
       date: new Date(formData.date).toLocaleDateString("en-US"),
       incomeDetail: formData.incomeDetail,
-      incomeType: formData.incomeType,
+      incomeType: formData.incomeType === "7" ? formData.otherIncomeType : formData.incomeType,
       amount: parseInt(formData.amount, 10),
       status: formData.status,
       action: "Edit",
@@ -96,12 +103,30 @@ const IncomeModal = memo(({ toggleModal, addIncome }) => {
                   className="model--select"
                 >
                   <option value="">Select Income Type</option>
-                  <option value="creditcard">Credit Card</option>
-                  <option value="cash">Cash</option>
-                  <option value="banktransfer">Bank Transfer</option>
-                  <option value="other">Other</option>
+                  <option value="1">Sale</option>
+                  <option value="2">Service</option>
+                  <option value="3">Investment</option>
+                  <option value="4">Rental</option>
+                  <option value="5">Commission</option>
+                  <option value="6">Royalty</option>
+                  <option value="7">Other</option>
                 </select>
               </div>
+
+              {formData.incomeType === "7" && (
+                <div className="model--form-group">
+                  <label htmlFor="otherIncomeType">Specify Other Income Type</label>
+                  <input
+                    type="text"
+                    id="otherIncomeType"
+                    name="otherIncomeType"
+                    value={formData.otherIncomeType}
+                    onChange={handleChange}
+                    className="model--input"
+                    placeholder="Enter other income type"
+                  />
+                </div>
+              )}
 
               <div className="model--form-group">
                 <label htmlFor="status">Status</label>
