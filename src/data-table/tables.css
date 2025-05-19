@@ -16,6 +16,14 @@
   --status-given: #2196f3;
   --status-enabled: #4caf50;
   --status-not-enabled: #f44336;
+  
+  /* Lüks mod değişkenleri */
+  --luxury-gold: #D4AF37;
+  --luxury-gold-light: #F9F295;
+  --luxury-gold-dark: #A68A24;
+  --luxury-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 5px 10px rgba(0, 0, 0, 0.08);
+  --luxury-gradient: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-light));
+  --luxury-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 [data-theme="dark"] {
@@ -27,6 +35,11 @@
   --datatable-border: rgba(255, 255, 255, 0.15);
   --datatable-text-primary: #ffffff;
   --datatable-text-secondary: rgba(255, 255, 255, 0.8);
+  
+  /* Lüks tema için altın renk efekti */
+  --luxury-gold: #D4AF37;
+  --luxury-gold-light: #F9F295;
+  --luxury-gold-dark: #A68A24;
 }
 
 [data-theme="light"] {
@@ -38,6 +51,11 @@
   --datatable-border: rgba(26, 37, 68, 0.15);
   --datatable-text-primary: #1A2544; /* Koyu mavi */
   --datatable-text-secondary: rgba(26, 37, 68, 0.8);
+  
+  /* Lüks tema için altın renk efekti */
+  --luxury-gold: #A68A24;
+  --luxury-gold-light: #D4AF37;
+  --luxury-gold-dark: #8A742A;
 }
 
 .datatable {
@@ -1032,4 +1050,359 @@ td .type-badge::before {
 .action-menu-item.delete:hover {
   background: rgba(239, 68, 68, 0.08);
   color: #d32f2f;
+}
+
+/* Lüks mod için tablo stilleri */
+.datatable.luxury-mode {
+  background-color: var(--datatable-background);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--luxury-shadow);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(var(--luxury-gold-light), 0.1);
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.datatable.luxury-mode:before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 30%;
+  right: 30%;
+  height: 2px;
+  background: var(--luxury-gradient);
+  border-radius: 100%;
+  filter: blur(1px);
+  opacity: 0.7;
+  transition: all 0.4s ease;
+}
+
+.datatable.luxury-mode:hover:before {
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+
+.datatable.luxury-mode .datatable--header {
+  background-color: var(--datatable-header-background);
+  border-bottom: none;
+  padding: var(--space-md) 0;
+}
+
+.datatable.luxury-mode .datatable--header th {
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--luxury-gold);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid rgba(var(--luxury-gold-light), 0.15);
+}
+
+.datatable.luxury-mode .datatable--items:hover {
+  background-color: var(--datatable-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  z-index: 2;
+}
+
+/* Lüks modda type badge'ler */
+.datatable.luxury-mode .tax-type {
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.datatable.luxury-mode .tax-type:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.datatable.luxury-mode .tax-type.income-tax {
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  color: #2E7D32;
+}
+
+.datatable.luxury-mode .tax-type.vat {
+  background-color: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.2);
+  color: #1565C0;
+}
+
+.datatable.luxury-mode .tax-type.corporate {
+  background-color: rgba(156, 39, 176, 0.1);
+  border: 1px solid rgba(156, 39, 176, 0.2);
+  color: #7B1FA2;
+}
+
+.datatable.luxury-mode .tax-type.other {
+  background-color: rgba(255, 152, 0, 0.1);
+  border: 1px solid rgba(255, 152, 0, 0.2);
+  color: #E65100;
+}
+
+/* Tutar stil geliştirmeleri */
+.datatable.luxury-mode .amount {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--luxury-gold);
+  background: rgba(212, 175, 55, 0.1);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  display: inline-block;
+  min-width: 100px;
+  text-align: right;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.datatable.luxury-mode .status-badge {
+  padding: 6px 16px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  border-radius: var(--radius-full);
+  min-width: 110px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.datatable.luxury-mode .status-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.datatable.luxury-mode .status-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.datatable.luxury-mode .status-paid {
+  background: linear-gradient(to right, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.2));
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #2E7D32;
+}
+
+.datatable.luxury-mode .status-paid::before {
+  background-color: #4CAF50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+}
+
+.datatable.luxury-mode .status-unpaid {
+  background: linear-gradient(to right, rgba(244, 67, 54, 0.1), rgba(244, 67, 54, 0.2));
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #D32F2F;
+}
+
+.datatable.luxury-mode .status-unpaid::before {
+  background-color: #F44336;
+  box-shadow: 0 0 6px rgba(244, 67, 54, 0.6);
+}
+
+/* Lüks mod için düzenleme formu */
+.datatable.luxury-mode .datatable-edit-form {
+  background-color: var(--datatable-header-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--luxury-shadow);
+  padding: var(--space-xl);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.datatable.luxury-mode .datatable-edit-form:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--luxury-gradient);
+}
+
+.datatable.luxury-mode .datatable-edit-form h3 {
+  color: var(--luxury-gold);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.datatable.luxury-mode .form-button.save {
+  background: var(--luxury-gradient);
+  color: #000;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
+  border: none;
+  padding: 10px 24px;
+}
+
+.datatable.luxury-mode .form-button.save:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+}
+
+.datatable.luxury-mode .form-button.cancel {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: var(--datatable-text-secondary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.datatable.luxury-mode .form-button.cancel:hover {
+  background-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.datatable.luxury-mode .form-row input, 
+.datatable.luxury-mode .form-row select, 
+.datatable.luxury-mode .form-row textarea {
+  background-color: var(--datatable-background);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 12px 16px;
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.datatable.luxury-mode .form-row input:focus, 
+.datatable.luxury-mode .form-row select:focus, 
+.datatable.luxury-mode .form-row textarea:focus {
+  border-color: var(--luxury-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Lüks mod için boş durum */
+.datatable.luxury-mode .datatable-empty {
+  background-color: var(--datatable-background);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.datatable.luxury-mode .datatable-empty:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--luxury-gradient);
+}
+
+.datatable.luxury-mode .datatable-empty svg {
+  color: var(--luxury-gold);
+  opacity: 0.3;
+  width: 64px;
+  height: 64px;
+}
+
+.datatable.luxury-mode .datatable-empty h3 {
+  color: var(--luxury-gold);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
+.datatable.luxury-mode .datatable-empty p {
+  color: var(--datatable-text-secondary);
+  font-size: var(--text-md);
+}
+
+/* Lüks mod filtre stilleri */
+.datatable.luxury-mode .datatable--filter-header th {
+  color: var(--datatable-text-primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-md) var(--space-md);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.datatable.luxury-mode .datatable--filter-header th:hover {
+  color: var(--luxury-gold);
+  background-color: var(--datatable-hover);
+}
+
+.datatable.luxury-mode .datatable--filter-active {
+  color: var(--luxury-gold) !important;
+  font-weight: 700 !important;
+}
+
+.datatable.luxury-mode .datatable--filter-header th::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--luxury-gradient);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.datatable.luxury-mode .datatable--filter-active::after {
+  width: 100%;
+}
+
+/* Responsive düzenlemeler */
+@media screen and (max-width: 768px) {
+  .datatable.luxury-mode {
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+  }
+  
+  .datatable.luxury-mode .tax-type,
+  .datatable.luxury-mode .status-badge {
+    min-width: auto;
+    padding: 4px 8px;
+    font-size: 0.65rem;
+  }
+  
+  .datatable.luxury-mode .amount {
+    min-width: 80px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .datatable.luxury-mode .datatable-edit-form {
+    padding: var(--space-md);
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .datatable.luxury-mode .tax-type,
+  .datatable.luxury-mode .status-badge {
+    min-width: 90px;
+    padding: 5px 10px;
+  }
 }

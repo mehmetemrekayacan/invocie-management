@@ -13,7 +13,8 @@ export default function DataTable({
   onEdit,
   onDelete,
   editFormFields,
-  editFormTitle = "Edit Record"
+  editFormTitle = "Edit Record",
+  luxuryMode = false
 }) {
   const [data, setData] = useState(initialData);
   const [filter, setFilter] = useState("All");
@@ -302,17 +303,23 @@ export default function DataTable({
   }
 
   return (
-    <div className="datatable">
-      {editItem && (
-        <div className="datatable-edit-form">
+    <div className={`datatable ${luxuryMode ? 'luxury-mode' : ''}`}>
+      {editItem && editFormFields && (
+        <div className={`datatable-edit-form ${luxuryMode ? 'luxury-edit-form' : ''}`}>
           <h3>{editFormTitle}</h3>
           {editFormFields.map((field) => (
-            <div key={field.name} className="form-row">
-              <label>{field.label}:</label>
+            <div className="form-row" key={field.name}>
+              <label htmlFor={field.name}>{field.label}</label>
               {field.type === 'select' ? (
-                <select 
-                  value={editItem[field.name]} 
-                  onChange={(e) => handleEditChange(field.name, field.parseValue ? field.parseValue(e.target.value) : e.target.value)}
+                <select
+                  id={field.name}
+                  value={editItem[field.name]}
+                  onChange={(e) => {
+                    const value = field.parseValue 
+                      ? field.parseValue(e.target.value)
+                      : e.target.value;
+                    handleEditChange(field.name, value);
+                  }}
                 >
                   {field.options.map(option => (
                     <option key={option.value} value={option.value}>
@@ -321,107 +328,144 @@ export default function DataTable({
                   ))}
                 </select>
               ) : (
-                <input 
-                  type={field.type || 'text'} 
-                  value={editItem[field.name]} 
-                  onChange={(e) => handleEditChange(field.name, field.parseValue ? field.parseValue(e.target.value) : e.target.value)} 
+                <input
+                  type={field.type}
+                  id={field.name}
+                  value={editItem[field.name]}
+                  onChange={(e) => {
+                    const value = field.parseValue && field.type === 'number'
+                      ? field.parseValue(e.target.value)
+                      : e.target.value;
+                    handleEditChange(field.name, value);
+                  }}
                 />
               )}
             </div>
           ))}
           <div className="form-actions">
-            <button onClick={handleSaveEdit} className="form-button save">
-              Save
+            <button 
+              type="button" 
+              className="form-button cancel"
+              onClick={() => setEditItem(null)}
+            >
+              İptal
             </button>
-            <button onClick={() => setEditItem(null)} className="form-button cancel">
-              Cancel
+            <button 
+              type="button" 
+              className="form-button save"
+              onClick={handleSaveEdit}
+            >
+              Kaydet
             </button>
           </div>
         </div>
       )}
 
-      <table className="datatable--chart">
-        <thead>
-          <tr className="datatable--filter-header">
-            {filters.map((filterOption) => (
-              <th 
-                key={filterOption.value}
-                onClick={() => setFilter(filterOption.value)} 
-                className={filter === filterOption.value ? "datatable--filter-active" : ""}
-              >
-                {filterOption.label}
-              </th>
-            ))}
-            {Array(columns.length - filters.length).fill(null).map((_, i) => (
-              <th key={`empty-${i}`}></th>
-            ))}
-          </tr>
-          <tr className="datatable--header">
-            {columns.map((column) => (
-              <th 
-                key={column.key}
-                onClick={() => column.sortable !== false && requestSort(column.key)}
-                style={{ cursor: column.sortable !== false ? 'pointer' : 'default', textAlign: column.key === 'amount' ? 'center' : 'left' }}
-              >
-                <span style={{display:'flex',alignItems:'center',gap:'6px'}}>
-                  {column.icon && <span className="column-icon">{column.icon}</span>}
-                  <span className="column-label">{column.label}</span>
-                </span>
-                {column.sortable !== false && getSortIndicator(column.key) && 
-                  <span className="sort-indicator">{getSortIndicator(column.key)}</span>
-                }
-              </th>
-            ))}
-            <th style={{ width: 48 }}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item, index) => (
-            <tr key={item.id || index} className="datatable--items">
-              {columns.map((column) => (
-                <td key={column.key}>
-                  {column.render ? column.render(item) : item[column.key]}
-                </td>
-              ))}
-              <td>
-                <div className="action-menu-container">
-                  <button 
-                    className="action-menu-button"
-                    onClick={(e) => toggleMenu(index, e)}
-                    aria-label="Dropdown Menu"
-                  >
-                    <div className="action-menu-dots">
-                      <div className="action-menu-dot"></div>
-                      <div className="action-menu-dot"></div>
-                      <div className="action-menu-dot"></div>
-                    </div>
-                  </button>
-                  
-                  {activeMenu === index && (
-                    <div className="action-menu">
-                      <div 
-                        className="action-menu-item"
-                        onClick={() => handleEdit(item)}
+      {!editItem && (
+        <>
+          {filters && (
+            <table className="datatable--chart">
+              <thead>
+                <tr className="datatable--filter-header">
+                  {filters.map((filterItem, index) => (
+                    <th
+                      key={index}
+                      className={filter === filterItem.value ? 'datatable--filter-active' : ''}
+                      onClick={() => setFilter(filterItem.value)}
+                    >
+                      {filterItem.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+            </table>
+          )}
+
+          {isLoading ? (
+            <LoadingState />
+          ) : filteredAndSortedData.length === 0 ? (
+            <EmptyState message={emptyMessage} subMessage={emptySubMessage} />
+          ) : (
+            <>
+              <table className="datatable--chart">
+                <thead>
+                  <tr className="datatable--header">
+                    {columns.map((column) => (
+                      <th 
+                        key={column.key}
+                        onClick={() => column.sortable && requestSort(column.key)}
+                        style={{ cursor: column.sortable ? 'pointer' : 'default' }}
+                        data-key={column.key}
                       >
-                        <i className="fas fa-edit"></i> Edit
-                      </div>
-                      <div 
-                        className="action-menu-item delete"
-                        onClick={() => handleDelete(item)}
-                      >
-                        <i className="fas fa-trash"></i> Delete
-                      </div>
-                    </div>
-                  )}
+                        {column.icon && column.icon}
+                        <span className="column-label">{column.label}</span>
+                        {column.sortable && <span className="sort-indicator">{getSortIndicator(column.key)}</span>}
+                      </th>
+                    ))}
+                    <th style={{ width: '60px' }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((item, index) => (
+                    <tr key={item.id || index} className="datatable--items">
+                      {columns.map((column) => (
+                        <td key={column.key}>
+                          {column.render ? column.render(item) : item[column.key]}
+                        </td>
+                      ))}
+                      <td>
+                        <div className="action-menu-container" style={{ position: 'relative' }}>
+                          <button
+                            className="action-menu-button"
+                            onClick={(e) => toggleMenu(index, e)}
+                          >
+                            <div className="action-menu-dots">
+                              <div className="action-menu-dot"></div>
+                              <div className="action-menu-dot"></div>
+                              <div className="action-menu-dot"></div>
+                            </div>
+                          </button>
+                          
+                          {activeMenu === index && (
+                            <div className="action-menu">
+                              <div className="action-menu-item" onClick={() => handleEdit(item)}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Düzenle
+                              </div>
+                              <div className="action-menu-item delete" onClick={() => handleDelete(item)}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="3 6 5 6 21 6"></polyline>
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                Sil
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              
+              {totalPages > 1 && (
+                <div className="datatable-pagination">
+                  <div className="pagination-info">
+                    Sayfa {currentPage} / {totalPages}
+                  </div>
+                  <div className="pagination-controls">
+                    {renderPaginationButtons()}
+                  </div>
                 </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
-      {totalPages > 1 && (
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+              )}
+            </>
+          )}
+        </>
       )}
     </div>
   );

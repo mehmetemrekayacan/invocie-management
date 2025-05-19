@@ -45,65 +45,112 @@ const StatusIcon = () => (
 );
 
 export default function Incometable({ products: initialProducts = [], isLoading = false }) {
+  // Gelir türlerini Türkçeleştirme
+  const incomeTypeMap = {
+    1: { label: 'Satış', class: 'sales' },
+    2: { label: 'Hizmet', class: 'service' },
+    3: { label: 'Yatırım', class: 'investment' },
+    4: { label: 'Kira', class: 'rental' },
+    5: { label: 'Komisyon', class: 'commission' },
+    6: { label: 'Telif', class: 'royalty' },
+    7: { label: 'Diğer', class: 'other' }
+  };
+
   const columns = [
-    { key: 'date', label: 'DATE', icon: <DateIcon />, sortable: true },
-    { key: 'incomeDetail', label: 'INCOME DETAIL', icon: <DetailIcon />, sortable: true },
-    { key: 'incomeType', label: 'INCOME TYPE', icon: <TypeIcon />, sortable: true,
+    { 
+      key: 'date', 
+      label: 'TARİH', 
+      icon: <DateIcon />, 
+      sortable: true 
+    },
+    { 
+      key: 'incomeDetail', 
+      label: 'GELİR DETAYI', 
+      icon: <DetailIcon />, 
+      sortable: true 
+    },
+    { 
+      key: 'incomeType', 
+      label: 'GELİR TÜRÜ', 
+      icon: <TypeIcon />, 
+      sortable: true,
       render: (item) => {
-        const incomeTypeMap = {
-          1: { label: 'Sale', class: 'sales' },
-          2: { label: 'Service', class: 'service' },
-          3: { label: 'Investment', class: 'investment' },
-          4: { label: 'Rental', class: 'rental' },
-          5: { label: 'Commission', class: 'commission' },
-          6: { label: 'Royalty', class: 'royalty' },
-          7: { label: 'Other', class: 'other' }
+        const type = incomeTypeMap[item.incomeType] || { 
+          label: formatType(item.incomeType), 
+          class: 'other' 
         };
-        const type = incomeTypeMap[item.incomeType] || { label: formatType(item.incomeType), class: 'other' };
-        return <span className={`type-badge ${type.class}`}>{type.label}</span>;
+        
+        return (
+          <span className={`type-badge ${type.class}`}>
+            {type.label}
+          </span>
+        );
       }
     },
-    { key: 'amount', label: 'AMOUNT', icon: <AmountIcon />, sortable: true,
-      render: (item) => <span className="amount">${formatAmount(item.amount)}</span> },
-    { key: 'status', label: 'STATUS', icon: <StatusIcon />, sortable: false,
+    { 
+      key: 'amount', 
+      label: 'TUTAR', 
+      icon: <AmountIcon />, 
+      sortable: true,
+      render: (item) => (
+        <span className="amount">{formatAmount(item.amount)} ₺</span>
+      )
+    },
+    { 
+      key: 'status', 
+      label: 'DURUM', 
+      icon: <StatusIcon />, 
+      sortable: false,
       render: (item) => {
         const statusClass = item.status === 1 ? 'status-receipt' : 'status-not-received';
-        const statusText = formatStatus(item.status);
-        return <span className={`status-badge ${statusClass}`} style={{ 
-          backgroundColor: statusClass === 'status-receipt' ? 'rgba(76, 175, 80, 0.1)' : 'rgba(244, 67, 54, 0.1)',
-          color: statusClass === 'status-receipt' ? '#2E7D32' : '#D32F2F',
-          borderColor: statusClass === 'status-receipt' ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)'
-        }}>{statusText}</span>;
+        const statusText = item.status === 1 ? 'Alındı' : 'Alınmadı';
+        
+        return (
+          <span className={`status-badge ${statusClass}`}>
+            {statusText}
+          </span>
+        );
       }
     }
   ];
 
   const filters = [
-    { value: 'All', label: 'All' },
-    { value: 'Receipt', label: 'Received' },
-    { value: 'Not Received', label: 'Not Received' }
+    { value: 'All', label: 'Tümü' },
+    { value: 'Receipt', label: 'Alındı' },
+    { value: 'Not Received', label: 'Alınmadı' }
   ];
 
   const editFormFields = [
-    { name: 'date', label: 'Date', type: 'date' },
-    { name: 'incomeDetail', label: 'Income Detail', type: 'text' },
-    { name: 'incomeType', label: 'Income Type', type: 'select',
+    { name: 'date', label: 'Tarih', type: 'date' },
+    { name: 'incomeDetail', label: 'Gelir Detayı', type: 'text' },
+    { 
+      name: 'incomeType', 
+      label: 'Gelir Türü', 
+      type: 'select',
       options: [
-        { value: 1, label: 'Sale' },
-        { value: 2, label: 'Service' },
-        { value: 3, label: 'Investment' },
-        { value: 4, label: 'Rental' },
-        { value: 5, label: 'Commission' },
-        { value: 6, label: 'Royalty' },
-        { value: 7, label: 'Other' }
+        { value: 1, label: 'Satış' },
+        { value: 2, label: 'Hizmet' },
+        { value: 3, label: 'Yatırım' },
+        { value: 4, label: 'Kira' },
+        { value: 5, label: 'Komisyon' },
+        { value: 6, label: 'Telif' },
+        { value: 7, label: 'Diğer' }
       ],
       parseValue: (value) => parseInt(value)
     },
-    { name: 'amount', label: 'Amount', type: 'number', parseValue: (value) => parseFloat(value) },
-    { name: 'status', label: 'Status', type: 'select',
+    { 
+      name: 'amount', 
+      label: 'Tutar', 
+      type: 'number', 
+      parseValue: (value) => parseFloat(value) 
+    },
+    { 
+      name: 'status', 
+      label: 'Durum', 
+      type: 'select',
       options: [
-        { value: 1, label: 'Received' },
-        { value: 2, label: 'Not Received' }
+        { value: 1, label: 'Alındı' },
+        { value: 2, label: 'Alınmadı' }
       ],
       parseValue: (value) => parseInt(value)
     }
@@ -119,6 +166,7 @@ export default function Incometable({ products: initialProducts = [], isLoading 
       editFormTitle="Gelir Kaydı Düzenle"
       emptyMessage="Henüz Gelir Kaydı Yok"
       emptySubMessage="Lütfen gelir girişi eklemek için yeni bir kayıt oluşturun."
+      luxuryMode={true}
     />
   );
 }
