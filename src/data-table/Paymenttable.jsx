@@ -46,51 +46,62 @@ const StatusIcon = () => (
 
 export default function Paymenttable({ payments: initialPayments = [], isLoading = false }) {
   const columns = [
-    { key: 'date', label: 'DATE', icon: <DateIcon />, sortable: true },
-    { key: 'paymentDetail', label: 'PAYMENT DETAIL', icon: <DetailIcon />, sortable: true },
-    { key: 'paymentType', label: 'PAYMENT TYPE', icon: <TypeIcon />, sortable: true,
+    { key: 'date', label: 'TARİH', icon: <DateIcon />, sortable: true },
+    { key: 'paymentDetail', label: 'ÖDEME DETAYI', icon: <DetailIcon />, sortable: true },
+    { key: 'paymentType', label: 'ÖDEME TİPİ', icon: <TypeIcon />, sortable: true,
       render: (item) => {
         const paymentTypeMap = {
-          'Cash': { label: 'Cash', class: 'cash' },
-          'Credit Card': { label: 'Credit Card', class: 'credit' },
-          'Bank Transfer': { label: 'Bank Transfer', class: 'bank' }
+          'Cash': { label: 'Nakit', class: 'cash' },
+          'Credit Card': { label: 'Kredi Kartı', class: 'credit' },
+          'Bank Transfer': { label: 'Banka Havalesi', class: 'bank' },
+          'Nakit': { label: 'Nakit', class: 'cash' },
+          'Kredi Kartı': { label: 'Kredi Kartı', class: 'credit' },
+          'Banka Havalesi': { label: 'Banka Havalesi', class: 'bank' }
         };
         const type = paymentTypeMap[item.paymentType] || { label: item.paymentType, class: 'other' };
         return <span className={`payment-type ${type.class}`}>{type.label}</span>;
       }
     },
-    { key: 'amount', label: 'AMOUNT', icon: <AmountIcon />, sortable: true,
-      render: (item) => <span className="amount">${formatAmount(item.amount)}</span> },
-    { key: 'status', label: 'STATUS', icon: <StatusIcon />, sortable: false,
+    { key: 'amount', label: 'TUTAR', icon: <AmountIcon />, sortable: true,
+      render: (item) => <span className="amount">{formatAmount(item.amount)} ₺</span> },
+    { key: 'status', label: 'DURUM', icon: <StatusIcon />, sortable: false,
       render: (item) => {
-        const statusClass = item.status === 1 ? 'status-receipt' : 'status-given';
-        const statusText = formatStatus(item.status);
-        return <span className={`status-badge ${statusClass}`}>{statusText}</span>;
+        const statusMap = {
+          1: { text: 'Alındı', class: 'status-receipt' },
+          2: { text: 'Verildi', class: 'status-given' }
+        };
+        
+        const status = statusMap[item.status] || { 
+          text: formatStatus(item.status), 
+          class: 'status-receipt'
+        };
+        
+        return <span className={`status-badge ${status.class}`}>{status.text}</span>;
       }
     }
   ];
 
   const filters = [
-    { value: 'All', label: 'All' },
-    { value: 'Receipt', label: 'Received' },
-    { value: 'Given', label: 'Given' }
+    { value: 'All', label: 'Tümü' },
+    { value: 'Receipt', label: 'Alındı' },
+    { value: 'Given', label: 'Verildi' }
   ];
 
   const editFormFields = [
-    { name: 'date', label: 'Date', type: 'date' },
-    { name: 'paymentDetail', label: 'Payment Detail', type: 'text' },
-    { name: 'paymentType', label: 'Payment Type', type: 'select',
+    { name: 'date', label: 'Tarih', type: 'date' },
+    { name: 'paymentDetail', label: 'Ödeme Detayı', type: 'text' },
+    { name: 'paymentType', label: 'Ödeme Tipi', type: 'select',
       options: [
-        { value: 'Cash', label: 'Cash' },
-        { value: 'Credit Card', label: 'Credit Card' },
-        { value: 'Bank Transfer', label: 'Bank Transfer' }
+        { value: 'Nakit', label: 'Nakit' },
+        { value: 'Kredi Kartı', label: 'Kredi Kartı' },
+        { value: 'Banka Havalesi', label: 'Banka Havalesi' }
       ]
     },
-    { name: 'amount', label: 'Amount', type: 'number', parseValue: (value) => parseFloat(value) },
-    { name: 'status', label: 'Status', type: 'select',
+    { name: 'amount', label: 'Tutar', type: 'number', parseValue: (value) => parseFloat(value) },
+    { name: 'status', label: 'Durum', type: 'select',
       options: [
-        { value: 1, label: 'Received' },
-        { value: 2, label: 'Given' }
+        { value: 1, label: 'Alındı' },
+        { value: 2, label: 'Verildi' }
       ],
       parseValue: (value) => parseInt(value)
     }
@@ -106,6 +117,7 @@ export default function Paymenttable({ payments: initialPayments = [], isLoading
       editFormTitle="Ödeme Kaydı Düzenle"
       emptyMessage="Henüz Ödeme Kaydı Yok"
       emptySubMessage="Lütfen ödeme girişi eklemek için yeni bir kayıt oluşturun."
+      luxuryMode={true}
     />
   );
 }

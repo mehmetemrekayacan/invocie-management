@@ -171,72 +171,72 @@ export default function Barchart() {
         </div>
       </div>
       
-      {isLoading ? (
-        <div className="chart-loading">
-          <div className="chart-loader"></div>
+        {isLoading ? (
+          <div className="chart-loading">
+            <div className="chart-loader"></div>
           <p>Veriler yükleniyor...</p>
-        </div>
+          </div>
       ) : chartData.length === 0 ? (
-        <EmptyState />
-      ) : (
+          <EmptyState />
+        ) : (
         <>
           {/* Bar grafiği */}
           <div className="bar--chart">
             <ResponsiveContainer width="100%" height={300} minHeight={250}>
-              <BarChart
-                data={chartData}
+            <BarChart
+              data={chartData}
                 margin={{ top: 20, right: 20, left: 0, bottom: 30 }}
                 barCategoryGap="15%"
                 barGap={3}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  stroke="none"
-                  tick={{ fill: "var(--title)", fontSize: 12 }}
-                  axisLine={{ stroke: 'var(--title-light)' }}
-                />
-                <YAxis
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis
+                dataKey="name"
+                stroke="none"
+                tick={{ fill: "var(--title)", fontSize: 12 }}
+                axisLine={{ stroke: 'var(--title-light)' }}
+              />
+              <YAxis
                   tickFormatter={(value) => `${value.toLocaleString('tr-TR')} ₺`}
-                  stroke="none"
-                  tick={{ fill: "var(--title)", fontSize: 12 }}
-                  axisLine={{ stroke: 'var(--title-light)' }}
-                />
-                <Tooltip content={<CustomTooltip />} />
+                stroke="none"
+                tick={{ fill: "var(--title)", fontSize: 12 }}
+                axisLine={{ stroke: 'var(--title-light)' }}
+              />
+              <Tooltip content={<CustomTooltip />} />
                 <Legend content={<CustomLegend />} wrapperStyle={{ paddingTop: 20 }} />
-                <Bar 
-                  dataKey="Income" 
+              <Bar 
+                dataKey="Income" 
                   name="Gelir"
-                  fill={CHART_COLORS.Income} 
+                fill={CHART_COLORS.Income} 
                   radius={[6, 6, 0, 0]}
                   animationDuration={1200}
                   animationEasing="ease-out"
                   // Lüks efekt için gölge ve parlaklık
                   fillOpacity={0.9}
-                />
-                <Bar 
-                  dataKey="Expense" 
+              />
+              <Bar 
+                dataKey="Expense" 
                   name="Gider"
-                  fill={CHART_COLORS.Expense} 
+                fill={CHART_COLORS.Expense} 
                   radius={[6, 6, 0, 0]}
                   animationDuration={1200}
                   animationEasing="ease-out"
-                  animationBegin={300}
+                animationBegin={300}
                   fillOpacity={0.9}
-                />
-                <Bar 
-                  dataKey="Profit" 
+              />
+              <Bar 
+                dataKey="Profit" 
                   name="Kar" 
-                  fill={CHART_COLORS.Profit} 
+                fill={CHART_COLORS.Profit} 
                   radius={[6, 6, 0, 0]}
                   animationDuration={1200}
                   animationEasing="ease-out"
-                  animationBegin={600}
+                animationBegin={600}
                   // Altın rengi için özel parlaklık efekti
                   fillOpacity={1}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+              />
+            </BarChart>
+          </ResponsiveContainer>
           </div>
           
           {/* Özet bölümü */}

@@ -1,6 +1,56 @@
 @import url("https://fonts.googleapis.com/css2?family=Kumar+One&display=swap");
 
 :root {
+  /* Lüks tema için ana renkler */
+  --primary-color: #D4AF37; /* Altın sarısı */
+  --secondary-color: #B8860B; /* Koyu altın */
+  --accent-color: #FFD700; /* Parlak altın */
+  
+  /* Nötr renkler */
+  --bg-dark: #1A1A1A;
+  --bg-light: #FFFFFF;
+  --text-dark: #333333;
+  --text-light: #FFFFFF;
+  
+  /* Durum renkleri */
+  --success-color: #10B981;
+  --danger-color: #EF4444;
+  --warning-color: #F59E0B;
+  --info-color: #3B82F6;
+  
+  /* Gölgeler */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  --shadow-gold: 0 4px 12px rgba(212, 175, 55, 0.15);
+  
+  /* Geçişler */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Köşe yuvarlaklıkları */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+  
+  /* Boşluklar */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.25rem;
+  --space-xl: 3rem;
+  
+  /* Yazı boyutları */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2rem;
+  
   /* Renkler - HSL formatında tanımlanıyor */
   --top-background: hsl(235, 32%, 27%);
   --navbar-background: hsl(235, 32%, 17%);
@@ -13,23 +63,10 @@
   --text-light: hsl(0, 0%, 96%);
   
   /* Lüks tema için ek renkler */
-  --primary-color: #D4AF37; /* Altın sarısı */
   --text-primary: #FFFFFF;
   --text-secondary: rgba(255, 255, 255, 0.8);
   --text-muted: rgba(255, 255, 255, 0.6);
-  --success-color: #10B981;
-  --danger-color: #EF4444;
-  --warning-color: #F59E0B;
-  --info-color: #3B82F6;
-  --shadow-gold: 0 4px 12px rgba(212, 175, 55, 0.15);
   --graphbox-background: rgba(26, 37, 68, 0.5);
-  
-  /* Boşluklar - rem biriminde */
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1.5rem;
-  --space-lg: 2.25rem;
-  --space-xl: 3rem;
   
   /* Gölgeler - optimize edilmiş */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -64,6 +101,11 @@
 }
 
 [data-theme="dark"] {
+  --bg-color: var(--bg-dark);
+  --text-color: var(--text-light);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --card-bg: rgba(255, 255, 255, 0.03);
   --top-background: hsl(235, 32%, 27%);
   --navbar-background: hsl(235, 32%, 17%);
   --footer-background: hsl(0, 0%, 24%);
@@ -71,6 +113,11 @@
 }
 
 [data-theme="light"] {
+  --bg-color: var(--bg-light);
+  --text-color: var(--text-dark);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: rgba(0, 0, 0, 0.05);
+  --card-bg: rgba(0, 0, 0, 0.02);
   --top-background: hsl(235, 65%, 65%);
   --navbar-background: hsl(235, 100%, 74%);
   --footer-background: hsl(0, 0%, 85%);
@@ -102,9 +149,9 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--top-background);
-  color: var(--text-light);
-  padding: 0 var(--space-lg);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: var(--space-sm) var(--space-lg);
   box-shadow: var(--shadow-md);
   position: fixed;
   top: 0;
@@ -113,7 +160,7 @@ img {
   height: 64px;
   z-index: var(--z-header);
   transition: all var(--transition-normal) ease;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.3); /* İnce altın çizgi */
+  border-bottom: 1px solid var(--border-color);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -132,7 +179,7 @@ img {
   margin: 0;
   transition: color var(--transition-normal) ease;
   letter-spacing: 0.5px;
-  background: linear-gradient(to right, var(--primary-color), #F9F295);
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -162,7 +209,7 @@ img {
   font-weight: 500;
   color: var(--primary-color);
   letter-spacing: 1px;
-  background: linear-gradient(to right, var(--primary-color), #F9F295);
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -233,15 +280,15 @@ img {
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-md);
   transition: all var(--transition-fast) ease;
-  border: 1px solid rgba(212, 175, 55, 0.2);
-  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
   min-width: 150px;
   justify-content: space-between;
 }
 
 .topbar--profile-box:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: rgba(212, 175, 55, 0.4);
+  background-color: var(--hover-bg);
+  border-color: var(--primary-color);
   box-shadow: var(--shadow-gold);
   transform: translateY(-2px);
 }
@@ -345,17 +392,17 @@ img {
 .navbar {
   display: flex;
   flex-direction: column;
-  background-color: var(--navbar-background);
-  color: var(--text-light);
+  background-color: var(--bg-color);
+  color: var(--text-color);
   padding: 0;
   height: 48px;
   position: fixed;
-  top: 64px; /* Topbar yüksekliğine göre ayarlandı */
+  top: 64px;
   left: 0;
   right: 0;
   z-index: calc(var(--z-header) - 10);
   transition: all var(--transition-normal) ease;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  border-bottom: 1px solid var(--border-color);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 }
@@ -388,9 +435,9 @@ img {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: inherit;
+  color: var(--text-color);
   gap: var(--space-xs);
-  transition: transform var(--transition-fast) ease;
+  transition: all var(--transition-fast) ease;
   width: 100%;
   padding: var(--space-xs);
   height: 100%;
@@ -401,6 +448,16 @@ img {
   font-weight: 500;
   margin: 0;
   white-space: nowrap;
+}
+
+.navbar--title.active {
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
+}
+
+.navbar--title.active a,
+.navbar--title.active button {
+  color: var(--primary-color);
 }
 
 .navbar--toggle {
@@ -534,12 +591,13 @@ img {
 
 /* Footer */
 .footer {
-  background-color: var(--footer-background);
-  color: var(--text-light);
+  background-color: var(--bg-color);
+  color: var(--text-color);
   padding: var(--space-md) var(--space-md);
   margin-top: auto;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   transition: background-color var(--transition-normal) ease;
+  border-top: 1px solid var(--border-color);
 }
 
 .footer--content {
@@ -556,7 +614,7 @@ img {
   font-size: var(--text-sm);
   font-weight: normal;
   margin: 0;
-  color: var(--text-light);
+  color: var(--text-color);
   opacity: 0.9;
   transition: opacity var(--transition-fast) ease;
 }
@@ -567,19 +625,35 @@ img {
 }
 
 .footer-link {
-  color: var(--text-light);
+  color: var(--text-color);
   text-decoration: none;
   font-size: var(--text-sm);
   opacity: 0.8;
   transition: all var(--transition-fast) ease;
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.footer-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+  transition: all var(--transition-fast) ease;
+  transform: translateX(-50%);
 }
 
 .footer-link:hover {
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-1px);
+  color: var(--primary-color);
+}
+
+.footer-link:hover::after {
+  width: 80%;
 }
 
 .footer-link:focus-visible {
@@ -595,28 +669,33 @@ img {
   padding: var(--space-xs);
   border-radius: var(--radius-md);
   transition: background-color var(--transition-fast) ease;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
 }
 
 .darkmode--container:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--hover-bg);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-gold);
 }
 
 .darkmode-label {
   font-size: var(--text-xs);
-  color: var(--text-light);
+  color: var(--text-color);
   opacity: 0.9;
   transition: opacity var(--transition-fast) ease;
 }
 
 .darkmode--container:hover .darkmode-label {
   opacity: 1;
+  color: var(--primary-color);
 }
 
 /* Switch stilleri */
 .switch {
   position: relative;
   display: inline-block;
-  width: 44px; /* Touch hedefi için büyütüldü */
+  width: 44px;
   height: 24px;
   flex-shrink: 0;
 }
@@ -635,10 +714,11 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--primary);
+  background-color: var(--bg-color);
   transition: var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: var(--radius-full);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .slider:before {
@@ -648,25 +728,25 @@ img {
   width: 20px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--text-light);
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
   transition: var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   will-change: transform;
 }
 
-/* Switch durumları */
 input:checked + .slider {
-  background-color: var(--secondary);
+  background-color: var(--bg-color);
+  border-color: var(--primary-color);
 }
 
 input:focus-visible + .slider {
-  box-shadow: 0 0 0 2px var(--primary), inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 2px var(--primary-color), inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 input:checked + .slider:before {
   transform: translateX(20px);
-  background-color: var(--text-light);
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
 }
 
 /* Hover efektleri */
@@ -966,7 +1046,7 @@ button:focus-visible {
   align-items: center;
   padding: var(--space-xs) var(--space-md);
   font-size: var(--text-sm);
-  color: var(--text-light);
+  color: var(--text-color);
   text-decoration: none;
   transition: all var(--transition-fast) ease;
   white-space: nowrap;
@@ -975,12 +1055,12 @@ button:focus-visible {
 
 .navbar--dropdown-item:hover,
 .topbar--dropdown-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--hover-bg);
   border-left-color: var(--primary-color);
 }
 
 .navbar--dropdown-item.active {
-  background-color: rgba(212, 175, 55, 0.1);
+  background-color: var(--hover-bg);
   border-left-color: var(--primary-color);
   font-weight: 500;
 }
@@ -994,8 +1074,8 @@ button:focus-visible {
 
 /* Active navbar styles */
 .navbar--title.active {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
 }
 
 .navbar--title.active a,
@@ -1128,16 +1208,16 @@ button:focus-visible {
 .navbar--dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   width: 180px;
-  background-color: var(--navbar-background);
+  background-color: var(--bg-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   z-index: var(--z-dropdown);
   padding: var(--space-xs) 0;
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  transform-origin: top right;
+  border: 1px solid var(--border-color);
+  transform-origin: top left;
   animation: dropdownAppear 0.2s ease forwards;
 }
 
@@ -1169,8 +1249,8 @@ button:focus-visible {
 }
 
 .navbar--title.active {
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background-color: var(--hover-bg);
+  border: 1px solid var(--border-color);
 }
 
 .navbar--title.active a,

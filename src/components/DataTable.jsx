@@ -311,9 +311,9 @@ export default function DataTable({
             <div className="form-row" key={field.name}>
               <label htmlFor={field.name}>{field.label}</label>
               {field.type === 'select' ? (
-                <select
+                <select 
                   id={field.name}
-                  value={editItem[field.name]}
+                  value={editItem[field.name]} 
                   onChange={(e) => {
                     const value = field.parseValue 
                       ? field.parseValue(e.target.value)
@@ -328,10 +328,10 @@ export default function DataTable({
                   ))}
                 </select>
               ) : (
-                <input
+                <input 
                   type={field.type}
                   id={field.name}
-                  value={editItem[field.name]}
+                  value={editItem[field.name]} 
                   onChange={(e) => {
                     const value = field.parseValue && field.type === 'number'
                       ? field.parseValue(e.target.value)
@@ -364,19 +364,19 @@ export default function DataTable({
       {!editItem && (
         <>
           {filters && (
-            <table className="datatable--chart">
-              <thead>
-                <tr className="datatable--filter-header">
+      <table className="datatable--chart">
+        <thead>
+          <tr className="datatable--filter-header">
                   {filters.map((filterItem, index) => (
-                    <th
+              <th 
                       key={index}
                       className={filter === filterItem.value ? 'datatable--filter-active' : ''}
                       onClick={() => setFilter(filterItem.value)}
-                    >
+              >
                       {filterItem.label}
-                    </th>
-                  ))}
-                </tr>
+              </th>
+            ))}
+          </tr>
               </thead>
             </table>
           )}
@@ -389,52 +389,52 @@ export default function DataTable({
             <>
               <table className="datatable--chart">
                 <thead>
-                  <tr className="datatable--header">
-                    {columns.map((column) => (
-                      <th 
-                        key={column.key}
+          <tr className="datatable--header">
+            {columns.map((column) => (
+              <th 
+                key={column.key}
                         onClick={() => column.sortable && requestSort(column.key)}
                         style={{ cursor: column.sortable ? 'pointer' : 'default' }}
                         data-key={column.key}
-                      >
+              >
                         {column.icon && column.icon}
-                        <span className="column-label">{column.label}</span>
+                  <span className="column-label">{column.label}</span>
                         {column.sortable && <span className="sort-indicator">{getSortIndicator(column.key)}</span>}
-                      </th>
-                    ))}
+              </th>
+            ))}
                     <th style={{ width: '60px' }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentItems.map((item, index) => (
-                    <tr key={item.id || index} className="datatable--items">
-                      {columns.map((column) => (
-                        <td key={column.key}>
-                          {column.render ? column.render(item) : item[column.key]}
-                        </td>
-                      ))}
-                      <td>
+          </tr>
+        </thead>
+        <tbody>
+          {currentItems.map((item, index) => (
+            <tr key={item.id || index} className="datatable--items">
+              {columns.map((column) => (
+                <td key={column.key}>
+                  {column.render ? column.render(item) : item[column.key]}
+                </td>
+              ))}
+              <td>
                         <div className="action-menu-container" style={{ position: 'relative' }}>
-                          <button
-                            className="action-menu-button"
-                            onClick={(e) => toggleMenu(index, e)}
-                          >
-                            <div className="action-menu-dots">
-                              <div className="action-menu-dot"></div>
-                              <div className="action-menu-dot"></div>
-                              <div className="action-menu-dot"></div>
-                            </div>
-                          </button>
-                          
-                          {activeMenu === index && (
-                            <div className="action-menu">
+                  <button 
+                    className="action-menu-button"
+                    onClick={(e) => toggleMenu(index, e)}
+                  >
+                    <div className="action-menu-dots">
+                      <div className="action-menu-dot"></div>
+                      <div className="action-menu-dot"></div>
+                      <div className="action-menu-dot"></div>
+                    </div>
+                  </button>
+                  
+                  {activeMenu === index && (
+                    <div className="action-menu">
                               <div className="action-menu-item" onClick={() => handleEdit(item)}>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                                 </svg>
                                 Düzenle
-                              </div>
+                      </div>
                               <div className="action-menu-item delete" onClick={() => handleDelete(item)}>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                   <polyline points="3 6 5 6 21 6"></polyline>
@@ -443,17 +443,17 @@ export default function DataTable({
                                   <line x1="14" y1="11" x2="14" y2="17"></line>
                                 </svg>
                                 Sil
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              {totalPages > 1 && (
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      
+      {totalPages > 1 && (
                 <div className="datatable-pagination">
                   <div className="pagination-info">
                     Sayfa {currentPage} / {totalPages}
