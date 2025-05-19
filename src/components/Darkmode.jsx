@@ -5,7 +5,7 @@ export default function Darkmode() {
   // Theme state
   const [isDark, setIsDark] = useState(false);
 
-  // Theme değişimini izleyip localstorage'a kaydetme
+  // Theme change detection and local storage saving
   useEffect(() => {
     const currentTheme = localStorage.getItem("theme");
     if (currentTheme === "dark") {
@@ -17,7 +17,7 @@ export default function Darkmode() {
     }
   }, []);
 
-  // Toggle theme fonksiyonu
+  // Toggle theme function
   const toggleTheme = () => {
     if (isDark) {
       document.documentElement.setAttribute("data-theme", "light");

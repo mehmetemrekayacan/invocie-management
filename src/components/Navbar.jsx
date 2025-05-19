@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-// Navbar öğelerini ayrı bir yapıda tanımlayalım
+// Define navigation items in a separate structure
 const NAV_ITEMS = [
   {
     path: "/",
@@ -9,7 +9,7 @@ const NAV_ITEMS = [
       dark: "/assets/dashboard=dark.svg",
       light: "/assets/dashboard=light.svg"
     },
-    label: "Genel Bakış",
+    label: "Overview",
     alt: "Dashboard icon"
   },
   {
@@ -18,7 +18,7 @@ const NAV_ITEMS = [
       dark: "/assets/income=dark.svg",
       light: "/assets/income=light.svg"
     },
-    label: "Gelirler",
+    label: "Income",
     alt: "Income icon"
   },
   {
@@ -27,7 +27,7 @@ const NAV_ITEMS = [
       dark: "/assets/invoice=dark.svg",
       light: "/assets/invoice=light.svg"
     },
-    label: "Faturalar",
+    label: "Invoices",
     alt: "Invoice icon"
   },
   {
@@ -36,11 +36,11 @@ const NAV_ITEMS = [
       dark: "/assets/expense=dark.svg",
       light: "/assets/expense=light.svg"
     },
-    label: "Giderler",
+    label: "Expenses",
     alt: "Expense icon",
     dropdown: [
-      { path: "/expense/payment", label: "Ödemeler" },
-      { path: "/expense/tax", label: "Vergiler" }
+      { path: "/expense/payment", label: "Payments" },
+      { path: "/expense/tax", label: "Taxes" }
     ]
   }
 ];
@@ -52,7 +52,7 @@ export default function Navbar() {
   const navbarRef = useRef(null);
   const location = useLocation();
 
-  // useCallback ile fonksiyonları memoize ediyoruz
+  // Memoize functions with useCallback
   const toggleDropdown = useCallback(() => {
     setIsDropdownOpen(prev => !prev);
   }, []);
@@ -79,7 +79,7 @@ export default function Navbar() {
     }
   }, [closeDropdown]);
 
-  // Ekran boyutu değişikliğini yöneten fonksiyon
+  // Handle screen size changes
   const handleResize = useCallback(() => {
     if (window.innerWidth > 768) {
       setNavbarCollapsed(false);
@@ -96,12 +96,12 @@ export default function Navbar() {
     };
   }, [handleClickOutside, handleResize]);
 
-  // Aktif menü öğesini belirle
+  // Determine active menu item
   const activePath = useMemo(() => {
     return location.pathname;
   }, [location.pathname]);
 
-  // Navbar öğelerini render eden fonksiyon
+  // Function to render nav items
   const renderNavItem = useCallback((item) => {
     const isActive = activePath === item.path || 
                     (item.path === "/" && activePath === "/dashboard");
@@ -205,7 +205,7 @@ export default function Navbar() {
     <nav 
       className="navbar" 
       role="navigation"
-      aria-label="Ana navigasyon"
+      aria-label="Main navigation"
       ref={navbarRef}
     >
       <button 
@@ -214,7 +214,7 @@ export default function Navbar() {
         aria-expanded={navbarCollapsed}
         aria-controls="navbar-content"
       >
-        <span>Menü</span>
+        <span>Menu</span>
         <img
           src="/assets/dropdown=dark.svg"
           className={`dark-icon ${navbarCollapsed ? "open" : ""}`}

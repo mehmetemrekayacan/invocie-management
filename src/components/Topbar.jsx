@@ -17,7 +17,7 @@ export default function Topbar() {
   const navigate = useNavigate();
   const modal = useModal();
 
-  // useCallback ile fonksiyonları memoize ediyoruz
+  // Memoize functions with useCallback
   const toggleDropdown = useCallback(() => {
     setIsDropdownOpen(prev => !prev);
   }, []);
@@ -57,7 +57,7 @@ export default function Topbar() {
     }
   }, [closeDropdown, closeMobileMenu]);
 
-  // Saat güncellemesi için
+  // For time updates
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -108,22 +108,22 @@ export default function Topbar() {
     }
   }, [navigate, modal]);
 
-  // useMemo ile hesaplamaları optimize ediyoruz
+  // Optimize calculations with useMemo
   const displayName = useMemo(() => {
     return `${truncateString(userName, 8)} ${truncateString(userSurname, 8)}`;
   }, [userName, userSurname, truncateString]);
 
-  // Zamanı formatlama
+  // Format time
   const formattedTime = useMemo(() => {
-    return currentTime.toLocaleTimeString('tr-TR', { 
+    return currentTime.toLocaleTimeString('en-US', { 
       hour: '2-digit', 
       minute: '2-digit'
     });
   }, [currentTime]);
 
-  // Tarihi formatlama
+  // Format date
   const formattedDate = useMemo(() => {
-    return currentTime.toLocaleDateString('tr-TR', { 
+    return currentTime.toLocaleDateString('en-US', { 
       day: 'numeric', 
       month: 'long', 
       year: 'numeric'
@@ -150,7 +150,7 @@ export default function Topbar() {
         <h2>Finverso</h2>
       </div>
 
-      {/* Orta kısım: saat ve tarih */}
+      {/* Middle section: clock and date */}
       <div className="topbar--datetime">
         <div className="topbar--time">{formattedTime}</div>
         <div className="topbar--date">{formattedDate}</div>
@@ -158,17 +158,17 @@ export default function Topbar() {
 
       <div className="topbar--right-section">
         <div className="topbar--notifications">
-          <button className="topbar--icon-button" aria-label="Bildirimler">
+          <button className="topbar--icon-button" aria-label="Notifications">
             <img 
               src="/assets/notification=dark.svg" 
-              alt="Bildirimler" 
+              alt="Notifications" 
               className="dark-icon"
               width="24"
               height="24"
             />
             <img 
               src="/assets/notification=light.svg" 
-              alt="Bildirimler" 
+              alt="Notifications" 
               className="light-icon"
               width="24"
               height="24"
@@ -182,7 +182,7 @@ export default function Topbar() {
             <>
               <img 
                 src="/assets/profile image.png" 
-                alt="Profil resmi" 
+                alt="Profile picture" 
                 width="36"
                 height="36"
               />
@@ -222,7 +222,7 @@ export default function Topbar() {
                     role="menuitem"
                   >
                     <i className="dropdown-icon profile-icon"></i>
-                    Profil
+                    Profile
                   </Link>
                   <Link
                     to="/settings"
@@ -231,7 +231,7 @@ export default function Topbar() {
                     role="menuitem"
                   >
                     <i className="dropdown-icon settings-icon"></i>
-                    Ayarlar
+                    Settings
                   </Link>
                   <div
                     className="topbar--dropdown-item-darkmode"
@@ -248,14 +248,14 @@ export default function Topbar() {
                     role="menuitem"
                   >
                     <i className="dropdown-icon logout-icon"></i>
-                    Çıkış Yap
+                    Log Out
                   </button>
                 </div>
               )}
             </>
           ) : (
             <Link to="/login" className="topbar--sign-box">
-              <span className="topbar--sign-title">Giriş Yap</span>
+              <span className="topbar--sign-title">Log In</span>
               </Link>
           )}
         </div>
@@ -264,7 +264,7 @@ export default function Topbar() {
           <button 
         className="topbar--hamburger" 
         onClick={toggleMobileMenu}
-        aria-label="Menüyü aç/kapat"
+        aria-label="Toggle menu"
         aria-expanded={mobileMenuOpen}
           >
         <div className={`hamburger-icon ${mobileMenuOpen ? 'open' : ''}`}>
@@ -278,13 +278,13 @@ export default function Topbar() {
         className={`topbar--mobile-menu ${mobileMenuOpen ? 'mobile-open' : ''}`} 
         ref={mobileMenuRef}
         role="navigation"
-        aria-label="Ana menü"
+        aria-label="Main menu"
       >
         {isLoggedIn ? (
           <div className="topbar--mobile-profile">
             <img 
               src="/assets/profile image.png" 
-              alt="Profil resmi" 
+              alt="Profile picture" 
               width="36"
               height="36"
             />
@@ -294,18 +294,18 @@ export default function Topbar() {
           </div>
         ) : (
           <Link to="/login" className="topbar--mobile-login">
-            Giriş Yap
+            Log In
           </Link>
         )}
         
         <div className="topbar--mobile-links">
           <Link to="/profile" className="topbar--mobile-link">
             <i className="dropdown-icon profile-icon"></i>
-            Profil
+            Profile
           </Link>
           <Link to="/settings" className="topbar--mobile-link">
             <i className="dropdown-icon settings-icon"></i>
-            Ayarlar
+            Settings
           </Link>
           <div className="topbar--mobile-darkmode">
             <Darkmode />
@@ -316,7 +316,7 @@ export default function Topbar() {
               onClick={handleSignOut}
             >
               <i className="dropdown-icon logout-icon"></i>
-              Çıkış Yap
+              Log Out
           </button>
         )}
         </div>

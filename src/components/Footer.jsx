@@ -8,7 +8,7 @@ const Footer = memo(() => {
     <footer className="footer" role="contentinfo">
       <div className="footer--content">
         <div className="footer--copyright">
-          <h2>{currentYear} © Invoicify</h2>
+          <h2>{currentYear} © Finverso Luxury</h2>
         </div>
         <div className="footer--links">
           <a 
